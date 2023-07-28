@@ -29,21 +29,29 @@ public class InstitutionServiceImpl implements InstitutionService {
 
     @Override
     public List<Institution> getAll() {
-        return null;
+        return institutionRepository.findAll();
     }
 
     @Override
     public Optional<Institution> getById(Long id) {
-        return Optional.empty();
+
+        return institutionRepository.findById(id);
     }
 
     @Override
     public Institution update(Long id, Institution updatedInstitution) {
-        return null;
+        Optional<Institution> institutionOptional = institutionRepository.findById(id);
+
+        if(institutionOptional.isPresent()){
+            return institutionRepository.save(updatedInstitution);
+        } else {
+            throw new ResourceNotFoundException(String.format("No institution with id: %s", id));
+        }
     }
 
     @Override
     public void delete(Long id) {
-
+        institutionRepository.deleteById(id);
     }
+
 }
