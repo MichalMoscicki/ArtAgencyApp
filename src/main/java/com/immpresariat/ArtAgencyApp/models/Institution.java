@@ -23,4 +23,6 @@ public class Institution {
     private boolean alreadyCooperated = false;
     @Size(max = 500, message = "Notes can not be longer then 500 characters")
     private String notes;
+
+
 }
