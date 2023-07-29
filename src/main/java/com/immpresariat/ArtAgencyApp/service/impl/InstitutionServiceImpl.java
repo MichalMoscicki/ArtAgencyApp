@@ -1,6 +1,6 @@
 package com.immpresariat.ArtAgencyApp.service.impl;
 
-import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.InstitutionService;
@@ -21,7 +21,8 @@ public class InstitutionServiceImpl implements InstitutionService {
         Optional<Institution> institutionOptional = institutionRepository.
                 findInstitutionByNameAndCity(institution.getName(), institution.getCity());
         if(institutionOptional.isPresent()){
-            throw new ResourceNotFoundException(String.format("Institution with given name: %s and city: %s already exists", institution.getName(), institution.getCity()));
+            throw new ResourceAlreadyExistsException(String.format("Institution with given name: %s and city: %s already exists",
+                    institution.getName(), institution.getCity()));
         }
 
         return institutionRepository.save(institution);
@@ -45,7 +46,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         if(institutionOptional.isPresent()){
             return institutionRepository.save(updatedInstitution);
         } else {
-            throw new ResourceNotFoundException(String.format("No institution with id: %s", id));
+            throw new ResourceAlreadyExistsException(String.format("No institution with id: %s", id));
         }
     }
 

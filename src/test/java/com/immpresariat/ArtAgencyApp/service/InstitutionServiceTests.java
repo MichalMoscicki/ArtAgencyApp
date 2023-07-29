@@ -1,12 +1,10 @@
 package com.immpresariat.ArtAgencyApp.service;
 import  static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.InstitutionServiceImpl;
-import jakarta.validation.ConstraintViolationException;
-import org.glassfish.jaxb.core.v2.TODO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,7 +64,7 @@ public class InstitutionServiceTests {
         given(institutionRepository.findInstitutionByNameAndCity(institution.getName(), institution.getCity())).willReturn(Optional.of(institution));
 
         //when - action or the behavior that we are going to test
-        assertThrows(ResourceNotFoundException.class, () -> {
+        assertThrows(ResourceAlreadyExistsException.class, () -> {
             institutionService.create(institution);
         });
 
@@ -145,7 +143,7 @@ public class InstitutionServiceTests {
 
 
         //when - action or the behavior that we are going to test
-        assertThrows(ResourceNotFoundException.class, () -> {
+        assertThrows(ResourceAlreadyExistsException.class, () -> {
             institutionService.update(id, updatedInstitution);
         });
 
