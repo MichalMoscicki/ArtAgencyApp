@@ -2,6 +2,8 @@ package com.immpresariat.ArtAgencyApp.service;
 import  static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
+import com.immpresariat.ArtAgencyApp.models.ContactPerson;
+import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.InstitutionServiceImpl;
@@ -26,6 +28,14 @@ public class InstitutionServiceTests {
 
     @Mock
     private InstitutionRepository institutionRepository;
+
+    @Mock
+    private EventService eventService;
+    @Mock
+
+    private ContactPersonService contactPersonService;
+
+
     @InjectMocks
     private InstitutionServiceImpl institutionService;
     private Institution institution;
@@ -150,6 +160,46 @@ public class InstitutionServiceTests {
         //then - verify the output
         Mockito.verify(institutionRepository, never()).save(any(Institution.class));
 
+    }
+
+
+    @DisplayName("JUnit test for delete institution method (institution Object with associated data")
+    @Test
+    public void givenInstitutionWithAssociateData_whenDeleteInstitution_thenInstitutionAndDataDeleted() {
+        //given - precondition or setup
+        Long institutionId = institution.getId();
+        List<ContactPerson> contactPeople = new ArrayList<>();
+        contactPeople.add(new ContactPerson());
+        given(contactPersonService.getAllByInstitutionId(institutionId)).willReturn(contactPeople);
+
+        List<Event> events = new ArrayList<>();
+        events.add(new Event());
+        given(eventService.getAllByInstitutionId(institutionId)).willReturn(events);
+
+        //when - action or the behavior that we are going to test
+        institutionService.delete(institutionId);
+
+        //then - verify the output
+        Mockito.verify(contactPersonService, times(1)).delete(any(ContactPerson.class));
+        Mockito.verify(eventService, times(1)).delete(any(Event.class));
+        Mockito.verify(institutionRepository, times(1)).deleteById(institutionId);
+    }
+
+    @DisplayName("JUnit test for delete institution method (institution Object without associated data")
+    @Test
+    public void givenInstitutionWithNoAssociateData_whenDeleteInstitution_thenInstitutionDeleted() {
+        //given - precondition or setup
+        Long institutionId = institution.getId();
+        given(contactPersonService.getAllByInstitutionId(institutionId)).willReturn(new ArrayList<>());
+        given(eventService.getAllByInstitutionId(institutionId)).willReturn(new ArrayList<>());
+
+        //when - action or the behavior that we are going to test
+        institutionService.delete(institutionId);
+
+        //then - verify the output
+        Mockito.verify(contactPersonService, never()).delete(any(ContactPerson.class));
+        Mockito.verify(eventService, never()).delete(any(Event.class));
+        Mockito.verify(institutionRepository, times(1)).deleteById(institutionId);
     }
 
 }

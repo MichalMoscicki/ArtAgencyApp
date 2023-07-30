@@ -2,7 +2,6 @@ package com.immpresariat.ArtAgencyApp.service.impl;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import org.springframework.stereotype.Service;
@@ -11,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ContactServiceImpl implements ContactPersonService {
+public class ContactPersonServiceImpl implements ContactPersonService {
 
     ContactPersonRepository contactPersonRepository;
 
-    public ContactServiceImpl(ContactPersonRepository contactPersonRepository) {
+    public ContactPersonServiceImpl(ContactPersonRepository contactPersonRepository) {
         this.contactPersonRepository = contactPersonRepository;
     }
 
@@ -54,5 +53,10 @@ public class ContactServiceImpl implements ContactPersonService {
     @Override
     public void delete(Long id) {
         contactPersonRepository.deleteById(id);
+    }
+
+    @Override
+    public void delete(ContactPerson contactPerson) {
+        contactPersonRepository.delete(contactPerson);
     }
 }
