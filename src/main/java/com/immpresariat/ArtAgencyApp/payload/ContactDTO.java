@@ -1,6 +1,7 @@
 package com.immpresariat.ArtAgencyApp.payload;
 
 import com.immpresariat.ArtAgencyApp.models.Institution;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -12,8 +13,11 @@ import java.util.List;
 @Builder
 public class ContactDTO {
 
+    @NotNull
     private Institution institution;
+    @NotNull
     List<ContactPersonDTO> contactPersonDTOS;
+    @NotNull
     List<EventDTO> eventDTOS;
 
 

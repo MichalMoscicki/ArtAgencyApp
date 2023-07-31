@@ -264,8 +264,6 @@ public class DTOMapperTests {
         given(institutionService.getById(institutionId)).willReturn(Optional.of(institution));
         contactDTO.setInstitution(institution);
 
-        //brakuje dtosów!
-
         //when - action or the behavior that we are going to test
         List<ContactPerson> contactPersonList = dtoMapper.mapContactDTOToContactPeople(contactDTO);
 
