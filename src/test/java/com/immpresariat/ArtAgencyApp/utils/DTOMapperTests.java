@@ -62,6 +62,7 @@ public class DTOMapperTests {
                 .notes("Super miejsce")
                 .alreadyCooperated(true)
                 .city("Warszawa")
+                .category("dom kultury")
                 .build();
 
         contactDTO = new ContactDTO();

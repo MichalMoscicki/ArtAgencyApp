@@ -46,6 +46,7 @@ public class InstitutionServiceTests {
                 id(1L)
                 .name("DK Łomianki")
                 .city("Łomianki")
+                .category("dom kultury")
                 .alreadyCooperated(true)
                 .notes("Graliśmy tam z Marią")
                 .build();
@@ -91,6 +92,7 @@ public class InstitutionServiceTests {
                 .id(2L)
                 .name("Klub Morświn")
                 .city("Świonujćie")
+                .category("klub")
                 .build();
 
         List<Institution> institutions = new ArrayList<>();

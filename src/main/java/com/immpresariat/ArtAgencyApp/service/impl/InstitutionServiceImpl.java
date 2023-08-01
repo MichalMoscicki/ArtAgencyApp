@@ -62,17 +62,17 @@ public class InstitutionServiceImpl implements InstitutionService {
         }
     }
 
-    @Override
-    public void delete(Long id) {
+        @Override
+        public void delete(Long id) {
 
-        List<ContactPerson> contactPeople = contactPersonService.getAllByInstitutionId(id);
-        contactPeople.forEach(contactPersonService::delete);
+            List<ContactPerson> contactPeople = contactPersonService.getAllByInstitutionId(id);
+            contactPeople.forEach(contactPersonService::delete);
 
-        List<Event> events = eventService.getAllByInstitutionId(id);
-        events.forEach(eventService::delete);
+            List<Event> events = eventService.getAllByInstitutionId(id);
+            events.forEach(eventService::delete);
 
-        institutionRepository.deleteById(id);
+            institutionRepository.deleteById(id);
 
-    }
+        }
 
 }

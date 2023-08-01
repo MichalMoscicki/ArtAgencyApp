@@ -20,6 +20,10 @@ public class Institution {
     private String name;
     @NotBlank(message = "City must not be blank")
     private String city;
+
+    @NotBlank(message= "Category must not be blank")
+    private String category;
+
     private boolean alreadyCooperated = false;
     @Size(max = 500, message = "Notes can not be longer then 500 characters")
     private String notes;
