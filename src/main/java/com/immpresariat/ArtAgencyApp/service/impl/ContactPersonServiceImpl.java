@@ -40,11 +40,11 @@ public class ContactPersonServiceImpl implements ContactPersonService {
     }
 
     @Override
-    public ContactPerson update(Long id, ContactPerson updaedContactPerson) {
+    public ContactPerson update(Long id, ContactPerson updatedContactPerson) {
         Optional<ContactPerson> contactPersonOptional = contactPersonRepository.findById(id);
 
         if(contactPersonOptional.isPresent()){
-            return contactPersonRepository.save(updaedContactPerson);
+            return contactPersonRepository.save(updatedContactPerson);
         } else {
             throw new ResourceNotFoundException(String.format("No ContactPerson with id: %s", id));
         }
