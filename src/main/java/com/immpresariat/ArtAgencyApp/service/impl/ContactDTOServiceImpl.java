@@ -82,7 +82,7 @@ public class ContactDTOServiceImpl implements ContactDTOService {
 
         List<EventDTO> eventDTOS = updatedContactDTO.getEventDTOS();
         for (EventDTO eventDTO: eventDTOS) {
-            eventService.update(eventDTO.getId() ,dtoMapper.mapDTOtoEvent(eventDTO, institutionId));
+            eventService.update(dtoMapper.mapDTOtoEvent(eventDTO, institutionId));
         }
 
         List<ContactPersonDTO> contactPersonDTOS = updatedContactDTO.getContactPersonDTOS();

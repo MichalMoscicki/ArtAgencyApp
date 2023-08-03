@@ -49,10 +49,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event update(Long id, Event event) {
+    public Event update(Event event) {
 
-        //sprawdzenie, czy juz jest
-        return null;
+        Optional<Event> eventOptional = eventRepository.findById(event.getId());
+        if(eventOptional.isEmpty()){
+            throw new ResourceNotFoundException(String.format("No event with id: %s", event.getId()));
+        }
+        return eventRepository.save(event);
     }
 
     @Override

@@ -17,7 +17,7 @@ public interface EventService {
     List<Event> getAllByInstitutionId(Long institutionId);
     Optional<Event> getById(Long id);
 
-    Event update(Long id, Event event);
+    Event update(Event event);
 
     void delete(Long id);
     void delete(Event event);
