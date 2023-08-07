@@ -1,7 +1,6 @@
 package com.immpresariat.ArtAgencyApp.service.impl;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
-import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
@@ -87,9 +86,8 @@ public class ContactDTOServiceImpl implements ContactDTOService {
 
         List<ContactPersonDTO> contactPersonDTOS = updatedContactDTO.getContactPersonDTOS();
         for (ContactPersonDTO contactPersonDTO: contactPersonDTOS) {
-            contactPersonService.update(contactPersonDTO.getId(), dtoMapper.mapDTOtoContactPerson(contactPersonDTO, institutionId));
+            contactPersonService.update(dtoMapper.mapDTOtoContactPerson(contactPersonDTO, institutionId));
         }
-
 
         return dtoMapper.mapToContactDTO(institutionId);
     }

@@ -13,7 +13,7 @@ public interface ContactPersonService {
     List<ContactPerson> getAllByInstitutionId(Long institutionId);
     Optional<ContactPerson> getById(Long id);
 
-    ContactPerson update(Long id, ContactPerson updatedContactPerson);
+    ContactPerson update(ContactPerson updatedContactPerson);
 
     void delete(Long id);
     void delete(ContactPerson contactPerson);
