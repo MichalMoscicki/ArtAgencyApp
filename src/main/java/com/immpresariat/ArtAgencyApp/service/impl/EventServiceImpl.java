@@ -5,6 +5,7 @@ import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.repository.EventRepository;
 import com.immpresariat.ArtAgencyApp.service.EventService;
+import com.immpresariat.ArtAgencyApp.utils.DataCleaner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
 
     EventRepository eventRepository;
+    DataCleaner dataCleaner;
 
-    public EventServiceImpl(EventRepository eventRepository) {
+    public EventServiceImpl(EventRepository eventRepository, DataCleaner dataCleaner) {
         this.eventRepository = eventRepository;
+        this.dataCleaner = dataCleaner;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class EventServiceImpl implements EventService {
                 findEventByNameAndInstitution(event.getName(), event.getInstitution());
 
         if(eventOptional.isEmpty()){
-            return eventRepository.save(event);
+            return eventRepository.save(dataCleaner.clean(event));
         } else {
             throw new ResourceAlreadyExistsException(String.format("Institution %s already contains event: %s", event.getInstitution().getName(), event.getName()));
         }
@@ -55,7 +58,7 @@ public class EventServiceImpl implements EventService {
         if(eventOptional.isEmpty()){
             throw new ResourceNotFoundException(String.format("No event with id: %s", event.getId()));
         }
-        return eventRepository.save(event);
+        return eventRepository.save(dataCleaner.clean(event));
     }
 
     @Override

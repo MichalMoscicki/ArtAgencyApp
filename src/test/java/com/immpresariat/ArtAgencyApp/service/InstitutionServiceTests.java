@@ -7,6 +7,7 @@ import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.InstitutionServiceImpl;
+import com.immpresariat.ArtAgencyApp.utils.DataCleaner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,12 +29,12 @@ public class InstitutionServiceTests {
 
     @Mock
     private InstitutionRepository institutionRepository;
-
     @Mock
     private EventService eventService;
     @Mock
-
     private ContactPersonService contactPersonService;
+    @Mock
+    private DataCleaner dataCleaner;
 
 
     @InjectMocks
@@ -60,6 +61,7 @@ public class InstitutionServiceTests {
 
         //when - action or the behavior that we are going to test
         given(institutionRepository.findInstitutionByNameAndCity(institution.getName(), institution.getCity())).willReturn(Optional.empty());
+        given(dataCleaner.clean(institution)).willReturn(institution);
         Institution institutionDB = institutionService.create(institution);
 
         //then - verify the output
@@ -134,6 +136,7 @@ public class InstitutionServiceTests {
         updatedInstitution.setName("updated");
         given(institutionRepository.findById(id)).willReturn(Optional.of(institution));
         given(institutionRepository.save(updatedInstitution)).willReturn(updatedInstitution);
+        given(dataCleaner.clean(institution)).willReturn(institution);
 
         //when - action or the behavior that we are going to test
         Institution updatedInstitutionDb = institutionService.update(id, updatedInstitution);

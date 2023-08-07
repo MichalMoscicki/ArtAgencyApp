@@ -8,6 +8,7 @@ import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import com.immpresariat.ArtAgencyApp.service.EventService;
 import com.immpresariat.ArtAgencyApp.service.InstitutionService;
+import com.immpresariat.ArtAgencyApp.utils.DataCleaner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,13 +20,13 @@ public class InstitutionServiceImpl implements InstitutionService {
     final private InstitutionRepository institutionRepository;
     final private ContactPersonService contactPersonService;
     final private EventService eventService;
+    final private DataCleaner dataCleaner;
 
-    public InstitutionServiceImpl(InstitutionRepository institutionRepository,
-                                  ContactPersonService contactPersonService,
-                                  EventService eventService) {
+    public InstitutionServiceImpl(InstitutionRepository institutionRepository, ContactPersonService contactPersonService, EventService eventService, DataCleaner dataCleaner) {
         this.institutionRepository = institutionRepository;
         this.contactPersonService = contactPersonService;
         this.eventService = eventService;
+        this.dataCleaner = dataCleaner;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class InstitutionServiceImpl implements InstitutionService {
                     institution.getName(), institution.getCity()));
         }
 
-        return institutionRepository.save(institution);
+        return institutionRepository.save(dataCleaner.clean(institution));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         Optional<Institution> institutionOptional = institutionRepository.findById(id);
 
         if(institutionOptional.isPresent()){
-            return institutionRepository.save(updatedInstitution);
+            return institutionRepository.save(dataCleaner.clean(updatedInstitution));
         } else {
             throw new ResourceAlreadyExistsException(String.format("No institution with id: %s", id));
         }

@@ -4,6 +4,8 @@ import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
+
+import com.immpresariat.ArtAgencyApp.utils.DataCleaner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,14 +15,17 @@ import java.util.Optional;
 public class ContactPersonServiceImpl implements ContactPersonService {
 
     ContactPersonRepository contactPersonRepository;
+    DataCleaner dataCleaner;
 
-    public ContactPersonServiceImpl(ContactPersonRepository contactPersonRepository) {
+    public ContactPersonServiceImpl(ContactPersonRepository contactPersonRepository, DataCleaner dataCleaner) {
         this.contactPersonRepository = contactPersonRepository;
+        this.dataCleaner = dataCleaner;
     }
 
     @Override
     public ContactPerson create(ContactPerson contactPerson) {
-        return contactPersonRepository.save(contactPerson);
+
+        return contactPersonRepository.save(dataCleaner.clean(contactPerson));
     }
 
     @Override
@@ -44,7 +49,7 @@ public class ContactPersonServiceImpl implements ContactPersonService {
         Optional<ContactPerson> contactPersonOptional = contactPersonRepository.findById(updatedContactPerson.getId());
 
         if(contactPersonOptional.isPresent()){
-            return contactPersonRepository.save(updatedContactPerson);
+            return contactPersonRepository.save(dataCleaner.clean(updatedContactPerson));
         } else {
             throw new ResourceNotFoundException(String.format("No ContactPerson with id: %s", updatedContactPerson.getId()));
         }
