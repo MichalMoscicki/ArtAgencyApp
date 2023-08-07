@@ -43,21 +43,67 @@ public class ContactDTOServiceTests {
     @InjectMocks
     ContactDTOServiceImpl contactDTOService;
 
-    Long institutionId;
+
+    ContactDTO contactDTO;
     Institution institution1;
     Institution institution2;
     List<Institution> institutions;
+    Long institutionId;
+    List<ContactPersonDTO> contactPersonDTOS;
+    ContactPersonDTO contactPersonDTO1;
+    ContactPersonDTO contactPersonDTO2;
+    List<EventDTO> eventDTOS;
+    EventDTO eventDTO1;
+    EventDTO eventDTO2;
 
     @BeforeEach
     public void setup() {
-        institutionId = 0l;
+        institutionId = 0L;
+        institution1 = Institution.builder()
+                .id(institutionId)
+                .category("Urząd miasta")
+                .city("Wyszków")
+                .name("Centrum Promocji Wyszkowa")
+                .notes("Średnia organizacja")
+                .alreadyCooperated(true)
+                .build();
+
+
         institutions = new ArrayList<>();
-        institution1 = new Institution();
-        institution1.setId(0L);
         institution2 = new Institution();
         institution2.setId(1L);
         institutions.add(institution1);
         institutions.add(institution2);
+
+        contactPersonDTOS = new ArrayList<>();
+        contactPersonDTO1 = ContactPersonDTO.builder()
+                .id(0L)
+                .role("dyrektor")
+                .phone("+48111222333")
+                .email("dyrektor@uww.pl")
+                .lastName("Kowalski")
+                .firstName("Jan")
+                .build();
+        contactPersonDTO2 = new ContactPersonDTO();
+        contactPersonDTOS.add(contactPersonDTO1);
+        contactPersonDTOS.add(contactPersonDTO2);
+
+        eventDTOS = new ArrayList<>();
+        eventDTO1 = EventDTO.builder()
+                .id(0l)
+                .name("Wianki")
+                .description("Super duper melanż")
+                .monthWhenOrganized(6)
+                .build();
+        eventDTO2 = new EventDTO();
+        eventDTOS.add(eventDTO1);
+        eventDTOS.add(eventDTO2);
+
+        contactDTO = new ContactDTO();
+        contactDTO.setInstitution(institution1);
+        contactDTO.setEventDTOS(eventDTOS);
+        contactDTO.setContactPersonDTOS(contactPersonDTOS);
+
     }
 
     @DisplayName("JUnit test for ContactDTOService getAll method")
@@ -66,7 +112,6 @@ public class ContactDTOServiceTests {
         //given - precondition or setup
         given(institutionService.getAll()).willReturn(institutions);
         given(dtoMapper.mapToContactDTO(any(Long.class))).willReturn(new ContactDTO());
-
 
         //when - action or the behavior that we are going to test
         List<ContactDTO> contactDTOs = contactDTOService.getAll();
@@ -109,22 +154,6 @@ public class ContactDTOServiceTests {
     @Test
     public void givenContactDTOObject_whenCreate_thenReturnContactDTOObject() {
         //given - precondition or setup
-        ContactDTO contactDTO = new ContactDTO();
-        contactDTO.setInstitution(institution1);
-        EventDTO eventDTO1 = new EventDTO();
-        EventDTO eventDTO2 = new EventDTO();
-        List<EventDTO> eventDTOS = new ArrayList<>();
-        eventDTOS.add(eventDTO1);
-        eventDTOS.add(eventDTO2);
-        contactDTO.setEventDTOS(eventDTOS);
-
-        ContactPersonDTO contactPersonDTO1 = new ContactPersonDTO();
-        ContactPersonDTO contactPersonDTO2 = new ContactPersonDTO();
-        List<ContactPersonDTO> contactPersonDTOS = new ArrayList<>();
-        contactPersonDTOS.add(contactPersonDTO1);
-        contactPersonDTOS.add(contactPersonDTO2);
-        contactDTO.setContactPersonDTOS(contactPersonDTOS);
-
         given(institutionService.create(contactDTO.getInstitution()))
                 .willReturn(new Institution());
         given(eventService.create(dtoMapper.mapDTOtoEvent(eventDTO1, institutionId)))
@@ -139,32 +168,33 @@ public class ContactDTOServiceTests {
 
         //then - verify the output
         assertNotNull(contactDTOFromDB);
+        assertEquals(contactDTO.getContactPersonDTOS().size(), contactPersonDTOS.size());
     }
 
+    @DisplayName("JUnit test for create ContactDTO method with no contactPerson")
+    @Test
+    public void givenContactDTOObjectWithNoContactPeople_whenCreate_thenReturnContactDTOObject() {
+        //given - precondition or setup
+        contactDTO.setContactPersonDTOS(new ArrayList<>());
 
+        given(institutionService.create(contactDTO.getInstitution()))
+                .willReturn(new Institution());
+        given(eventService.create(dtoMapper.mapDTOtoEvent(eventDTO1, institutionId)))
+                .willReturn(new Event());
+        given(dtoMapper.mapToContactDTO(institutionId))
+                .willReturn(new ContactDTO());
 
+        //when - action or the behavior that we are going to test
+        ContactDTO contactDTOFromDB = contactDTOService.create(contactDTO);
+
+        //then - verify the output
+        assertNotNull(contactDTOFromDB);
+    }
 
     @DisplayName("JUnit test for update ContactDTO")
     @Test
     public void givenUpdatedContactDTOObject_whenUpdate_thenReturnContactDTO() {
         //given - precondition or setup
-
-        ContactDTO contactDTO = new ContactDTO();
-        contactDTO.setInstitution(institution1);
-        EventDTO eventDTO1 = new EventDTO();
-        EventDTO eventDTO2 = new EventDTO();
-        List<EventDTO> eventDTOS = new ArrayList<>();
-        eventDTOS.add(eventDTO1);
-        eventDTOS.add(eventDTO2);
-        contactDTO.setEventDTOS(eventDTOS);
-
-        ContactPersonDTO contactPersonDTO1 = new ContactPersonDTO();
-        ContactPersonDTO contactPersonDTO2 = new ContactPersonDTO();
-        List<ContactPersonDTO> contactPersonDTOS = new ArrayList<>();
-        contactPersonDTOS.add(contactPersonDTO1);
-        contactPersonDTOS.add(contactPersonDTO2);
-        contactDTO.setContactPersonDTOS(contactPersonDTOS);
-
         when(institutionService.update(anyLong(), any(Institution.class))).thenReturn(institution1);
         given(eventService.update(any(Event.class))).willReturn(new Event());
         given(dtoMapper.mapDTOtoEvent(any(EventDTO.class), anyLong())).willReturn(new Event());
@@ -172,7 +202,6 @@ public class ContactDTOServiceTests {
         given(contactPersonService.update(any(ContactPerson.class))).willReturn(new ContactPerson());
         given(dtoMapper.mapDTOtoContactPerson(any(ContactPersonDTO.class), anyLong())).willReturn(new ContactPerson());
         when(dtoMapper.mapToContactDTO(anyLong())).thenReturn(contactDTO);
-
 
         //when - action or the behavior that we are going to test
         ContactDTO result = contactDTOService.update(contactDTO);
@@ -186,9 +215,28 @@ public class ContactDTOServiceTests {
 
     }
 
+    @DisplayName("JUnit test for update ContactDTO with no EventDTOS")
+    @Test
+    public void givenUpdatedContactDTOObjectWithNoEventDTOS_whenUpdate_thenReturnContactDTO() {
+        //given - precondition or setup
+        contactDTO.setEventDTOS(new ArrayList<>());
+        when(institutionService.update(anyLong(), any(Institution.class))).thenReturn(institution1);
 
-    //piszę porządny kod testowy!
-    //dwa testy - co jeżeli nie ma eventów albo contact persons? zarówno w creae jak i update
-    //zrób refactor metody
+        given(contactPersonService.update(any(ContactPerson.class))).willReturn(new ContactPerson());
+        given(dtoMapper.mapDTOtoContactPerson(any(ContactPersonDTO.class), anyLong())).willReturn(new ContactPerson());
+        when(dtoMapper.mapToContactDTO(anyLong())).thenReturn(contactDTO);
+
+        //when - action or the behavior that we are going to test
+        ContactDTO result = contactDTOService.update(contactDTO);
+
+        //then - verify the output
+        assertEquals(contactDTO, result);
+        verify(institutionService, times(1)).update(anyLong(), any(Institution.class));
+        verify(contactPersonService, times(contactPersonDTOS.size())).update(any(ContactPerson.class));
+        verify(dtoMapper, times(1)).mapToContactDTO(anyLong());
+
+    }
+
+
 
 }
