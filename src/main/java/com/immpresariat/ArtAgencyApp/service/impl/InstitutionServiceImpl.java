@@ -59,6 +59,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         if(institutionOptional.isPresent()){
             return institutionRepository.save(dataCleaner.clean(updatedInstitution));
         } else {
+            //TODO Resource Not Found Exception
             throw new ResourceAlreadyExistsException(String.format("No institution with id: %s", id));
         }
     }
