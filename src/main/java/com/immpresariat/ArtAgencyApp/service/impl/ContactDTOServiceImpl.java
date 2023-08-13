@@ -19,10 +19,10 @@ import java.util.Optional;
 @Service
 public class ContactDTOServiceImpl implements ContactDTOService {
 
-    DTOMapper dtoMapper;
-    InstitutionService institutionService;
-    EventService eventService;
-    ContactPersonService contactPersonService;
+    private final DTOMapper dtoMapper;
+    private final InstitutionService institutionService;
+    private final EventService eventService;
+    private final ContactPersonService contactPersonService;
 
     public ContactDTOServiceImpl(DTOMapper dtoMapper,
                                  InstitutionService institutionService,
@@ -49,8 +49,8 @@ public class ContactDTOServiceImpl implements ContactDTOService {
     @Override
     public ContactDTO getByInstitutionID(Long institutionId) {
         Optional<Institution> institutionOptional = institutionService.getById(institutionId);
-        if(institutionOptional.isEmpty()){
-           throw new ResourceNotFoundException(String.format("No institution with id: %s", institutionId));
+        if (institutionOptional.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("No institution with id: %s", institutionId));
         }
         return dtoMapper.mapToContactDTO(institutionId);
     }
@@ -59,16 +59,8 @@ public class ContactDTOServiceImpl implements ContactDTOService {
     public ContactDTO create(ContactDTO contactDTO) {
         Long institutionId = contactDTO.getInstitution().getId();
         institutionService.create(contactDTO.getInstitution());
-
-        List<EventDTO> eventDTOS = contactDTO.getEventDTOS();
-        for (EventDTO eventDTO: eventDTOS) {
-           eventService.create(dtoMapper.mapDTOtoEvent(eventDTO, institutionId));
-        }
-
-        List<ContactPersonDTO> contactPersonDTOS = contactDTO.getContactPersonDTOS();
-        for (ContactPersonDTO contactPersonDTO: contactPersonDTOS) {
-            contactPersonService.create(dtoMapper.mapDTOtoContactPerson(contactPersonDTO, institutionId));
-        }
+        createEvents(contactDTO, institutionId);
+        createContactPeople(contactDTO, institutionId);
 
         return dtoMapper.mapToContactDTO(institutionId);
     }
@@ -76,19 +68,9 @@ public class ContactDTOServiceImpl implements ContactDTOService {
     @Override
     public ContactDTO update(ContactDTO updatedContactDTO) {
         Long institutionId = updatedContactDTO.getInstitution().getId();
-
         institutionService.update(institutionId, updatedContactDTO.getInstitution());
-
-        List<EventDTO> eventDTOS = updatedContactDTO.getEventDTOS();
-        for (EventDTO eventDTO: eventDTOS) {
-            eventService.update(dtoMapper.mapDTOtoEvent(eventDTO, institutionId));
-        }
-
-        List<ContactPersonDTO> contactPersonDTOS = updatedContactDTO.getContactPersonDTOS();
-        for (ContactPersonDTO contactPersonDTO: contactPersonDTOS) {
-            contactPersonService.update(dtoMapper.mapDTOtoContactPerson(contactPersonDTO, institutionId));
-        }
-
+        updateEvents(updatedContactDTO, institutionId);
+        updateContactPeople(updatedContactDTO, institutionId);
         return dtoMapper.mapToContactDTO(institutionId);
     }
 
@@ -97,4 +79,33 @@ public class ContactDTOServiceImpl implements ContactDTOService {
         institutionService.delete(id);
 
     }
+
+    private void createContactPeople(ContactDTO contactDTO, Long institutionId) {
+        List<ContactPersonDTO> contactPersonDTOS = contactDTO.getContactPersonDTOS();
+        for (ContactPersonDTO contactPersonDTO : contactPersonDTOS) {
+            contactPersonService.create(dtoMapper.mapDTOtoContactPerson(contactPersonDTO, institutionId));
+        }
+    }
+
+    private void createEvents(ContactDTO contactDTO, Long institutionId) {
+        List<EventDTO> eventDTOS = contactDTO.getEventDTOS();
+        for (EventDTO eventDTO : eventDTOS) {
+            eventService.create(dtoMapper.mapDTOtoEvent(eventDTO, institutionId));
+        }
+    }
+
+    private void updateContactPeople(ContactDTO updatedContactDTO, Long institutionId) {
+        List<ContactPersonDTO> contactPersonDTOS = updatedContactDTO.getContactPersonDTOS();
+        for (ContactPersonDTO contactPersonDTO : contactPersonDTOS) {
+            contactPersonService.update(dtoMapper.mapDTOtoContactPerson(contactPersonDTO, institutionId));
+        }
+    }
+
+    private void updateEvents(ContactDTO updatedContactDTO, Long institutionId) {
+        List<EventDTO> eventDTOS = updatedContactDTO.getEventDTOS();
+        for (EventDTO eventDTO : eventDTOS) {
+            eventService.update(dtoMapper.mapDTOtoEvent(eventDTO, institutionId));
+        }
+    }
+
 }
