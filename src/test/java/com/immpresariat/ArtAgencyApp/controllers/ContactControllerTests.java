@@ -53,7 +53,7 @@ public class ContactControllerTests {
 
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
 
         institution = Institution.builder()
                 .id(0l)
@@ -102,7 +102,7 @@ public class ContactControllerTests {
 
     @DisplayName("JUnit test for create ContactDTO Api (positive scenario)")
     @Test
-    public void givenContactDTOObject_whenCreate_thenReturnContactDTOObject() throws Exception{
+    public void givenContactDTOObject_whenCreate_thenReturnContactDTOObject() throws Exception {
         //given - precondition or setup
         given(contactDTOService.create(contactDTO)).willReturn(contactDTO);
 
@@ -124,16 +124,16 @@ public class ContactControllerTests {
 
     }
 
-    @DisplayName("JUnit test for create ContactDTO Api (negative scenario)")
-    @Test
-    public void givenContactDTOObject_whenCreate_thenThrowResourceAlreadyExistsError() {
-        //given - precondition or setup
-
-        //when - action or the behavior that we are going to test
-
-        //then - verify the output
-
-    }
+//    @DisplayName("JUnit test for create ContactDTO Api (negative scenario)")
+//    @Test
+//    public void givenContactDTOObject_whenCreate_thenThrowResourceAlreadyExistsError() {
+//        //given - precondition or setup
+//
+//        //when - action or the behavior that we are going to test
+//
+//        //then - verify the output
+//
+//    }
 
     @DisplayName("JUnit test for getById ContactDTO REST Api (positive scenario)")
     @Test
@@ -171,6 +171,26 @@ public class ContactControllerTests {
 
      */
 
+    //jak przetestować, czy json property działa?
+    @DisplayName("JUnit test for JsonProperty check")
+    @Test
+    public void given_when_then() throws Exception {
+        Long institutionId = 0l;
+        given(contactDTOService.getByInstitutionID(institutionId)).willReturn(contactDTO);
+
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s", institutionId)));
+
+        System.out.println(response);
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.contactPeople", CoreMatchers.notNullValue()))
+                .andExpect(jsonPath("$.events", CoreMatchers.notNullValue()));
+
+    }
+
+
     @DisplayName("JUnit test for getAll ContactDTO REST Api")
     @Test
     public void givenListOfContactDTO_whenGetAll_thenReturnContactDTOsList() throws Exception {
@@ -185,7 +205,6 @@ public class ContactControllerTests {
                 .andExpect(status().isOk());
 
     }
-
 
 
     //update
