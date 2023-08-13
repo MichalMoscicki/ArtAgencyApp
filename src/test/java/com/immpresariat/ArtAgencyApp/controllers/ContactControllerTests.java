@@ -107,7 +107,7 @@ public class ContactControllerTests {
         given(contactDTOService.create(contactDTO)).willReturn(contactDTO);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(post("/api/v1/contact")
+        ResultActions response = mockMvc.perform(post("/api/v1/contacts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(contactDTO)));
 
@@ -143,7 +143,7 @@ public class ContactControllerTests {
         given(contactDTOService.getByInstitutionID(institutionId)).willReturn(contactDTO);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contact/%s", institutionId)));
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s", institutionId)));
 
         //then - verify the output
         response.andDo(print())
@@ -162,7 +162,7 @@ public class ContactControllerTests {
         given(contactDTOService.getByInstitutionID(institutionId)).willThrow(ResourceNotFoundException.class);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contact/%s", institutionId)));
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s", institutionId)));
         System.out.println(response);
 
         response.andDo(print())
@@ -178,7 +178,7 @@ public class ContactControllerTests {
         given(contactDTOService.getAll()).willReturn(contactDTOS);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get("/api/v1/contact"));
+        ResultActions response = mockMvc.perform(get("/api/v1/contacts"));
 
         //then - verify the output
         response.andDo(print())
