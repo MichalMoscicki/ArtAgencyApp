@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -117,16 +118,21 @@ public class ContactControllerTests {
 
     }
 
-    //TODO negative scenario - rzuca wyjątkiem
+    //TODO negative scenario - rzuca wyjątkiem po zrobieniu global exception handling powinno przejść
 //    @DisplayName("JUnit test for create ContactDTO Api (negative scenario)")
 //    @Test
-//    public void givenContactDTOObject_whenCreate_thenThrowResourceAlreadyExistsError() {
+//    public void givenContactDTOObject_whenCreate_thenStatus400() throws Exception{
 //        //given - precondition or setup
+//        given(contactDTOService.create(any(ContactDTO.class))).willThrow(ResourceAlreadyExistsException.class);
 //
 //        //when - action or the behavior that we are going to test
+//        ResultActions response = mockMvc.perform(post("/api/v1/contacts")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(contactDTO)));
 //
 //        //then - verify the output
-//
+//        response.andDo(print())
+//                .andExpect(status().is4xxClientError());
 //    }
 
     @DisplayName("JUnit test for getById ContactDTO REST Api (positive scenario)")
@@ -165,10 +171,10 @@ public class ContactControllerTests {
 
      */
 
-    //jak przetestować, czy json property działa?
+
     @DisplayName("JUnit test for JsonProperty check")
     @Test
-    public void given_when_then() throws Exception {
+    public void givenContactDTOObject_whenGet_thenReturnJsonWihProperFieldNames() throws Exception {
         Long institutionId = 0l;
         given(contactDTOService.getByInstitutionID(institutionId)).willReturn(contactDTO);
 
@@ -198,6 +204,23 @@ public class ContactControllerTests {
         response.andDo(print())
                 .andExpect(status().isOk());
 
+    }
+
+    //delete
+
+    @DisplayName("JUnit test for delete ContactDTO REST Api")
+    @Test
+    public void givenInstitutionId_whenDelete_thenStatus200() throws Exception{
+        //given - precondition or setup
+        Long institutionId = 0l;
+        willDoNothing().given(contactDTOService).deleteById(institutionId);
+
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s", institutionId)));
+        //then - verify the output
+
+        response.andDo(print())
+                .andExpect(status().isOk());
     }
 
 

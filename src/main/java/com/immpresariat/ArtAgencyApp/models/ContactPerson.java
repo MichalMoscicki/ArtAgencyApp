@@ -29,7 +29,7 @@ public class ContactPerson {
     private String role;
     @Email(message = "Invalid email")
     private String email;
-    @Pattern(regexp = "/^[\\+]?[(]?[0-9]{2}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$/gm",
+    @Pattern(regexp = "^[\\\\+]?[(]?[0-9]{2}[)]?-?[0-9]{3}[-\\\\s\\\\.]?[0-9]{4,6}$",
             message = "Invalid phone number. Proper structure: \"+\"[dial number][number]. Eg: +481111222333")
     private String phone;
 
