@@ -7,6 +7,7 @@ import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
+import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import com.immpresariat.ArtAgencyApp.service.EventService;
 import com.immpresariat.ArtAgencyApp.service.InstitutionService;;
@@ -225,70 +226,81 @@ public class DTOMapperTests {
 
     }
 
-    @DisplayName("JUnit test for Mapper mapContactDTOToEvents method (positive scenario)")
-    @Test
-    public void givenContactDTOObject_whenMapContactDTOToEvents_thenReturnEventsList() {
-        //given - precondition or setup
-        given(institutionService.getById(institutionId)).willReturn(Optional.of(institution));
-        contactDTO.setInstitution(institution);
 
+
+    @DisplayName("JUnit test for map Institution to DTO")
+    @Test
+    public void givenInstitutionObject_whenMapInstitutionToDto_thenReturnInstitutionDTOObject() {
+        //given - precondition or setup
 
         //when - action or the behavior that we are going to test
-        List<Event> eventList = dtoMapper.mapContactDTOToEvents(contactDTO);
+        InstitutionDTO institutionDTO = dtoMapper.mapInstitutionToDTO(institution);
 
         //then - verify the output
-        assertEquals(eventDTOS.size(), eventList.size());
-        assertEquals(institutionId, eventList.get(0).getInstitution().getId());
+        assertEquals(institution.getId(), institutionDTO.getId());
+        assertEquals(institution.getName(), institutionDTO.getName());
+        assertEquals(institution.getCity(), institutionDTO.getCity());
+        assertEquals(institution.getNotes(), institutionDTO.getNotes());
+        assertEquals(institution.getCategory(), institutionDTO.getCategory());
+        assertEquals(institution.isAlreadyCooperated(), institutionDTO.isAlreadyCooperated());
 
     }
 
-    @DisplayName("JUnit test for Mapper mapContactDTOToEvents method (negative scenario)")
+    //inputDtoToInstitution (no id)
+    @DisplayName("JUnit test for map input DTO to Institution")
     @Test
-    public void givenContactDTOObject_whenMapContactDTOToEvents_thenThrowError() {
+    public void givenInstitutionDTOWithNoId_whenMapInputDTOToInstitution_thenReturnInstitutionObject() {
         //given - precondition or setup
-        given(institutionService.getById(institutionId)).willReturn(Optional.empty());
-        contactDTO.setInstitution(institution);
+        InstitutionDTO inputInstitutionDTO = InstitutionDTO.builder()
+                .name("DK Chotomów")
+                .city("Chotomów")
+                .notes("Cool miejsce")
+                .category("DK")
+                .alreadyCooperated(true)
+                .build();
 
 
         //when - action or the behavior that we are going to test
-        assertThrows(ResourceNotFoundException.class, () -> {
-            List<Event> eventList = dtoMapper.mapContactDTOToEvents(contactDTO);
-        });
+        Institution unsynchronizedInstitution = dtoMapper.mapInputDTOToInstitution(inputInstitutionDTO);
 
         //then - verify the output
+        assertNotNull(unsynchronizedInstitution);
+        assertNull(unsynchronizedInstitution.getId());
+        assertEquals(inputInstitutionDTO.getName(), unsynchronizedInstitution.getName());
+        assertEquals(inputInstitutionDTO.getCity(), unsynchronizedInstitution.getCity());
+        assertEquals(inputInstitutionDTO.getCategory(), unsynchronizedInstitution.getCategory());
+        assertEquals(inputInstitutionDTO.getNotes(), unsynchronizedInstitution.getNotes());
+        assertEquals(inputInstitutionDTO.isAlreadyCooperated(), unsynchronizedInstitution.isAlreadyCooperated());
+
     }
 
-    @DisplayName("JUnit test for Mapper mapContactDTOToContactPeople method (positive scenario)")
+    //dtoToInstitution (id)
+    @DisplayName("JUnit test map DTO to Institution")
     @Test
-    public void givenContactDTOObject_whenMapContactDTOToContactPeople_thenReturnContactPersonList() {
+    public void given_when_then() {
         //given - precondition or setup
-        given(institutionService.getById(institutionId)).willReturn(Optional.of(institution));
-        contactDTO.setInstitution(institution);
+        InstitutionDTO institutionDTO = InstitutionDTO.builder()
+                .id(0L)
+                .name("DK Chotomów")
+                .city("Chotomów")
+                .notes("Cool miejsce")
+                .category("DK")
+                .alreadyCooperated(true)
+                .build();
 
         //when - action or the behavior that we are going to test
-        List<ContactPerson> contactPersonList = dtoMapper.mapContactDTOToContactPeople(contactDTO);
+        Institution synchronizedInstitution = dtoMapper.mapDTOToInstitution(institutionDTO);
 
         //then - verify the output
-        assertEquals(eventDTOS.size(), contactPersonList.size());
-        assertEquals(institutionId, contactPersonList.get(0).getInstitution().getId());
+        assertNotNull(synchronizedInstitution);
+        assertEquals(institutionDTO.getId(), synchronizedInstitution.getId());
+        assertEquals(institutionDTO.getName(), synchronizedInstitution.getName());
+        assertEquals(institutionDTO.getCity(), synchronizedInstitution.getCity());
+        assertEquals(institutionDTO.getCategory(), synchronizedInstitution.getCategory());
+        assertEquals(institutionDTO.getNotes(), synchronizedInstitution.getNotes());
+        assertEquals(institutionDTO.isAlreadyCooperated(), synchronizedInstitution.isAlreadyCooperated());
 
     }
 
-    @DisplayName("JUnit test for Mapper mapContactDTOToContactPeople method (negative scenario)")
-    @Test
-    public void givenContactDTOObject_whenMapContactDTOToContactPeople_thenThrowError() {
-        //given - precondition or setup
-        given(institutionService.getById(institutionId)).willReturn(Optional.empty());
-        contactDTO.setInstitution(institution);
-
-
-        //when - action or the behavior that we are going to test
-        assertThrows(ResourceNotFoundException.class, () -> {
-            List<ContactPerson> contactPersonList = dtoMapper.mapContactDTOToContactPeople(contactDTO);
-        });
-
-        //then - verify the output
-
-    }
 
 }
