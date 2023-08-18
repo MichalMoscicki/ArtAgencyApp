@@ -57,8 +57,9 @@ public class ContactDTOServiceImpl implements ContactDTOService {
 
     @Override
     public ContactDTO create(ContactDTO contactDTO) {
-        Long institutionId = contactDTO.getInstitution().getId();
-        institutionService.create(contactDTO.getInstitution());
+
+        Institution institutionDB = institutionService.create(contactDTO.getInstitution());
+        Long institutionId = institutionDB.getId();
         createEvents(contactDTO, institutionId);
         createContactPeople(contactDTO, institutionId);
 

@@ -111,7 +111,6 @@ public class ContactControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(contactDTO)));
 
-        System.out.println(response);
 
         //then - verify the output
         response.andDo(print())

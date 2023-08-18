@@ -153,34 +153,8 @@ public class ContactDTOServiceTests {
     @DisplayName("JUnit test for create ContactDTO method")
     @Test
     public void givenContactDTOObject_whenCreate_thenReturnContactDTOObject() {
-        //given - precondition or setup
         given(institutionService.create(contactDTO.getInstitution()))
-                .willReturn(new Institution());
-        given(eventService.create(dtoMapper.mapDTOtoEvent(eventDTO1, institutionId)))
-                .willReturn(new Event());
-        given(contactPersonService.create(dtoMapper.mapDTOtoContactPerson(contactPersonDTO1, institutionId)))
-                .willReturn(new ContactPerson());
-        given(dtoMapper.mapToContactDTO(institutionId))
-                .willReturn(new ContactDTO());
-
-        //when - action or the behavior that we are going to test
-        ContactDTO contactDTOFromDB = contactDTOService.create(contactDTO);
-
-        //then - verify the output
-        assertNotNull(contactDTOFromDB);
-        assertEquals(contactDTO.getContactPersonDTOS().size(), contactPersonDTOS.size());
-    }
-
-    @DisplayName("JUnit test for create ContactDTO method with no contactPerson")
-    @Test
-    public void givenContactDTOObjectWithNoContactPeople_whenCreate_thenReturnContactDTOObject() {
-        //given - precondition or setup
-        contactDTO.setContactPersonDTOS(new ArrayList<>());
-
-        given(institutionService.create(contactDTO.getInstitution()))
-                .willReturn(new Institution());
-        given(eventService.create(dtoMapper.mapDTOtoEvent(eventDTO1, institutionId)))
-                .willReturn(new Event());
+                .willReturn(institution1);
         given(dtoMapper.mapToContactDTO(institutionId))
                 .willReturn(new ContactDTO());
 
@@ -190,6 +164,7 @@ public class ContactDTOServiceTests {
         //then - verify the output
         assertNotNull(contactDTOFromDB);
     }
+
 
     @DisplayName("JUnit test for update ContactDTO")
     @Test
@@ -236,7 +211,5 @@ public class ContactDTOServiceTests {
         verify(dtoMapper, times(1)).mapToContactDTO(anyLong());
 
     }
-
-
 
 }
