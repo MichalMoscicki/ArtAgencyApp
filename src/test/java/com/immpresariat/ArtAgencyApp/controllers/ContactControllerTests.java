@@ -1,8 +1,6 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
@@ -22,9 +20,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -104,7 +101,8 @@ public class ContactControllerTests {
     @Test
     public void givenContactDTOObject_whenCreate_thenReturnContactDTOObject() throws Exception {
         //given - precondition or setup
-        given(contactDTOService.create(contactDTO)).willReturn(contactDTO);
+        given(contactDTOService.create(any(ContactDTO.class))).willReturn(contactDTO);
+
 
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(post("/api/v1/contacts")
@@ -116,13 +114,10 @@ public class ContactControllerTests {
         response.andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.institution.name", CoreMatchers.is(institution.getName())));
-//                .andExpect(jsonPath("$.lastName",
-//                        is(employee.getLastName())))
-//                .andExpect(jsonPath("$.email",
-//                        is(employee.getEmail())));
 
     }
 
+    //TODO negative scenario - rzuca wyjątkiem
 //    @DisplayName("JUnit test for create ContactDTO Api (negative scenario)")
 //    @Test
 //    public void givenContactDTOObject_whenCreate_thenThrowResourceAlreadyExistsError() {

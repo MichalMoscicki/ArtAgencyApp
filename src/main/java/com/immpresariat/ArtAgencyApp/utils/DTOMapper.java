@@ -86,10 +86,8 @@ public class DTOMapper {
                 () -> new ResourceNotFoundException(String.format("No institution with given id: %s", institutionId))
         );
 
-        //
-
         return Event.builder()
-                .id(eventDTO.getId())
+              //  .id(eventDTO.getId())
                 .institution(institution)
                 .name(eventDTO.getName())
                 .description(eventDTO.getDescription())
@@ -114,7 +112,7 @@ public class DTOMapper {
         );
 
         return ContactPerson.builder()
-                .id(contactPersonDTO.getId())
+            //    .id(contactPersonDTO.getId())
                 .institution(institution)
                 .firstName(contactPersonDTO.getFirstName())
                 .lastName(contactPersonDTO.getLastName())
