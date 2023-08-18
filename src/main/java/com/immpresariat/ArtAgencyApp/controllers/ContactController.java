@@ -2,7 +2,6 @@ package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.service.ContactDTOService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
