@@ -223,8 +223,40 @@ public class ContactControllerTests {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("JUnit test for update ContactDTO Api (positive scenario)")
+    @Test
+    public void givenContactDTOObjectAndId_whenUpdate_thenReturnContactDTOObject() throws Exception {
+        //given - precondition or setup
+        Long id = contactDTO.getInstitution().getId();
 
-    //update
-    //delete
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(put(String.format("/api/v1/contacts/%s", id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(contactDTO)));
+
+
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk());
+
+    }
+/*
+    //TODO negative scenario - rzuca wyjątkiem po zrobieniu global exception handling powinno przejść
+//    @DisplayName("JUnit test for create ContactDTO Api (negative scenario)")
+//    @Test
+//    public void givenContactDTOObject_whenCreate_thenStatus400() throws Exception{
+//        //given - precondition or setup
+//        given(contactDTOService.create(any(ContactDTO.class))).willThrow(ResourceAlreadyExistsException.class);
+//
+//        //when - action or the behavior that we are going to test
+//        ResultActions response = mockMvc.perform(post("/api/v1/contacts")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(contactDTO)));
+//
+//        //then - verify the output
+//        response.andDo(print())
+//                .andExpect(status().is4xxClientError());
+//    }
+     */
 
 }
