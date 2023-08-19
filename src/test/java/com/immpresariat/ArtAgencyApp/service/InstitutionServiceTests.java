@@ -1,12 +1,16 @@
 package com.immpresariat.ArtAgencyApp.service;
-import  static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
+import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
+import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.InstitutionServiceImpl;
+import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.DataCleaner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,16 +39,27 @@ public class InstitutionServiceTests {
     private ContactPersonService contactPersonService;
     @Mock
     private DataCleaner dataCleaner;
+    @Mock
+    private DTOMapper dtoMapper;
 
 
     @InjectMocks
     private InstitutionServiceImpl institutionService;
-    private Institution institution;
+    private InstitutionDTO synchronizedInstitutionDTO;
+    private InstitutionDTO unsynchronizedInstitutionDTO;
 
     @BeforeEach
     public void setup() {
-        institution = Institution.builder().
-                id(1L)
+        synchronizedInstitutionDTO = InstitutionDTO.builder()
+                .id(1L)
+                .name("DK Łomianki")
+                .city("Łomianki")
+                .category("dom kultury")
+                .alreadyCooperated(true)
+                .notes("Graliśmy tam z Marią")
+                .build();
+
+        unsynchronizedInstitutionDTO = InstitutionDTO.builder()
                 .name("DK Łomianki")
                 .city("Łomianki")
                 .category("dom kultury")
@@ -53,32 +68,38 @@ public class InstitutionServiceTests {
                 .build();
     }
 
-    @DisplayName("JUnit test for save institution method")
+    @DisplayName("JUnit test for InstitutionService create method")
     @Test
-    public void givenInstitutionObject_whenSaveInstitution_thenReturnInstitutionObject() {
+    public void givenUnsynchronizedInstitutionDTOObject_whenCreateInstitution_thenReturnSynchronizedInstitutionObject() {
         //given - precondition or setup
-        given(institutionRepository.save(institution)).willReturn(institution);
+
+        given(institutionRepository.findInstitutionByNameAndCity(unsynchronizedInstitutionDTO.getName(), unsynchronizedInstitutionDTO.getCity()))
+                .willReturn(Optional.empty());
+        given(dtoMapper.mapInputDTOToInstitution(unsynchronizedInstitutionDTO)).willReturn(new Institution());
+        given(dataCleaner.clean(any(Institution.class))).willReturn(new Institution());
+        given(institutionRepository.save(any(Institution.class))).willReturn(new Institution());
+        given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);
 
         //when - action or the behavior that we are going to test
-        given(institutionRepository.findInstitutionByNameAndCity(institution.getName(), institution.getCity())).willReturn(Optional.empty());
-        given(dataCleaner.clean(institution)).willReturn(institution);
-        Institution institutionDB = institutionService.create(institution);
+        InstitutionDTO institutionDTOFromDB = institutionService.create(unsynchronizedInstitutionDTO);
 
         //then - verify the output
-        assertThat(institutionDB).isNotNull();
-        assertThat(institutionDB).isEqualTo(institution);
+        assertThat(institutionDTOFromDB).isNotNull();
+        assertThat(institutionDTOFromDB.getId()).isNotNull();
+        assertThat(institutionDTOFromDB).isEqualTo(synchronizedInstitutionDTO);
 
     }
 
-    @DisplayName("JUnit test for save institution method that throws an exception")
+    @DisplayName("JUnit test for InstitutionService create method (negative scenario)")
     @Test
-    public void givenExistingNameAndCity_whenSaveInstitution_thenThrowsException() {
+    public void givenUnsynchronizedInstitutionDTOObject_whenCreateInstitution_thenThrowsException() {
         //given - precondition or setup
-        given(institutionRepository.findInstitutionByNameAndCity(institution.getName(), institution.getCity())).willReturn(Optional.of(institution));
+        given(institutionRepository.findInstitutionByNameAndCity(unsynchronizedInstitutionDTO.getName(), unsynchronizedInstitutionDTO.getCity()))
+                .willReturn(Optional.of(new Institution()));
 
         //when - action or the behavior that we are going to test
         assertThrows(ResourceAlreadyExistsException.class, () -> {
-            institutionService.create(institution);
+            institutionService.create(unsynchronizedInstitutionDTO);
         });
 
         //then - verify the output
@@ -86,80 +107,93 @@ public class InstitutionServiceTests {
 
     }
 
-    @DisplayName("JUnit test for institution getAll method (positive scenario)")
-    @Test
-    public void givenListOfInstitutions_whenGetAll_thenReturnListOfInstitutions() {
-        //given - precondition or setup
-        Institution secondInstitution = Institution.builder()
-                .id(2L)
-                .name("Klub Morświn")
-                .city("Świonujćie")
-                .category("klub")
-                .build();
-
-        List<Institution> institutions = new ArrayList<>();
-        institutions.add(institution);
-        institutions.add(secondInstitution);
-        given(institutionRepository.findAll()).willReturn(institutions);
-
-        //when - action or the behavior that we are going to test
-        List<Institution> institutionsDB = institutionService.getAll();
-
-        //then - verify the output
-        assertThat(institutions).isNotNull();
-        assertThat(institutionsDB.size()).isEqualTo(institutions.size());
-
-    }
-
-    @DisplayName("JUnit test for institution getAll method (negative scenario)")
+    @DisplayName("JUnit test for InstitutionService getAll method (negative scenario)")
     @Test
     public void givenListOfInstitutions_whenGetAll_thenReturnEmptyList() {
         //given - precondition or setup
-        List<Institution> institutions = new ArrayList<>();
-        given(institutionRepository.findAll()).willReturn(institutions);
 
         //when - action or the behavior that we are going to test
-        List<Institution> institutionsDB = institutionService.getAll();
+        List<InstitutionDTO> institutionsDB = institutionService.getAll();
 
         //then - verify the output
-        assertThat(institutions).isNotNull();
+        assertThat(institutionsDB).isNotNull();
         assertThat(institutionsDB).isEmpty();
 
     }
 
-    @DisplayName("JUnit test for institution update method (positive scenario)")
+    @DisplayName("JUnit test for InstitutionService getAll method (positive scenario)")
     @Test
-    public void givenIdAndUpdatedInstitution_whenUpdateInstitution_thenReturnUpdatedInstitutions() {
+    public void givenListOfInstitutions_whenGetAll_thenReturnListOfInstitutions() {
         //given - precondition or setup
-        Long id = institution.getId();
-        Institution updatedInstitution = institution;
-        updatedInstitution.setName("updated");
-        given(institutionRepository.findById(id)).willReturn(Optional.of(institution));
-        given(institutionRepository.save(updatedInstitution)).willReturn(updatedInstitution);
-        given(dataCleaner.clean(institution)).willReturn(institution);
+
+        List<Institution> institutions = new ArrayList<>();
+        Institution institution = Institution.builder()
+                .id(1L)
+                .name("DK Łomianki")
+                .city("Łomianki")
+                .category("dom kultury")
+                .alreadyCooperated(true)
+                .notes("Graliśmy tam z Marią")
+                .build();
+        institutions.add(institution);
+        given(institutionRepository.findAll()).willReturn(institutions);
+        given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);
+
 
         //when - action or the behavior that we are going to test
-        Institution updatedInstitutionDb = institutionService.update(id, updatedInstitution);
+        List<InstitutionDTO> institutionsDB = institutionService.getAll();
 
         //then - verify the output
-        assertThat(updatedInstitutionDb).isNotNull();
-        assertThat(updatedInstitutionDb).isEqualTo(updatedInstitution);
+        assertThat(institutionsDB).isNotNull();
+        assertThat(institutionsDB.size()).isEqualTo(institutions.size());
+        assertThat(institutionsDB.get(institutionsDB.size() - 1).getId()).isEqualTo(institution.getId());
 
     }
 
-    @DisplayName("JUnit test for institution update method (negative scenario)")
+    @DisplayName("JUnit test for InstitutionService findById method (negative scenario)")
+    @Test
+    public void givenId_whenGetById_thenThrowResourceNotFoundException() {
+        //given - precondition or setup
+        Long id = 0l;
+        given(institutionRepository.findById(id)).willReturn(Optional.empty());
+
+        //when - action or the behavior that we are going to test
+        assertThrows(ResourceNotFoundException.class, () -> {
+            institutionService.getById(id);
+        });
+
+        //then - verify the output
+    }
+
+    @DisplayName("JUnit test for InstitutionService findById method (positive scenario)")
+    @Test
+    public void givenId_whenGetById_thenReturnInstitutionDTO() {
+        //given - precondition or setup
+        Long id = synchronizedInstitutionDTO.getId();
+        given(institutionRepository.findById(id)).willReturn(Optional.of(new Institution()));
+        given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);
+
+        //when - action or the behavior that we are going to test
+        InstitutionDTO institutionDTODb = institutionService.getById(id);
+
+        //then - verify the output
+        assertThat(institutionDTODb).isNotNull();
+        verify(institutionRepository, times(1)).findById(id);
+        verify(dtoMapper, times(1)).mapInstitutionToDTO(any(Institution.class));
+    }
+
+    @DisplayName("JUnit test for InstitutionService update method (negative scenario)")
     @Test
     public void givenInstitutionId_whenUpdateInstitution_thenThrowsException() {
         //given - precondition or setup
-        Long id = 2l;
-        Institution updatedInstitution = institution;
-        updatedInstitution.setName("updated");
-        given(institutionRepository.findById(id)).willReturn(Optional.empty());
+        synchronizedInstitutionDTO.setNotes("Notatki, żeby sprawdzić zmianę");
+        InstitutionDTO updatedInstitutionDTO = synchronizedInstitutionDTO;
+        given(institutionRepository.findById(anyLong())).willReturn(Optional.empty());
 
 
         //when - action or the behavior that we are going to test
-        assertThrows(ResourceAlreadyExistsException.class, () -> {
-            institutionService.update(id, updatedInstitution);
+        assertThrows(ResourceNotFoundException.class, () -> {
+            institutionService.update(updatedInstitutionDTO);
         });
 
         //then - verify the output
@@ -167,44 +201,61 @@ public class InstitutionServiceTests {
 
     }
 
-
-    @DisplayName("JUnit test for delete institution method (institution Object with associated data")
+    @DisplayName("JUnit test for InstitutionService update method (positive scenario)")
     @Test
-    public void givenInstitutionWithAssociateData_whenDeleteInstitution_thenInstitutionAndDataDeleted() {
+    public void givenIdAndUpdatedInstitution_whenUpdateInstitution_thenReturnUpdatedInstitutionDTO() {
+
         //given - precondition or setup
-        Long institutionId = institution.getId();
+        synchronizedInstitutionDTO.setNotes("Notatki, żeby sprawdzić zmianę");
+        InstitutionDTO updatedInstitutionDTO = synchronizedInstitutionDTO;
+
+        given(institutionRepository.findById(anyLong())).willReturn(Optional.of(new Institution()));
+        given(dtoMapper.mapDTOToInstitution(updatedInstitutionDTO)).willReturn(new Institution());
+        given(dataCleaner.clean(any(Institution.class))).willReturn(new Institution());
+        given(institutionRepository.save(any(Institution.class))).willReturn(new Institution());
+        given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(updatedInstitutionDTO);
+
+
+        //when - action or the behavior that we are going to test
+        InstitutionDTO updatedInstitutionDTODb = institutionService.update(updatedInstitutionDTO);
+
+        //then - verify the output
+        assertThat(updatedInstitutionDTODb).isNotNull();
+        verify(institutionRepository, times(1)).findById(anyLong());
+        verify(dtoMapper, times(1)).mapDTOToInstitution(any(InstitutionDTO.class));
+        verify(dataCleaner, times(1)).clean(any(Institution.class));
+        verify(institutionRepository, times(1)).save(any(Institution.class));
+        verify(dtoMapper, times(1)).mapInstitutionToDTO(any(Institution.class));
+        assertThat(updatedInstitutionDTO).isEqualTo(updatedInstitutionDTODb);
+
+    }
+
+
+    @DisplayName("JUnit test for InstitutionService delete method (Institution Object with associated data)")
+    @Test
+    public void givenInstitutionWithAssociateData_whenDeleteWithAssociatedData_thenInstitutionAndDataDeleted() {
+        //given - precondition or setup
+        Long id = synchronizedInstitutionDTO.getId();
+
         List<ContactPerson> contactPeople = new ArrayList<>();
         contactPeople.add(new ContactPerson());
-        given(contactPersonService.getAllByInstitutionId(institutionId)).willReturn(contactPeople);
+        given(contactPersonService.getAllByInstitutionId(id)).willReturn(contactPeople);
+        doNothing().when(contactPersonService).delete(any(ContactPerson.class));
+
 
         List<Event> events = new ArrayList<>();
         events.add(new Event());
-        given(eventService.getAllByInstitutionId(institutionId)).willReturn(events);
+        given(eventService.getAllByInstitutionId(id)).willReturn(events);
+        doNothing().when(eventService).delete(any(Event.class));
 
         //when - action or the behavior that we are going to test
-        institutionService.delete(institutionId);
+        institutionService.deleteWithAssociatedData(id);
 
         //then - verify the output
-        Mockito.verify(contactPersonService, times(1)).delete(any(ContactPerson.class));
-        Mockito.verify(eventService, times(1)).delete(any(Event.class));
-        Mockito.verify(institutionRepository, times(1)).deleteById(institutionId);
+        Mockito.verify(contactPersonService, times(contactPeople.size())).delete(any(ContactPerson.class));
+        Mockito.verify(eventService, times(events.size())).delete(any(Event.class));
+        Mockito.verify(institutionRepository, times(1)).deleteById(id);
     }
 
-    @DisplayName("JUnit test for delete institution method (institution Object without associated data")
-    @Test
-    public void givenInstitutionWithNoAssociateData_whenDeleteInstitution_thenInstitutionDeleted() {
-        //given - precondition or setup
-        Long institutionId = institution.getId();
-        given(contactPersonService.getAllByInstitutionId(institutionId)).willReturn(new ArrayList<>());
-        given(eventService.getAllByInstitutionId(institutionId)).willReturn(new ArrayList<>());
-
-        //when - action or the behavior that we are going to test
-        institutionService.delete(institutionId);
-
-        //then - verify the output
-        Mockito.verify(contactPersonService, never()).delete(any(ContactPerson.class));
-        Mockito.verify(eventService, never()).delete(any(Event.class));
-        Mockito.verify(institutionRepository, times(1)).deleteById(institutionId);
-    }
 
 }

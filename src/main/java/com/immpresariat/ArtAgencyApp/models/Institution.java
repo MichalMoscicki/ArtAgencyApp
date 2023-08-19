@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class Institution {
 
     @Id

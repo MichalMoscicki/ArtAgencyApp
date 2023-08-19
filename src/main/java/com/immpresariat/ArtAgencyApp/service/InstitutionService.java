@@ -1,22 +1,22 @@
 package com.immpresariat.ArtAgencyApp.service;
 
-import com.immpresariat.ArtAgencyApp.models.Institution;
+import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface InstitutionService {
 
-    Institution create(Institution institution);
+    InstitutionDTO create(InstitutionDTO institutionDTO);
 
-    List<Institution> getAll();
+    List<InstitutionDTO> getAll();
 
-    Optional<Institution> getById(Long id);
+    InstitutionDTO update(InstitutionDTO updatedInstitutionDTO);
 
-    Institution update(Long id, Institution updatedInstitution);
+    InstitutionDTO getById(Long id);
 
-    void delete(Long id);
+    void deleteWithAssociatedData(Long id);
+
 
 }

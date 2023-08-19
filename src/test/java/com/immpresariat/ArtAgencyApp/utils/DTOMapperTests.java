@@ -109,7 +109,7 @@ public class DTOMapperTests {
 
     }
 
-
+/*
     @DisplayName("JUnit test for Mapper mapToContactDTO method (positive scenario)")
     @Test
     public void givenInstitutionId_whenMapToContactDTO_thenContactDTOObject() {
@@ -130,6 +130,8 @@ public class DTOMapperTests {
         assertEquals(institution, contactDTO.getInstitution());
 
     }
+
+
 
 
     @DisplayName("JUnit test for Mapper mapToContactDTO method (negative scenario)")
@@ -169,6 +171,8 @@ public class DTOMapperTests {
         assertEquals(eventOne.getInstitution(), event.getInstitution());
 
     }
+
+
 
     @DisplayName("JUnit test for  Mapper  Mapper mapDTOToEvent method (negative scenario)")
     @Test
@@ -227,6 +231,8 @@ public class DTOMapperTests {
     }
 
 
+ */
+
 
     @DisplayName("JUnit test for map Institution to DTO")
     @Test
@@ -246,7 +252,6 @@ public class DTOMapperTests {
 
     }
 
-    //inputDtoToInstitution (no id)
     @DisplayName("JUnit test for map input DTO to Institution")
     @Test
     public void givenInstitutionDTOWithNoId_whenMapInputDTOToInstitution_thenReturnInstitutionObject() {
@@ -274,7 +279,7 @@ public class DTOMapperTests {
 
     }
 
-    //dtoToInstitution (id)
+
     @DisplayName("JUnit test map DTO to Institution")
     @Test
     public void given_when_then() {

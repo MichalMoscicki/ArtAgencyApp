@@ -31,25 +31,25 @@ public class DTOMapper {
         this.contactPersonService = contactPersonService;
     }
 
-    public ContactDTO mapToContactDTO(Long institutionId) {
-
-
-        Optional<Institution> institutionOptional = institutionService.getById(institutionId);
-        if (institutionOptional.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("No institution with given id: %s", institutionId));
-        }
-
-        List<Event> events = eventService.getAllByInstitutionId(institutionId);
-        List<EventDTO> eventDTOS = events.stream().map(this::mapEventToDTO).toList();
-        List<ContactPerson> contactPeople = contactPersonService.getAllByInstitutionId(institutionId);
-        List<ContactPersonDTO> contactPersonDTOS = contactPeople.stream().map(this::mapContactPersonToDTO).toList();
-
-        return ContactDTO.builder()
-                .institution(institutionOptional.get())
-                .contactPersonDTOS(contactPersonDTOS)
-                .eventDTOS(eventDTOS)
-                .build();
-    }
+//    public ContactDTO mapToContactDTO(Long institutionId) {
+//
+//
+//        Optional<Institution> institutionOptional = institutionService.getById(institutionId);
+//        if (institutionOptional.isEmpty()) {
+//            throw new ResourceNotFoundException(String.format("No institution with given id: %s", institutionId));
+//        }
+//
+//        List<Event> events = eventService.getAllByInstitutionId(institutionId);
+//        List<EventDTO> eventDTOS = events.stream().map(this::mapEventToDTO).toList();
+//        List<ContactPerson> contactPeople = contactPersonService.getAllByInstitutionId(institutionId);
+//        List<ContactPersonDTO> contactPersonDTOS = contactPeople.stream().map(this::mapContactPersonToDTO).toList();
+//
+//        return ContactDTO.builder()
+//                .institution(institutionOptional.get())
+//                .contactPersonDTOS(contactPersonDTOS)
+//                .eventDTOS(eventDTOS)
+//                .build();
+//    }
 
 
     public EventDTO mapEventToDTO(Event event) {
@@ -61,19 +61,19 @@ public class DTOMapper {
                 .build();
     }
 
-    public Event mapDTOtoEvent(EventDTO eventDTO, Long institutionId) {
-        Institution institution = institutionService.getById(institutionId).orElseThrow(
-                () -> new ResourceNotFoundException(String.format("No institution with given id: %s", institutionId))
-        );
-
-        return Event.builder()
-              //  .id(eventDTO.getId())
-                .institution(institution)
-                .name(eventDTO.getName())
-                .description(eventDTO.getDescription())
-                .monthWhenOrganized(eventDTO.getMonthWhenOrganized())
-                .build();
-    }
+//    public Event mapDTOtoEvent(EventDTO eventDTO, Long institutionId) {
+//        Institution institution = institutionService.getById(institutionId).orElseThrow(
+//                () -> new ResourceNotFoundException(String.format("No institution with given id: %s", institutionId))
+//        );
+//
+//        return Event.builder()
+//              //  .id(eventDTO.getId())
+//                .institution(institution)
+//                .name(eventDTO.getName())
+//                .description(eventDTO.getDescription())
+//                .monthWhenOrganized(eventDTO.getMonthWhenOrganized())
+//                .build();
+//    }
 
     public ContactPersonDTO mapContactPersonToDTO(ContactPerson contactPerson) {
         return ContactPersonDTO.builder()
@@ -86,21 +86,21 @@ public class DTOMapper {
                 .build();
     }
 
-    public ContactPerson mapDTOtoContactPerson(ContactPersonDTO contactPersonDTO, Long institutionId) {
-        Institution institution = institutionService.getById(institutionId).orElseThrow(
-                () -> new ResourceNotFoundException(String.format("No institution with given id: %s", institutionId))
-        );
-
-        return ContactPerson.builder()
-            //    .id(contactPersonDTO.getId())
-                .institution(institution)
-                .firstName(contactPersonDTO.getFirstName())
-                .lastName(contactPersonDTO.getLastName())
-                .role(contactPersonDTO.getRole())
-                .phone(contactPersonDTO.getPhone())
-                .email(contactPersonDTO.getEmail())
-                .build();
-    }
+//    public ContactPerson mapDTOtoContactPerson(ContactPersonDTO contactPersonDTO, Long institutionId) {
+//        Institution institution = institutionService.getById(institutionId).orElseThrow(
+//                () -> new ResourceNotFoundException(String.format("No institution with given id: %s", institutionId))
+//        );
+//
+//        return ContactPerson.builder()
+//            //    .id(contactPersonDTO.getId())
+//                .institution(institution)
+//                .firstName(contactPersonDTO.getFirstName())
+//                .lastName(contactPersonDTO.getLastName())
+//                .role(contactPersonDTO.getRole())
+//                .phone(contactPersonDTO.getPhone())
+//                .email(contactPersonDTO.getEmail())
+//                .build();
+//    }
 
     public InstitutionDTO mapInstitutionToDTO (Institution institution){
         return InstitutionDTO.builder()
