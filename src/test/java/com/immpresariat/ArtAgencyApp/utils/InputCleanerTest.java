@@ -10,12 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class TrimmerTest {
-    DataCleaner dataCleaner;
+class InputCleanerTest {
+    InputCleaner inputCleaner;
 
     @BeforeEach
     public void setup() {
-        dataCleaner = new DataCleaner();
+        inputCleaner = new InputCleaner();
     }
 
     @DisplayName("JUnit test for trim institution method")
@@ -30,7 +30,7 @@ class TrimmerTest {
                 .build();
 
         //when - action or the behavior that we are going to test
-        Institution trimmedInstitution = dataCleaner.clean(institution);
+        Institution trimmedInstitution = inputCleaner.clean(institution);
 
 
         //then - verify the output
@@ -52,7 +52,7 @@ class TrimmerTest {
 
 
         //when - action or the behavior that we are going to test
-        Event trimmedEvent = dataCleaner.clean(event);
+        Event trimmedEvent = inputCleaner.clean(event);
 
 
         //then - verify the output
@@ -74,7 +74,7 @@ class TrimmerTest {
                 .build();
 
         //when - action or the behavior that we are going to test
-        ContactPerson trimmedContactPerson = dataCleaner.clean(contactPerson);
+        ContactPerson trimmedContactPerson = inputCleaner.clean(contactPerson);
 
 
         //then - verify the output

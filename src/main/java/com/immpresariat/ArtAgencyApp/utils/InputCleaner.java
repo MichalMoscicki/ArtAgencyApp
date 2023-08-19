@@ -6,7 +6,7 @@ import com.immpresariat.ArtAgencyApp.models.Institution;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataCleaner {
+public class InputCleaner {
 
     public Institution clean(Institution institution){
       institution.setName(institution.getName().trim());

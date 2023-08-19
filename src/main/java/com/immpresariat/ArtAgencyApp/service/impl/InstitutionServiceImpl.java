@@ -11,7 +11,7 @@ import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import com.immpresariat.ArtAgencyApp.service.EventService;
 import com.immpresariat.ArtAgencyApp.service.InstitutionService;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
-import com.immpresariat.ArtAgencyApp.utils.DataCleaner;
+import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,18 +24,18 @@ public class InstitutionServiceImpl implements InstitutionService {
     final private InstitutionRepository institutionRepository;
     final private ContactPersonService contactPersonService;
     final private EventService eventService;
-    final private DataCleaner dataCleaner;
+    final private InputCleaner inputCleaner;
     final private DTOMapper dtoMapper;
 
     public InstitutionServiceImpl(InstitutionRepository institutionRepository,
                                   ContactPersonService contactPersonService,
                                   EventService eventService,
-                                  DataCleaner dataCleaner,
+                                  InputCleaner inputCleaner,
                                   DTOMapper dtoMapper) {
         this.institutionRepository = institutionRepository;
         this.contactPersonService = contactPersonService;
         this.eventService = eventService;
-        this.dataCleaner = dataCleaner;
+        this.inputCleaner = inputCleaner;
         this.dtoMapper = dtoMapper;
     }
 
@@ -52,7 +52,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         }
 
         Institution unsynchronizedInstitution = dtoMapper.mapInputDTOToInstitution(unsynchronizedInstitutionDTO);
-        Institution synchronizedInstitution = institutionRepository.save(dataCleaner.clean(unsynchronizedInstitution));
+        Institution synchronizedInstitution = institutionRepository.save(inputCleaner.clean(unsynchronizedInstitution));
 
         return dtoMapper.mapInstitutionToDTO(synchronizedInstitution);
     }
@@ -74,7 +74,7 @@ public class InstitutionServiceImpl implements InstitutionService {
             throw new ResourceNotFoundException(String.format("No institution with id: %s", id));
         } else {
             Institution updatedInstitution = dtoMapper.mapDTOToInstitution(updatedInstitutionDTO);
-            Institution institutionDB = institutionRepository.save(dataCleaner.clean(updatedInstitution));
+            Institution institutionDB = institutionRepository.save(inputCleaner.clean(updatedInstitution));
             return dtoMapper.mapInstitutionToDTO(institutionDB);
         }
     }

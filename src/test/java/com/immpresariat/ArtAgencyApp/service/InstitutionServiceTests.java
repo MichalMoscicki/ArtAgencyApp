@@ -11,7 +11,7 @@ import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.InstitutionServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
-import com.immpresariat.ArtAgencyApp.utils.DataCleaner;
+import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ public class InstitutionServiceTests {
     @Mock
     private ContactPersonService contactPersonService;
     @Mock
-    private DataCleaner dataCleaner;
+    private InputCleaner inputCleaner;
     @Mock
     private DTOMapper dtoMapper;
 
@@ -76,7 +76,7 @@ public class InstitutionServiceTests {
         given(institutionRepository.findInstitutionByNameAndCity(unsynchronizedInstitutionDTO.getName(), unsynchronizedInstitutionDTO.getCity()))
                 .willReturn(Optional.empty());
         given(dtoMapper.mapInputDTOToInstitution(unsynchronizedInstitutionDTO)).willReturn(new Institution());
-        given(dataCleaner.clean(any(Institution.class))).willReturn(new Institution());
+        given(inputCleaner.clean(any(Institution.class))).willReturn(new Institution());
         given(institutionRepository.save(any(Institution.class))).willReturn(new Institution());
         given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);
 
@@ -211,7 +211,7 @@ public class InstitutionServiceTests {
 
         given(institutionRepository.findById(anyLong())).willReturn(Optional.of(new Institution()));
         given(dtoMapper.mapDTOToInstitution(updatedInstitutionDTO)).willReturn(new Institution());
-        given(dataCleaner.clean(any(Institution.class))).willReturn(new Institution());
+        given(inputCleaner.clean(any(Institution.class))).willReturn(new Institution());
         given(institutionRepository.save(any(Institution.class))).willReturn(new Institution());
         given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(updatedInstitutionDTO);
 
@@ -223,7 +223,7 @@ public class InstitutionServiceTests {
         assertThat(updatedInstitutionDTODb).isNotNull();
         verify(institutionRepository, times(1)).findById(anyLong());
         verify(dtoMapper, times(1)).mapDTOToInstitution(any(InstitutionDTO.class));
-        verify(dataCleaner, times(1)).clean(any(Institution.class));
+        verify(inputCleaner, times(1)).clean(any(Institution.class));
         verify(institutionRepository, times(1)).save(any(Institution.class));
         verify(dtoMapper, times(1)).mapInstitutionToDTO(any(Institution.class));
         assertThat(updatedInstitutionDTO).isEqualTo(updatedInstitutionDTODb);
