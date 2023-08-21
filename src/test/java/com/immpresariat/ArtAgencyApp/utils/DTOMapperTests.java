@@ -66,46 +66,46 @@ public class DTOMapperTests {
                 .category("dom kultury")
                 .build();
 
-        contactDTO = new ContactDTO();
+//        contactDTO = new ContactDTO();
+//
+//        personOne = ContactPerson.builder()
+//                .id(1l)
+//                .email("test@test.pl")
+//                .phone("+48111222333")
+//                .firstName("Jan")
+//                .lastName("Kowalski")
+//                .role("Dyrektor")
+//                .institution(institution)
+//                .build();
+//
+//        personTwo = new ContactPerson();
+//
+//        contactPeople = new ArrayList<>();
+//        contactPeople.add(personOne);
+//        contactPeople.add(personTwo);
 
-        personOne = ContactPerson.builder()
-                .id(1l)
-                .email("test@test.pl")
-                .phone("+48111222333")
-                .firstName("Jan")
-                .lastName("Kowalski")
-                .role("Dyrektor")
-                .institution(institution)
-                .build();
+//        contactPeopleDTO = new ArrayList<>();
+//        contactPeopleDTO.add(dtoMapper.mapContactPersonToDTO(personOne));
+//        contactPeopleDTO.add(dtoMapper.mapContactPersonToDTO(personTwo));
+ //       contactDTO.setContactPersonDTOS(contactPeopleDTO);
 
-        personTwo = new ContactPerson();
-
-        contactPeople = new ArrayList<>();
-        contactPeople.add(personOne);
-        contactPeople.add(personTwo);
-
-        contactPeopleDTO = new ArrayList<>();
-        contactPeopleDTO.add(dtoMapper.mapContactPersonToDTO(personOne));
-        contactPeopleDTO.add(dtoMapper.mapContactPersonToDTO(personTwo));
-        contactDTO.setContactPersonDTOS(contactPeopleDTO);
-
-        eventOne = Event.builder()
-                .id(1l)
-                .description("Dni ogórka")
-                .monthWhenOrganized(8)
-                .institution(institution)
-                .name("Odpust na Stalowej")
-                .build();
-        eventTwo = new Event();
-
-        events = new ArrayList<>();
-        events.add(eventOne);
-        events.add(eventTwo);
-
-        eventDTOS = new ArrayList<>();
-        eventDTOS.add(dtoMapper.mapEventToDTO(eventOne));
-        eventDTOS.add(dtoMapper.mapEventToDTO(eventTwo));
-        contactDTO.setEventDTOS(eventDTOS);
+//        eventOne = Event.builder()
+//                .id(1l)
+//                .description("Dni ogórka")
+//                .monthWhenOrganized(8)
+//                .institution(institution)
+//                .name("Odpust na Stalowej")
+//                .build();
+//        eventTwo = new Event();
+//
+//        events = new ArrayList<>();
+//        events.add(eventOne);
+//        events.add(eventTwo);
+//
+//        eventDTOS = new ArrayList<>();
+//        eventDTOS.add(dtoMapper.mapEventToDTO(eventOne));
+//        eventDTOS.add(dtoMapper.mapEventToDTO(eventTwo));
+//        contactDTO.setEventDTOS(eventDTOS);
 
     }
 

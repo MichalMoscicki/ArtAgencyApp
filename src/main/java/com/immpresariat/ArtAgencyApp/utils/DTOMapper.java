@@ -21,15 +21,15 @@ import java.util.Optional;
 @Component
 public class DTOMapper {
 
-    InstitutionService institutionService;
-    EventService eventService;
-    ContactPersonService contactPersonService;
-
-    public DTOMapper(InstitutionService institutionService, EventService eventService, ContactPersonService contactPersonService) {
-        this.institutionService = institutionService;
-        this.eventService = eventService;
-        this.contactPersonService = contactPersonService;
-    }
+//    InstitutionService institutionService;
+//    EventService eventService;
+//    ContactPersonService contactPersonService;
+//
+//    public DTOMapper(InstitutionService institutionService, EventService eventService, ContactPersonService contactPersonService) {
+//        this.institutionService = institutionService;
+//        this.eventService = eventService;
+//        this.contactPersonService = contactPersonService;
+//    }
 
 //    public ContactDTO mapToContactDTO(Long institutionId) {
 //
@@ -52,14 +52,14 @@ public class DTOMapper {
 //    }
 
 
-    public EventDTO mapEventToDTO(Event event) {
-        return EventDTO.builder()
-                .id(event.getId())
-                .name(event.getName())
-                .description(event.getDescription())
-                .monthWhenOrganized(event.getMonthWhenOrganized())
-                .build();
-    }
+//    public EventDTO mapEventToDTO(Event event) {
+//        return EventDTO.builder()
+//                .id(event.getId())
+//                .name(event.getName())
+//                .description(event.getDescription())
+//                .monthWhenOrganized(event.getMonthWhenOrganized())
+//                .build();
+//    }
 
 //    public Event mapDTOtoEvent(EventDTO eventDTO, Long institutionId) {
 //        Institution institution = institutionService.getById(institutionId).orElseThrow(
@@ -75,16 +75,16 @@ public class DTOMapper {
 //                .build();
 //    }
 
-    public ContactPersonDTO mapContactPersonToDTO(ContactPerson contactPerson) {
-        return ContactPersonDTO.builder()
-                .id(contactPerson.getId())
-                .firstName(contactPerson.getFirstName())
-                .lastName(contactPerson.getLastName())
-                .email(contactPerson.getEmail())
-                .phone(contactPerson.getPhone())
-                .role(contactPerson.getRole())
-                .build();
-    }
+//    public ContactPersonDTO mapContactPersonToDTO(ContactPerson contactPerson) {
+//        return ContactPersonDTO.builder()
+//                .id(contactPerson.getId())
+//                .firstName(contactPerson.getFirstName())
+//                .lastName(contactPerson.getLastName())
+//                .email(contactPerson.getEmail())
+//                .phone(contactPerson.getPhone())
+//                .role(contactPerson.getRole())
+//                .build();
+//    }
 
 //    public ContactPerson mapDTOtoContactPerson(ContactPersonDTO contactPersonDTO, Long institutionId) {
 //        Institution institution = institutionService.getById(institutionId).orElseThrow(

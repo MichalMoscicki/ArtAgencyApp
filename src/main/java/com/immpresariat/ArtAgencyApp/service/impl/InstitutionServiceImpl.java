@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class InstitutionServiceImpl implements InstitutionService {
+public class    InstitutionServiceImpl implements InstitutionService {
 
     final private InstitutionRepository institutionRepository;
     final private ContactPersonService contactPersonService;

@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
+@ToString
 public class InstitutionDTO {
 
     private Long id;
