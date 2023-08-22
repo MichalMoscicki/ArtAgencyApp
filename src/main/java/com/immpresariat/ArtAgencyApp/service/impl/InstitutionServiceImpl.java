@@ -96,8 +96,9 @@ public class    InstitutionServiceImpl implements InstitutionService {
         List<ContactPerson> contactPeople = contactPersonService.getAllByInstitutionId(id);
         contactPeople.forEach(contactPersonService::delete);
 
-        List<Event> events = eventService.getAllByInstitutionId(id);
-        events.forEach(eventService::delete);
+        //todo
+//        List<Event> events = eventService.getAllByInstitutionId(id);
+//        events.forEach(eventService::delete);
 
         institutionRepository.deleteById(id);
 

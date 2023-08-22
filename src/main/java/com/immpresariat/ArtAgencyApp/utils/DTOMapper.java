@@ -134,4 +134,29 @@ public class DTOMapper {
                 .build();
     }
 
+    public EventDTO mapEventToDTO(Event event) {
+        return EventDTO.builder()
+                .id(event.getId())
+                .description(event.getDescription())
+                .monthWhenOrganized(event.getMonthWhenOrganized())
+                .name(event.getName())
+                .build();
+    }
+
+    public Event mapInputDTOToEvent(EventDTO inputEventDTO) {
+        return Event.builder()
+                .name(inputEventDTO.getName())
+                .description(inputEventDTO.getDescription())
+                .monthWhenOrganized(inputEventDTO.getMonthWhenOrganized())
+                .build();
+    }
+
+    public Event mapDTOToEvent(EventDTO eventDTO) {
+        return Event.builder()
+                .id(eventDTO.getId())
+                .name(eventDTO.getName())
+                .description(eventDTO.getDescription())
+                .monthWhenOrganized(eventDTO.getMonthWhenOrganized())
+                .build();
+    }
 }

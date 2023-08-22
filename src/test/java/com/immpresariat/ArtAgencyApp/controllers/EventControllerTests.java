@@ -3,7 +3,9 @@ package com.immpresariat.ArtAgencyApp.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.payload.EventDTO;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
+import com.immpresariat.ArtAgencyApp.service.EventService;
 import com.immpresariat.ArtAgencyApp.service.InstitutionService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,47 +30,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
-public class InstitutionControllerTests {
+public class EventControllerTests {
+
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private InstitutionService institutionService;
+    private EventService eventService;
     @Autowired
     ObjectMapper objectMapper;
-
-    InstitutionDTO institutionDTO;
-    List<InstitutionDTO> institutionDTOS;
+    EventDTO eventDTO;
+    List<EventDTO> eventDTOs;
 
     @BeforeEach
     public void setup() {
-        institutionDTO = InstitutionDTO.builder()
+        eventDTO = EventDTO.builder()
                 .id(0L)
-                .name("Dk Głogów")
-                .city("Głogów")
-                .alreadyCooperated(true)
-                .category("DK")
-                .notes("")
+                .name("Dożmynki")
+                .monthWhenOrganized(1)
+                .description("Cool event")
                 .build();
 
-        institutionDTOS = new ArrayList<>();
-        institutionDTOS.add(institutionDTO);
+        eventDTOs = new ArrayList<>();
+        eventDTOs.add(eventDTO);
 
     }
-
-    @DisplayName("JUnit test for getAll Institution REST Api")
+/*
+    @DisplayName("JUnit test for getAll Event REST Api")
     @Test
-    public void givenInstitutionDTOsList_whenGetAll_thenReturnStatusOk() throws Exception {
+    public void givenEventDTOsList_whenGetAll_thenReturnStatusOk() throws Exception {
         // given
-        when(institutionService.getAll()).thenReturn(institutionDTOS);
+        when(eventService.getAll()).thenReturn(eventDTOs);
 
         // when
-        ResultActions response = mockMvc.perform(get("/api/v1/institutions"));
+        ResultActions response = mockMvc.perform(get("/api/v1/events"));
 
         // then
         response.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", CoreMatchers.is(institutionDTOS.size())));
+                .andExpect(jsonPath("$.size()", CoreMatchers.is(eventDTOs.size())));
     }
 
     @DisplayName("JUnit test for getById Institution REST Api (negative scenario)")
@@ -192,4 +192,5 @@ public class InstitutionControllerTests {
 
     }
 
+ */
 }

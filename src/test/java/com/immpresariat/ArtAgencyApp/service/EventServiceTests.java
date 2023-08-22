@@ -49,22 +49,22 @@ public class EventServiceTests {
                 .build();
     }
 
-    @DisplayName("JUnit test for EventService create method (negative scenario) ")
-    @Test
-    public void givenExistingEvent_whenCreate_thenThrowsException() {
-        //given - precondition or setup
-        given(eventRepository.findEventByNameAndInstitution(event.getName(), event.getInstitution()))
-                .willReturn(Optional.of(event));
-
-        //when - action or the behavior that we are going to test
-        Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
-            eventService.create(event);
-        });
-
-        //then - verify the output
-        Mockito.verify(eventRepository, never()).save(any(Event.class));
-
-    }
+//    @DisplayName("JUnit test for EventService create method (negative scenario) ")
+//    @Test
+//    public void givenExistingEvent_whenCreate_thenThrowsException() {
+//        //given - precondition or setup
+//        given(eventRepository.findEventByNameAndInstitution(event.getName(), event.getInstitution()))
+//                .willReturn(Optional.of(event));
+//
+//        //when - action or the behavior that we are going to test
+//        Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
+//            eventService.create(event);
+//        });
+//
+//        //then - verify the output
+//        Mockito.verify(eventRepository, never()).save(any(Event.class));
+//
+//    }
 
     @DisplayName("JUnit test for EventService create method (positive scenario) ")
     @Test

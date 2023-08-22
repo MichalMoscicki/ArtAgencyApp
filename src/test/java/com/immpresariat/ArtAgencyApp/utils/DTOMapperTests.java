@@ -1,6 +1,5 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
-import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
@@ -17,16 +16,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.BDDMockito.given;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @ExtendWith(MockitoExtension.class)
 public class DTOMapperTests {
@@ -34,16 +30,19 @@ public class DTOMapperTests {
     @Mock
     InstitutionService institutionService;
     @Mock
-    EventService eventService;
-    @Mock
     ContactPersonService contactPersonService;
     @InjectMocks
     DTOMapper dtoMapper;
 
 
-    ContactDTO contactDTO;
     Long institutionId;
     Institution institution;
+
+    Long eventId;
+    Event event;
+
+
+    ContactDTO contactDTO;
     ContactPerson personOne;
     ContactPerson personTwo;
     List<ContactPerson> contactPeople;
@@ -64,6 +63,14 @@ public class DTOMapperTests {
                 .alreadyCooperated(true)
                 .city("Warszawa")
                 .category("dom kultury")
+                .build();
+
+        eventId = 1l;
+        event = Event.builder()
+                .id(eventId)
+                .name("Dni Miasta")
+                .institution(institution)
+                .description("")
                 .build();
 
 //        contactDTO = new ContactDTO();
@@ -87,7 +94,7 @@ public class DTOMapperTests {
 //        contactPeopleDTO = new ArrayList<>();
 //        contactPeopleDTO.add(dtoMapper.mapContactPersonToDTO(personOne));
 //        contactPeopleDTO.add(dtoMapper.mapContactPersonToDTO(personTwo));
- //       contactDTO.setContactPersonDTOS(contactPeopleDTO);
+        //       contactDTO.setContactPersonDTOS(contactPeopleDTO);
 
 //        eventOne = Event.builder()
 //                .id(1l)
@@ -282,7 +289,7 @@ public class DTOMapperTests {
 
     @DisplayName("JUnit test map DTO to Institution")
     @Test
-    public void given_when_then() {
+    public void givenInstitutionDTOObject_whenMapDTOToInstitution_thenInstitutionObject() {
         //given - precondition or setup
         InstitutionDTO institutionDTO = InstitutionDTO.builder()
                 .id(0L)
@@ -304,6 +311,71 @@ public class DTOMapperTests {
         assertEquals(institutionDTO.getCategory(), synchronizedInstitution.getCategory());
         assertEquals(institutionDTO.getNotes(), synchronizedInstitution.getNotes());
         assertEquals(institutionDTO.isAlreadyCooperated(), synchronizedInstitution.isAlreadyCooperated());
+
+    }
+
+    @DisplayName("JUnit test for map Event to DTO")
+    @Test
+    public void givenEventObject_whenMapEventToDto_thenReturnEventDTOObject() {
+        //given - precondition or setup
+
+        //when - action or the behavior that we are going to test
+        EventDTO eventDTO = dtoMapper.mapEventToDTO(event);
+
+        //then - verify the output
+        assertEquals(event.getId(), eventDTO.getId());
+        assertEquals(event.getName(), eventDTO.getName());
+        assertEquals(event.getMonthWhenOrganized(), eventDTO.getMonthWhenOrganized());
+        assertEquals(event.getDescription(), eventDTO.getDescription());
+
+
+    }
+
+    @DisplayName("JUnit test for map input DTO to Event")
+    @Test
+    public void givenEventDTOWithNoId_whenMapInputDTOToEvent_thenReturnEventObject() {
+        //given - precondition or setup
+        EventDTO inputEventDTO = EventDTO.builder()
+                .name(event.getName())
+                .monthWhenOrganized(event.getMonthWhenOrganized())
+                .description(event.getDescription())
+                .build();
+
+
+        //when - action or the behavior that we are going to test
+        Event unsynchronizedEvent = dtoMapper.mapInputDTOToEvent(inputEventDTO);
+
+
+        //then - verify the output
+        assertNotNull(unsynchronizedEvent);
+        assertNull(unsynchronizedEvent.getId());
+        assertEquals(inputEventDTO.getName(), unsynchronizedEvent.getName());
+        assertEquals(inputEventDTO.getMonthWhenOrganized(), unsynchronizedEvent.getMonthWhenOrganized());
+        assertEquals(inputEventDTO.getDescription(), unsynchronizedEvent.getDescription());
+
+    }
+
+
+    @DisplayName("JUnit test map DTO to Event")
+    @Test
+    public void givenEventDTOObject_whenMapDTOToEvent_thenEventObject() {
+        //given - precondition or setup
+        EventDTO eventDTO = EventDTO.builder()
+                .id(event.getId())
+                .name(event.getName())
+                .monthWhenOrganized(event.getMonthWhenOrganized())
+                .description(event.getDescription())
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Event synchronizedEvent = dtoMapper.mapDTOToEvent(eventDTO);
+
+        //then - verify the output
+        assertNotNull(synchronizedEvent);
+        assertEquals(eventDTO.getId(), synchronizedEvent.getId());
+        assertEquals(eventDTO.getName(), synchronizedEvent.getName());
+        assertEquals(eventDTO.getDescription(), synchronizedEvent.getDescription());
+        assertEquals(eventDTO.getMonthWhenOrganized(), synchronizedEvent.getMonthWhenOrganized());
 
     }
 
