@@ -78,7 +78,7 @@ class InputCleanerTest {
 
 
         //then - verify the output
-        assertEquals("Dyrektor", trimmedContactPerson.getRole());
+        assertEquals("dyrektor", trimmedContactPerson.getRole());
         assertEquals("mail@mail.pl", trimmedContactPerson.getEmail());
         assertEquals("+48777222666", trimmedContactPerson.getPhone());
         assertEquals("Jan", trimmedContactPerson.getFirstName());

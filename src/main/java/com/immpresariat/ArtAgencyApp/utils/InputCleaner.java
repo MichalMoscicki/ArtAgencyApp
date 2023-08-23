@@ -26,7 +26,9 @@ public class InputCleaner {
         contactPerson.setLastName(contactPerson.getLastName().trim());
         contactPerson.setEmail(contactPerson.getEmail().trim());
         contactPerson.setPhone(contactPerson.getPhone().trim());
-        contactPerson.setRole(contactPerson.getRole().trim());
+        if(contactPerson.getRole() != null){
+            contactPerson.setRole(contactPerson.getRole().trim().toLowerCase());
+        }
         return contactPerson;
     }
 
