@@ -18,7 +18,7 @@ public class ContactPerson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @ManyToOne
     private Institution institution;
     @NotBlank(message = "First name must not be blank")
