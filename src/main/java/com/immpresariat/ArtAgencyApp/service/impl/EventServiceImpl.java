@@ -39,6 +39,7 @@ public class EventServiceImpl implements EventService {
         ensureEventNotExists(unsynchronizedEventDTO, institution);
 
         Event unsynchronizedEvent = dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO);
+        unsynchronizedEvent.setInstitution(institution);
         Event synchronizedEvent = eventRepository.save(inputCleaner.clean(unsynchronizedEvent));
         return dtoMapper.mapEventToDTO(synchronizedEvent);
 
@@ -65,8 +66,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDTO update(EventDTO eventDTO) {
-        ensureEventExists(eventDTO.getId());
-        Event event = dtoMapper.mapDTOToEvent(eventDTO);
+        Event event = ensureEventExists(eventDTO.getId());
+       event.setName(eventDTO.getName());
+       event.setDescription(eventDTO.getDescription());
+       event.setMonthWhenOrganized(event.getMonthWhenOrganized());
         Event eventDb = eventRepository.save(inputCleaner.clean(event));
         return dtoMapper.mapEventToDTO(eventDb);
     }

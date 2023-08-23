@@ -252,7 +252,6 @@ public class EventServiceTests {
         //given - precondition or setup
         EventDTO inputDTO = synchronizedEventDTO;
         given(eventRepository.findById(inputDTO.getId())).willReturn(Optional.of(event));
-        given(dtoMapper.mapDTOToEvent(any(EventDTO.class))).willReturn(new Event());
         given(inputCleaner.clean(any(Event.class))).willReturn(new Event());
         given(eventRepository.save(any(Event.class))).willReturn(new Event());
         given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
@@ -263,7 +262,6 @@ public class EventServiceTests {
         //then - verify the output
         assertNotNull(eventDTO);
         verify(eventRepository, times(1)).findById(anyLong());
-        verify(dtoMapper, times(1)).mapDTOToEvent(any(EventDTO.class));
         verify(inputCleaner, times(1)).clean(any(Event.class));
         verify(eventRepository, times(1)).save(any(Event.class));
         verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));

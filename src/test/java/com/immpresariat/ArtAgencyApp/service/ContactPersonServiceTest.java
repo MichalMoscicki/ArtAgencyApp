@@ -141,8 +141,6 @@ public class ContactPersonServiceTest {
 
     }
 
-
-
     @DisplayName("JUnit test for contactPersonService getAllByInstitutionId method (negative scenario)")
     @Test
     public void givenInstitutionId_whenGetAllByInstitutionId_thenThrowResourceNotFoundException() {
@@ -159,8 +157,6 @@ public class ContactPersonServiceTest {
         verify(contactPersonRepository, times(0)).findAllByInstitutionId(institutionId);
         verify(dtoMapper, times(0)).mapContactPersonToDTO(any(ContactPerson.class));
     }
-
-
 
     @DisplayName("JUnit test for contactPersonService getAllByInstitutionId method (positive scenario)")
     @Test
@@ -184,8 +180,6 @@ public class ContactPersonServiceTest {
         verify(contactPersonRepository, times(1)).findAllByInstitutionId(institutionId);
         verify(dtoMapper, times(contactPeople.size())).mapContactPersonToDTO(any(ContactPerson.class));
     }
-
-
 
     @DisplayName("JUnit test for contactPersonService getById method (negative scenario)")
     @Test
@@ -217,8 +211,6 @@ public class ContactPersonServiceTest {
         verify(dtoMapper, times(1)).mapContactPersonToDTO(any(ContactPerson.class));
 
     }
-
-
 
     @DisplayName("JUnit test for contactPersonService update method (negative scenario)")
     @Test
@@ -259,7 +251,6 @@ public class ContactPersonServiceTest {
 
     }
 
-
     @DisplayName("JUnit test for contactPersonService delete method")
     @Test
     public void givenId_whenDelete_thenEventDeleted() {
@@ -274,7 +265,6 @@ public class ContactPersonServiceTest {
         //then - verify the output
         verify(contactPersonRepository, Mockito.times(1)).deleteById(id);
     }
-
 
     @DisplayName("JUnit test for contactPersonService delete method")
     @Test

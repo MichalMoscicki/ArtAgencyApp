@@ -37,8 +37,9 @@ public class ContactPersonServiceImpl implements ContactPersonService {
 
     @Override
     public ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long institutionId) {
-        ensureInstitutionExists(institutionId);
+        Institution institution = ensureInstitutionExists(institutionId);
         ContactPerson unsyncContactPerson = dtoMapper.mapUnsyncDTOToContactPerson(unsyncContactPersonDTO);
+        unsyncContactPerson.setInstitution(institution);
         ContactPerson synchronizedContactPerson = contactPersonRepository.save(inputCleaner.clean(unsyncContactPerson));
         return dtoMapper.mapContactPersonToDTO(synchronizedContactPerson);
     }
