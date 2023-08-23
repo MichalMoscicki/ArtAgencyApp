@@ -119,7 +119,7 @@ public class EventServiceTests {
         given(eventRepository.findEventByNameAndInstitution(unsynchronizedEventDTO.getName(), institution))
                 .willReturn(Optional.empty());
 
-        given(dtoMapper.mapInputDTOToEvent(unsynchronizedEventDTO)).willReturn(new Event());
+        given(dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO)).willReturn(new Event());
         given(inputCleaner.clean(any(Event.class))).willReturn(new Event());
         given(eventRepository.save(any(Event.class))).willReturn(new Event());
         given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
@@ -131,7 +131,7 @@ public class EventServiceTests {
         //then - verify the output
         verify(institutionRepository, times(1)).findById(anyLong());
         verify(eventRepository, times(1)).findEventByNameAndInstitution(anyString(),any(Institution.class));
-        verify(dtoMapper, times(1)).mapInputDTOToEvent(any(EventDTO.class));
+        verify(dtoMapper, times(1)).mapUnsyncInputDTOToEvent(any(EventDTO.class));
         verify(inputCleaner, times(1)).clean(any(Event.class));
         verify(eventRepository, times(1)).save(any(Event.class));
         verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));

@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
-import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
@@ -75,7 +73,7 @@ public class InstitutionServiceTests {
 
         given(institutionRepository.findInstitutionByNameAndCity(unsynchronizedInstitutionDTO.getName(), unsynchronizedInstitutionDTO.getCity()))
                 .willReturn(Optional.empty());
-        given(dtoMapper.mapInputDTOToInstitution(unsynchronizedInstitutionDTO)).willReturn(new Institution());
+        given(dtoMapper.mapUnsyncDTOToInstitution(unsynchronizedInstitutionDTO)).willReturn(new Institution());
         given(inputCleaner.clean(any(Institution.class))).willReturn(new Institution());
         given(institutionRepository.save(any(Institution.class))).willReturn(new Institution());
         given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);

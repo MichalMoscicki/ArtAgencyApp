@@ -38,7 +38,7 @@ public class EventServiceImpl implements EventService {
         Institution institution = ensureInstitutionExists(institutionId);
         ensureEventNotExists(unsynchronizedEventDTO, institution);
 
-        Event unsynchronizedEvent = dtoMapper.mapInputDTOToEvent(unsynchronizedEventDTO);
+        Event unsynchronizedEvent = dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO);
         Event synchronizedEvent = eventRepository.save(inputCleaner.clean(unsynchronizedEvent));
         return dtoMapper.mapEventToDTO(synchronizedEvent);
 

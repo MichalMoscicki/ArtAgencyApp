@@ -3,7 +3,6 @@ package com.immpresariat.ArtAgencyApp.service.impl;
 import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
@@ -51,7 +50,7 @@ public class    InstitutionServiceImpl implements InstitutionService {
                     unsynchronizedInstitutionDTO.getName(), unsynchronizedInstitutionDTO.getCity()));
         }
 
-        Institution unsynchronizedInstitution = dtoMapper.mapInputDTOToInstitution(unsynchronizedInstitutionDTO);
+        Institution unsynchronizedInstitution = dtoMapper.mapUnsyncDTOToInstitution(unsynchronizedInstitutionDTO);
         Institution synchronizedInstitution = institutionRepository.save(inputCleaner.clean(unsynchronizedInstitution));
 
         return dtoMapper.mapInstitutionToDTO(synchronizedInstitution);

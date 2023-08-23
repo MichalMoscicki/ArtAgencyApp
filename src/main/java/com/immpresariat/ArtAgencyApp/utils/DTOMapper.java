@@ -1,21 +1,11 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
 
-import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
-import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
-import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
-import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
-import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
-import com.immpresariat.ArtAgencyApp.service.EventService;
-import com.immpresariat.ArtAgencyApp.service.InstitutionService;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Optional;
 
 
 @Component
@@ -113,7 +103,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Institution mapInputDTOToInstitution(InstitutionDTO inputInstitutionDTO){
+    public Institution mapUnsyncDTOToInstitution(InstitutionDTO inputInstitutionDTO){
         return Institution.builder()
                 .name(inputInstitutionDTO.getName())
                 .city(inputInstitutionDTO.getCity())
@@ -143,7 +133,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Event mapInputDTOToEvent(EventDTO inputEventDTO) {
+    public Event mapUnsyncInputDTOToEvent(EventDTO inputEventDTO) {
         return Event.builder()
                 .name(inputEventDTO.getName())
                 .description(inputEventDTO.getDescription())

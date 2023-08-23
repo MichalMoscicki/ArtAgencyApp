@@ -8,7 +8,6 @@ import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
-import com.immpresariat.ArtAgencyApp.service.EventService;
 import com.immpresariat.ArtAgencyApp.service.InstitutionService;;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -273,7 +272,7 @@ public class DTOMapperTests {
 
 
         //when - action or the behavior that we are going to test
-        Institution unsynchronizedInstitution = dtoMapper.mapInputDTOToInstitution(inputInstitutionDTO);
+        Institution unsynchronizedInstitution = dtoMapper.mapUnsyncDTOToInstitution(inputInstitutionDTO);
 
         //then - verify the output
         assertNotNull(unsynchronizedInstitution);
@@ -343,7 +342,7 @@ public class DTOMapperTests {
 
 
         //when - action or the behavior that we are going to test
-        Event unsynchronizedEvent = dtoMapper.mapInputDTOToEvent(inputEventDTO);
+        Event unsynchronizedEvent = dtoMapper.mapUnsyncInputDTOToEvent(inputEventDTO);
 
 
         //then - verify the output
