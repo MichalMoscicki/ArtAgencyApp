@@ -158,8 +158,6 @@ public class EventServiceTests {
 
     }
 
-    ////    List<EventDTO> getAllByInstitutionId(Long institutionId); - negative (no institution), positive)
-
     @DisplayName("JUnit test for EventService getAllByInstitutionId method (negative scenario)")
     @Test
     public void givenInstitutionId_whenGetAllByInstitutionId_thenThrowResourceNotFoundException() {

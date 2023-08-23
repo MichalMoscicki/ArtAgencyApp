@@ -1,19 +1,22 @@
 package com.immpresariat.ArtAgencyApp.service;
 
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
+import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ContactPersonService {
-    ContactPerson create(ContactPerson contactPerson);
 
-    List<ContactPerson> getAll();
+    ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long institutionId);
 
-    List<ContactPerson> getAllByInstitutionId(Long institutionId);
-    Optional<ContactPerson> getById(Long id);
+    List<ContactPersonDTO> getAll();
 
-    ContactPerson update(ContactPerson updatedContactPerson);
+    List<ContactPersonDTO> getAllByInstitutionId(Long institutionId);
+
+    ContactPersonDTO getById(Long id);
+
+    ContactPersonDTO update(ContactPersonDTO updatedContactPersonDTO);
 
     void delete(Long id);
     void delete(ContactPerson contactPerson);

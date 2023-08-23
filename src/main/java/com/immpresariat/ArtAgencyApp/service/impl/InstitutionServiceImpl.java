@@ -92,10 +92,12 @@ public class    InstitutionServiceImpl implements InstitutionService {
     @Override
     public void deleteWithAssociatedData(Long id) {
 
-        List<ContactPerson> contactPeople = contactPersonService.getAllByInstitutionId(id);
-        contactPeople.forEach(contactPersonService::delete);
-
         //todo
+
+//        List<ContactPerson> contactPeople = contactPersonService.getAllByInstitutionId(id);
+//        contactPeople.forEach(contactPersonService::delete);
+
+
 //        List<Event> events = eventService.getAllByInstitutionId(id);
 //        events.forEach(eventService::delete);
 

@@ -2,57 +2,78 @@ package com.immpresariat.ArtAgencyApp.service.impl;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
+import com.immpresariat.ArtAgencyApp.models.Event;
+import com.immpresariat.ArtAgencyApp.models.Institution;
+import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
+import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 
+import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ContactPersonServiceImpl implements ContactPersonService {
 
     ContactPersonRepository contactPersonRepository;
+    InstitutionRepository institutionRepository;
     InputCleaner inputCleaner;
+    DTOMapper dtoMapper;
 
-    public ContactPersonServiceImpl(ContactPersonRepository contactPersonRepository, InputCleaner inputCleaner) {
+    public ContactPersonServiceImpl(ContactPersonRepository contactPersonRepository,
+                                    InstitutionRepository institutionRepository,
+                                    InputCleaner inputCleaner,
+                                    DTOMapper dtoMapper) {
         this.contactPersonRepository = contactPersonRepository;
+        this.institutionRepository = institutionRepository;
         this.inputCleaner = inputCleaner;
+        this.dtoMapper = dtoMapper;
     }
 
     @Override
-    public ContactPerson create(ContactPerson contactPerson) {
-
-        return contactPersonRepository.save(inputCleaner.clean(contactPerson));
+    public ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long institutionId) {
+        ensureInstitutionExists(institutionId);
+        ContactPerson unsyncContactPerson = dtoMapper.mapUnsyncDTOToContactPerson(unsyncContactPersonDTO);
+        ContactPerson synchronizedContactPerson = contactPersonRepository.save(inputCleaner.clean(unsyncContactPerson));
+        return dtoMapper.mapContactPersonToDTO(synchronizedContactPerson);
     }
 
     @Override
-    public List<ContactPerson> getAll() {
-        return contactPersonRepository.findAll();
+    public List<ContactPersonDTO> getAll() {
+        List<ContactPerson> contactPeople = contactPersonRepository.findAll();
+        return contactPeople.stream().map(dtoMapper::mapContactPersonToDTO).collect(Collectors.toList());
     }
 
 
     @Override
-    public List<ContactPerson> getAllByInstitutionId(Long institutionId) {
-        return contactPersonRepository.findAllByInstitutionId(institutionId);
+    public List<ContactPersonDTO> getAllByInstitutionId(Long institutionId) {
+        ensureInstitutionExists(institutionId);
+        List<ContactPerson> contactPeople = contactPersonRepository.findAllByInstitutionId(institutionId);
+        return contactPeople.stream().map(dtoMapper::mapContactPersonToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ContactPerson> getById(Long id) {
-        return contactPersonRepository.findById(id);
+    public ContactPersonDTO getById(Long id) {
+        ContactPerson contactPerson = ensureContactPersonExists(id);
+        return dtoMapper.mapContactPersonToDTO(contactPerson);
     }
 
     @Override
-    public ContactPerson update(ContactPerson updatedContactPerson) {
-        Optional<ContactPerson> contactPersonOptional = contactPersonRepository.findById(updatedContactPerson.getId());
+    public ContactPersonDTO update(ContactPersonDTO updatedContactPersonDTO) {
+        ContactPerson contactPerson = ensureContactPersonExists(updatedContactPersonDTO.getId());
+        contactPerson.setFirstName(updatedContactPersonDTO.getFirstName());
+        contactPerson.setLastName(updatedContactPersonDTO.getLastName());
+        contactPerson.setRole(updatedContactPersonDTO.getRole());
+        contactPerson.setPhone(updatedContactPersonDTO.getPhone());
+        contactPerson.setEmail(updatedContactPersonDTO.getEmail());
 
-        if(contactPersonOptional.isPresent()){
-            return contactPersonRepository.save(inputCleaner.clean(updatedContactPerson));
-        } else {
-            throw new ResourceNotFoundException(String.format("No ContactPerson with id: %s", updatedContactPerson.getId()));
-        }
+        ContactPerson contactPersonDB = contactPersonRepository.save(inputCleaner.clean(contactPerson));
+        return dtoMapper.mapContactPersonToDTO(contactPersonDB);
     }
 
     @Override
@@ -63,5 +84,21 @@ public class ContactPersonServiceImpl implements ContactPersonService {
     @Override
     public void delete(ContactPerson contactPerson) {
         contactPersonRepository.delete(contactPerson);
+    }
+
+    private Institution ensureInstitutionExists(Long institutionId) {
+        Optional<Institution> institutionOptional = institutionRepository.findById(institutionId);
+        if (institutionOptional.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("No institution with id: %s", institutionId));
+        }
+        return institutionOptional.get();
+    }
+
+    private ContactPerson ensureContactPersonExists(Long id) {
+        Optional<ContactPerson> contactPersonOptional = contactPersonRepository.findById(id);
+        if (contactPersonOptional.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("No contactPerson with id: %s", id));
+        }
+        return contactPersonOptional.get();
     }
 }
