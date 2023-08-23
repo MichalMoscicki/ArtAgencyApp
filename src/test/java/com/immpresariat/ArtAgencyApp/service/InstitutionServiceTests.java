@@ -4,8 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.models.ContactPerson;
+import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
+import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
+import com.immpresariat.ArtAgencyApp.repository.EventRepository;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.InstitutionServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
@@ -17,6 +21,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import static org.mockito.Mockito.*;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -32,9 +39,9 @@ public class InstitutionServiceTests {
     @Mock
     private InstitutionRepository institutionRepository;
     @Mock
-    private EventService eventService;
+    private EventRepository eventRepository;
     @Mock
-    private ContactPersonService contactPersonService;
+    private ContactPersonRepository contactPersonRepository;
     @Mock
     private InputCleaner inputCleaner;
     @Mock
@@ -228,32 +235,35 @@ public class InstitutionServiceTests {
 
     }
 
-//todo
-//    @DisplayName("JUnit test for InstitutionService delete method (Institution Object with associated data)")
-//    @Test
-//    public void givenInstitutionWithAssociateData_whenDeleteWithAssociatedData_thenInstitutionAndDataDeleted() {
-//        //given - precondition or setup
-//        Long id = synchronizedInstitutionDTO.getId();
-//
-//        List<ContactPerson> contactPeople = new ArrayList<>();
-//        contactPeople.add(new ContactPerson());
-//        given(contactPersonService.getAllByInstitutionId(id)).willReturn(contactPeople);
-//        doNothing().when(contactPersonService).delete(any(ContactPerson.class));
-//
-//
-//        List<Event> events = new ArrayList<>();
-//        events.add(new Event());
-//        given(eventService.getAllByInstitutionId(id)).willReturn(events);
-//        doNothing().when(eventService).delete(any(Event.class));
-//
-//        //when - action or the behavior that we are going to test
-//        institutionService.deleteWithAssociatedData(id);
-//
-//        //then - verify the output
-//        Mockito.verify(contactPersonService, times(contactPeople.size())).delete(any(ContactPerson.class));
-//        Mockito.verify(eventService, times(events.size())).delete(any(Event.class));
-//        Mockito.verify(institutionRepository, times(1)).deleteById(id);
-//    }
+
+    @DisplayName("JUnit test for InstitutionService delete method (Institution Object with associated data)")
+    @Test
+    public void givenInstitutionWithAssociateData_whenDeleteWithAssociatedData_thenInstitutionAndDataDeleted() {
+        //given - precondition or setup
+        Long id = synchronizedInstitutionDTO.getId();
+
+        List<ContactPerson> contactPeople = new ArrayList<>();
+        contactPeople.add(new ContactPerson());
+
+        given(contactPersonRepository.findAllByInstitutionId(id)).willReturn(contactPeople);
+        doNothing().when(contactPersonRepository).deleteAll(contactPeople);
+
+
+        List<Event> events = new ArrayList<>();
+        events.add(new Event());
+        given(eventRepository.findAllByInstitutionId(id)).willReturn(events);
+        doNothing().when(eventRepository).deleteAll(events);
+
+        //when - action or the behavior that we are going to test
+        institutionService.deleteWithAssociatedData(id);
+
+        //then - verify the output
+        verify(contactPersonRepository, times(1)).findAllByInstitutionId(id);
+        verify(contactPersonRepository, times(1)).deleteAll(contactPeople);
+        verify(eventRepository, times(1)).findAllByInstitutionId(id);
+        verify(eventRepository, times(1)).deleteAll(events);
+        verify(institutionRepository, times(1)).deleteById(id);
+    }
 
 
 }

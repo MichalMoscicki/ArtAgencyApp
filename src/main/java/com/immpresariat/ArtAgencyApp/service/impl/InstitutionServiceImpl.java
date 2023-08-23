@@ -3,8 +3,11 @@ package com.immpresariat.ArtAgencyApp.service.impl;
 import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
+import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
+import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
+import com.immpresariat.ArtAgencyApp.repository.EventRepository;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import com.immpresariat.ArtAgencyApp.service.EventService;
@@ -21,23 +24,22 @@ import java.util.stream.Collectors;
 public class    InstitutionServiceImpl implements InstitutionService {
 
     final private InstitutionRepository institutionRepository;
-    final private ContactPersonService contactPersonService;
-    final private EventService eventService;
+    final private ContactPersonRepository contactPersonRepository;
+    final private EventRepository eventRepository;
     final private InputCleaner inputCleaner;
     final private DTOMapper dtoMapper;
 
     public InstitutionServiceImpl(InstitutionRepository institutionRepository,
-                                  ContactPersonService contactPersonService,
-                                  EventService eventService,
+                                  ContactPersonRepository contactPersonRepository,
+                                  EventRepository eventRepository,
                                   InputCleaner inputCleaner,
                                   DTOMapper dtoMapper) {
         this.institutionRepository = institutionRepository;
-        this.contactPersonService = contactPersonService;
-        this.eventService = eventService;
+        this.contactPersonRepository = contactPersonRepository;
+        this.eventRepository = eventRepository;
         this.inputCleaner = inputCleaner;
         this.dtoMapper = dtoMapper;
     }
-
 
     @Override
     public InstitutionDTO create(InstitutionDTO unsynchronizedInstitutionDTO) {
@@ -92,12 +94,12 @@ public class    InstitutionServiceImpl implements InstitutionService {
     @Override
     public void deleteWithAssociatedData(Long id) {
 
-//        List<ContactPerson> contactPeople = contactPersonService.getAllByInstitutionId(id);
-//        contactPeople.forEach(contactPersonService::delete);
+        List<ContactPerson> contactPeople = contactPersonRepository.findAllByInstitutionId(id);
+        contactPersonRepository.deleteAll(contactPeople);
 
 
-//        List<Event> events = eventService.getAllByInstitutionId(id);
-//        events.forEach(eventService::delete);
+        List<Event> events = eventRepository.findAllByInstitutionId(id);
+        eventRepository.deleteAll(events);
 
         institutionRepository.deleteById(id);
 
