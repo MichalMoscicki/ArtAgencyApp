@@ -39,7 +39,6 @@ public class EventServiceImpl implements EventService {
         ensureEventNotExists(unsynchronizedEventDTO, institution);
 
         Event unsynchronizedEvent = dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO);
-        unsynchronizedEvent.setInstitution(institution);
         Event synchronizedEvent = eventRepository.save(inputCleaner.clean(unsynchronizedEvent));
         return dtoMapper.mapEventToDTO(synchronizedEvent);
 
@@ -49,13 +48,6 @@ public class EventServiceImpl implements EventService {
     public List<EventDTO> getAll() {
         List<Event> event = eventRepository.findAll();
         return event.stream().map(dtoMapper::mapEventToDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventDTO> getAllByInstitutionId(Long institutionId) {
-        ensureInstitutionExists(institutionId);
-        List<Event> events = eventRepository.findAllByInstitutionId(institutionId);
-        return events.stream().map(dtoMapper::mapEventToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -102,11 +94,11 @@ public class EventServiceImpl implements EventService {
     }
 
     private void ensureEventNotExists(EventDTO unsynchronizedEventDTO, Institution institution) {
-        Optional<Event> eventOptional = eventRepository.
-                findEventByNameAndInstitution(unsynchronizedEventDTO.getName(), institution);
-        if (eventOptional.isPresent()) {
-            throw new ResourceAlreadyExistsException(String.format("Institution %s already contains event: %s", institution, unsynchronizedEventDTO.getName()));
-        }
+//        Optional<Event> eventOptional = eventRepository.
+//                findEventByNameAndInstitution(unsynchronizedEventDTO.getName(), institution);
+//        if (eventOptional.isPresent()) {
+//            throw new ResourceAlreadyExistsException(String.format("Institution %s already contains event: %s", institution, unsynchronizedEventDTO.getName()));
+//        }
     }
 
 }

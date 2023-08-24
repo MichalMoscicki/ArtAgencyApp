@@ -59,7 +59,6 @@ public class EventServiceTests {
         event = Event.builder()
                 .id(1l)
                 .name("Dni Łomianek")
-                .institution(institution)
                 .description("Impreza plenerowa")
                 .monthWhenOrganized(6)
                 .build();
@@ -98,8 +97,6 @@ public class EventServiceTests {
     public void givenUnsynchronizedEventDTOObject_whenCreate_thenThrowResourceAlreadyExistsException() {
         //given - precondition or setup
         given(institutionRepository.findById(anyLong())).willReturn(Optional.of(institution));
-        given(eventRepository.findEventByNameAndInstitution(unsynchronizedEventDTO.getName(), institution))
-                .willReturn(Optional.of(event));
 
         //when - action or the behavior that we are going to test
         assertThrows(ResourceAlreadyExistsException.class, () -> {
@@ -116,8 +113,6 @@ public class EventServiceTests {
     public void givenUnsynchronizedEventDTOObject_whenCreate_thenReturnSynchronizedEventDTOObject() {
         //given - precondition or setup
         given(institutionRepository.findById(anyLong())).willReturn(Optional.of(institution));
-        given(eventRepository.findEventByNameAndInstitution(unsynchronizedEventDTO.getName(), institution))
-                .willReturn(Optional.empty());
 
         given(dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO)).willReturn(new Event());
         given(inputCleaner.clean(any(Event.class))).willReturn(new Event());
@@ -130,7 +125,6 @@ public class EventServiceTests {
 
         //then - verify the output
         verify(institutionRepository, times(1)).findById(anyLong());
-        verify(eventRepository, times(1)).findEventByNameAndInstitution(anyString(),any(Institution.class));
         verify(dtoMapper, times(1)).mapUnsyncInputDTOToEvent(any(EventDTO.class));
         verify(inputCleaner, times(1)).clean(any(Event.class));
         verify(eventRepository, times(1)).save(any(Event.class));
@@ -157,47 +151,6 @@ public class EventServiceTests {
         assertEquals(eventList.size(), eventDTOS.size());
 
     }
-
-    @DisplayName("JUnit test for EventService getAllByInstitutionId method (negative scenario)")
-    @Test
-    public void givenInstitutionId_whenGetAllByInstitutionId_thenThrowResourceNotFoundException() {
-        //given - precondition or setup
-        Long institutionId = institution.getId();
-
-        //when - action or the behavior that we are going to test
-        assertThrows(ResourceNotFoundException.class, () -> {
-            eventService.getAllByInstitutionId(institutionId);
-        });
-
-        //then - verify the output
-        verify(institutionRepository, times(1)).findById(anyLong());
-        verify(eventRepository, times(0)).findAllByInstitutionId(institutionId);
-        verify(dtoMapper, times(0)).mapEventToDTO(any(Event.class));
-    }
-
-    @DisplayName("JUnit test for EventService getAllByInstitutionId method (positive scenario)")
-    @Test
-    public void givenInstitutionId_whenGetAllByInstitutionId_thenReturnEventDTOsList() {
-        //given - precondition or setup
-        List<Event> events = new ArrayList<>();
-        events.add(event);
-
-        Long institutionId = institution.getId();
-        given(institutionRepository.findById(anyLong())).willReturn(Optional.of(institution));
-        given(eventRepository.findAllByInstitutionId(institutionId)).willReturn(events);
-        given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(new EventDTO());
-
-        //when - action or the behavior that we are going to test
-        List<EventDTO> eventDTOS = eventService.getAllByInstitutionId(institutionId);
-
-        //then - verify the output
-        assertNotNull(eventDTOS);
-        assertEquals(events.size(), eventDTOS.size());
-        verify(institutionRepository, times(1)).findById(anyLong());
-        verify(eventRepository, times(1)).findAllByInstitutionId(institutionId);
-        verify(dtoMapper, times(events.size())).mapEventToDTO(any(Event.class));
-    }
-
 
 
     @DisplayName("JUnit test for EventService getById method (negative scenario)")

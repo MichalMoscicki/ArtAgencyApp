@@ -1,18 +1,24 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
-import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
-import com.immpresariat.ArtAgencyApp.service.ContactDTOService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/contacts")
 public class ContactController {
 
-/*
+    ContactRepository contactRepository;
+
+//    public ContactController(ContactRepository contactRepository) {
+//        this.contactRepository = contactRepository;
+//    }
+//
+//    @GetMapping("")
+//    public List<Contact> getAll() {
+//        return contactRepository.findAll();
+//    }
+
+    /*
     ContactDTOService contactDTOService;
 
     public ContactController(ContactDTOService contactDTOService) {

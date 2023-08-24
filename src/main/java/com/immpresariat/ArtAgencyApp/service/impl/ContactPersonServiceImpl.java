@@ -2,7 +2,6 @@ package com.immpresariat.ArtAgencyApp.service.impl;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
@@ -39,7 +38,6 @@ public class ContactPersonServiceImpl implements ContactPersonService {
     public ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long institutionId) {
         Institution institution = ensureInstitutionExists(institutionId);
         ContactPerson unsyncContactPerson = dtoMapper.mapUnsyncDTOToContactPerson(unsyncContactPersonDTO);
-        unsyncContactPerson.setInstitution(institution);
         ContactPerson synchronizedContactPerson = contactPersonRepository.save(inputCleaner.clean(unsyncContactPerson));
         return dtoMapper.mapContactPersonToDTO(synchronizedContactPerson);
     }
@@ -47,14 +45,6 @@ public class ContactPersonServiceImpl implements ContactPersonService {
     @Override
     public List<ContactPersonDTO> getAll() {
         List<ContactPerson> contactPeople = contactPersonRepository.findAll();
-        return contactPeople.stream().map(dtoMapper::mapContactPersonToDTO).collect(Collectors.toList());
-    }
-
-
-    @Override
-    public List<ContactPersonDTO> getAllByInstitutionId(Long institutionId) {
-        ensureInstitutionExists(institutionId);
-        List<ContactPerson> contactPeople = contactPersonRepository.findAllByInstitutionId(institutionId);
         return contactPeople.stream().map(dtoMapper::mapContactPersonToDTO).collect(Collectors.toList());
     }
 

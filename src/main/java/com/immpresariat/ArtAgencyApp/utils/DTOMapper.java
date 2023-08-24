@@ -1,9 +1,11 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
 
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
+import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
@@ -102,4 +104,23 @@ public class DTOMapper {
                 .role(unsyncContactPersonDTO.getRole())
                 .build();
     }
+
+    public ContactDTO mapContactToDTO(Contact contact){
+        return ContactDTO.builder()
+                .id(contact.getId())
+                .events(contact.getEvents())
+                .contactPeople(contact.getContactPeople())
+                .institutions(contact.getInstitutions())
+                .build();
+    }
+
+    public Contact mapDTOToContact(ContactDTO contactDTO){
+        return Contact.builder()
+                .id(contactDTO.getId())
+                .events(contactDTO.getEvents())
+                .contactPeople(contactDTO.getContactPeople())
+                .institutions(contactDTO.getInstitutions())
+                .build();
+    }
+
 }

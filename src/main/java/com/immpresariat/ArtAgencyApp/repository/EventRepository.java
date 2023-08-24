@@ -11,8 +11,4 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    List<Event> findAllByInstitutionId(Long institutionId);
-
-    @Query("select e from Event e where e.name=:name and e.institution=:institution")
-    Optional<Event> findEventByNameAndInstitution(String name, Institution institution);
 }

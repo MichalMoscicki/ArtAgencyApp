@@ -18,8 +18,6 @@ public class ContactPerson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private Institution institution;
     @NotBlank(message = "First name must not be blank")
     private String firstName;
     @NotBlank(message = "Last name must not be blank")

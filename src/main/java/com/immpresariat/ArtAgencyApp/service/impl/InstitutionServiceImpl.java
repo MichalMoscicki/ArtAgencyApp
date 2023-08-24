@@ -94,13 +94,6 @@ public class    InstitutionServiceImpl implements InstitutionService {
     @Override
     public void deleteWithAssociatedData(Long id) {
 
-        List<ContactPerson> contactPeople = contactPersonRepository.findAllByInstitutionId(id);
-        contactPersonRepository.deleteAll(contactPeople);
-
-
-        List<Event> events = eventRepository.findAllByInstitutionId(id);
-        eventRepository.deleteAll(events);
-
         institutionRepository.deleteById(id);
 
     }

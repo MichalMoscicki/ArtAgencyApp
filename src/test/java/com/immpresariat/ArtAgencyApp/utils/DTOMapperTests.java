@@ -1,8 +1,10 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
+import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
@@ -14,6 +16,9 @@ import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -50,7 +55,6 @@ public class DTOMapperTests {
         event = Event.builder()
                 .id(eventId)
                 .name("Dni Miasta")
-                .institution(institution)
                 .description("")
                 .build();
 
@@ -62,7 +66,6 @@ public class DTOMapperTests {
                 .firstName("Jan")
                 .lastName("Kowalski")
                 .role("Dyrektor")
-                .institution(institution)
                 .build();
 
     }
@@ -271,6 +274,58 @@ public class DTOMapperTests {
         assertEquals(contactPerson.getRole(), UnsyncContactPersonDTO.getRole());
         assertEquals(contactPerson.getEmail(), UnsyncContactPersonDTO.getEmail());
         assertEquals(contactPerson.getPhone(), UnsyncContactPersonDTO.getPhone());
+
+    }
+
+    @DisplayName("JUnit test for mapContactToDTO method")
+    @Test
+    public void givenContactObject_whenMapContactToDTO_thenContactDTOObject() {
+        //given - precondition or setup
+        Contact contact = new Contact();
+        List<Institution> institutions = new ArrayList<>();
+        institutions.add(institution);
+        List<Event> events = new ArrayList<>();
+        events.add(event);
+        List<ContactPerson> contactPeople = new ArrayList<>();
+        contactPeople.add(contactPerson);
+        contact.setEvents(events);
+        contact.setInstitutions(institutions);
+        contact.setContactPeople(contactPeople);
+
+        //when - action or the behavior that we are going to test
+        ContactDTO contactDTO = dtoMapper.mapContactToDTO(contact);
+
+        //then - verify the output
+        assertNotNull(contactDTO);
+        assertEquals(institutions.size(), contactDTO.getInstitutions().size());
+        assertEquals(events.size(), contactDTO.getEvents().size());
+        assertEquals(contactPeople.size(), contactDTO.getContactPeople().size());
+
+    }
+
+    @DisplayName("JUnit test for mapDTOToContact method")
+    @Test
+    public void givenContactDTOObject_whenMapContactToDTO_thenContactObject() {
+        //given - precondition or setup
+        ContactDTO contactDTO = new ContactDTO();
+        List<Institution> institutions = new ArrayList<>();
+        institutions.add(institution);
+        List<Event> events = new ArrayList<>();
+        events.add(event);
+        List<ContactPerson> contactPeople = new ArrayList<>();
+        contactPeople.add(contactPerson);
+        contactDTO.setEvents(events);
+        contactDTO.setInstitutions(institutions);
+        contactDTO.setContactPeople(contactPeople);
+
+        //when - action or the behavior that we are going to test
+        Contact contact = dtoMapper.mapDTOToContact(contactDTO);
+
+        //then - verify the output
+        assertNotNull(contact);
+        assertEquals(institutions.size(), contact.getInstitutions().size());
+        assertEquals(events.size(), contact.getEvents().size());
+        assertEquals(contactPeople.size(), contact.getContactPeople().size());
 
     }
 

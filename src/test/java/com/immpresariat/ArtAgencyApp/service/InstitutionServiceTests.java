@@ -242,26 +242,10 @@ public class InstitutionServiceTests {
         //given - precondition or setup
         Long id = synchronizedInstitutionDTO.getId();
 
-        List<ContactPerson> contactPeople = new ArrayList<>();
-        contactPeople.add(new ContactPerson());
-
-        given(contactPersonRepository.findAllByInstitutionId(id)).willReturn(contactPeople);
-        doNothing().when(contactPersonRepository).deleteAll(contactPeople);
-
-
-        List<Event> events = new ArrayList<>();
-        events.add(new Event());
-        given(eventRepository.findAllByInstitutionId(id)).willReturn(events);
-        doNothing().when(eventRepository).deleteAll(events);
-
         //when - action or the behavior that we are going to test
         institutionService.deleteWithAssociatedData(id);
 
         //then - verify the output
-        verify(contactPersonRepository, times(1)).findAllByInstitutionId(id);
-        verify(contactPersonRepository, times(1)).deleteAll(contactPeople);
-        verify(eventRepository, times(1)).findAllByInstitutionId(id);
-        verify(eventRepository, times(1)).deleteAll(events);
         verify(institutionRepository, times(1)).deleteById(id);
     }
 

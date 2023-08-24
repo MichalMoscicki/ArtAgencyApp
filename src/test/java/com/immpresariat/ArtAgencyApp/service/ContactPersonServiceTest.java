@@ -61,7 +61,6 @@ public class ContactPersonServiceTest {
                 .role("dyrektor")
                 .email("jan@gmail.com")
                 .phone("+48777666555")
-                .institution(institution)
                 .build();
 
         unsyncContactPersonDTO = ContactPersonDTO.builder()
@@ -139,46 +138,6 @@ public class ContactPersonServiceTest {
         verify(dtoMapper, times(contactPeople.size())).mapContactPersonToDTO(any(ContactPerson.class));
         assertEquals(contactPeople.size(), contactPersonDTOS.size());
 
-    }
-
-    @DisplayName("JUnit test for contactPersonService getAllByInstitutionId method (negative scenario)")
-    @Test
-    public void givenInstitutionId_whenGetAllByInstitutionId_thenThrowResourceNotFoundException() {
-        //given - precondition or setup
-        Long institutionId = institution.getId();
-
-        //when - action or the behavior that we are going to test
-        assertThrows(ResourceNotFoundException.class, () -> {
-            contactPersonService.getAllByInstitutionId(institutionId);
-        });
-
-        //then - verify the output
-        verify(institutionRepository, times(1)).findById(anyLong());
-        verify(contactPersonRepository, times(0)).findAllByInstitutionId(institutionId);
-        verify(dtoMapper, times(0)).mapContactPersonToDTO(any(ContactPerson.class));
-    }
-
-    @DisplayName("JUnit test for contactPersonService getAllByInstitutionId method (positive scenario)")
-    @Test
-    public void givenInstitutionId_whenGetAllByInstitutionId_thenReturnContactPersonDTOsList() {
-        //given - precondition or setup
-        List<ContactPerson> contactPeople = new ArrayList<>();
-        contactPeople.add(contactPerson);
-
-        Long institutionId = institution.getId();
-        given(institutionRepository.findById(anyLong())).willReturn(Optional.of(institution));
-        given(contactPersonRepository.findAllByInstitutionId(institutionId)).willReturn(contactPeople);
-        given(dtoMapper.mapContactPersonToDTO(any(ContactPerson.class))).willReturn(new ContactPersonDTO());
-
-        //when - action or the behavior that we are going to test
-        List<ContactPersonDTO> contactPersonDTOS = contactPersonService.getAllByInstitutionId(institutionId);
-
-        //then - verify the output
-        assertNotNull(contactPersonDTOS);
-        assertEquals(contactPeople.size(), contactPersonDTOS.size());
-        verify(institutionRepository, times(1)).findById(anyLong());
-        verify(contactPersonRepository, times(1)).findAllByInstitutionId(institutionId);
-        verify(dtoMapper, times(contactPeople.size())).mapContactPersonToDTO(any(ContactPerson.class));
     }
 
     @DisplayName("JUnit test for contactPersonService getById method (negative scenario)")

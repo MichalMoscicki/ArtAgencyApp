@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface ContactPersonRepository extends JpaRepository<ContactPerson, Long> {
 
-    List<ContactPerson> findAllByInstitutionId(Long institutionId);
-
 }

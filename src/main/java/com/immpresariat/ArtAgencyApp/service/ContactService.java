@@ -4,11 +4,10 @@ import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 
 
 import java.util.List;
-import java.util.Optional;
 
-public interface ContactDTOService {
+public interface ContactService {
 
-    ContactDTO getByInstitutionID(Long institutionId);
+    ContactDTO getById(Long Id);
     List<ContactDTO> getAll();
 
 }

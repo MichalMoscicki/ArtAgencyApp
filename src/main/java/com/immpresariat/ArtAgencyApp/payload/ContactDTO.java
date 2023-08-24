@@ -1,6 +1,8 @@
 package com.immpresariat.ArtAgencyApp.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.immpresariat.ArtAgencyApp.models.ContactPerson;
+import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,14 +19,16 @@ import java.util.List;
 public class ContactDTO {
 
     @NotNull
-    private Institution institution;
-    @JsonProperty("contactPeople")
+    private Long id;
+
+    private List<Institution> institutions;
+
     @NotNull
-    List<ContactPersonDTO> contactPersonDTOS;
+    private List<ContactPerson> contactPeople;
 
     @JsonProperty("events")
     @NotNull
-    List<EventDTO> eventDTOS;
+    private List<Event> events;
 
 
 }

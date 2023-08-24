@@ -19,9 +19,6 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private Institution institution;
-
     @NotEmpty(message = "Name must not be blank")
     private String name;
 

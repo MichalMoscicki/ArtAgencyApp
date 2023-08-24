@@ -12,8 +12,6 @@ public interface ContactPersonService {
 
     List<ContactPersonDTO> getAll();
 
-    List<ContactPersonDTO> getAllByInstitutionId(Long institutionId);
-
     ContactPersonDTO getById(Long id);
 
     ContactPersonDTO update(ContactPersonDTO updatedContactPersonDTO);

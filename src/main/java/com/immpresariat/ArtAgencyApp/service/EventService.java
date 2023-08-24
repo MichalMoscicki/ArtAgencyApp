@@ -13,8 +13,6 @@ public interface EventService {
 
     List<EventDTO> getAll();
 
-    List<EventDTO> getAllByInstitutionId(Long institutionId);
-
     EventDTO getById(Long id);
 
     EventDTO update(EventDTO eventDTO);
