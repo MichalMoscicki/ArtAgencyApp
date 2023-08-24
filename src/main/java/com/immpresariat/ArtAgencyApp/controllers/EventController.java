@@ -1,11 +1,28 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.immpresariat.ArtAgencyApp.payload.EventDTO;
+import com.immpresariat.ArtAgencyApp.service.EventService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/events")
 public class EventController {
+    private final EventService eventService;
+
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
+
+    @GetMapping("/api/v1/events")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EventDTO> getAll(){
+       return eventService.getAll();
+    }
+
 
 
 
