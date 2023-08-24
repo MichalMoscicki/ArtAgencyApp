@@ -10,4 +10,6 @@ public interface ContactService {
     ContactDTO getById(Long Id);
     List<ContactDTO> getAll();
 
+    ContactDTO create();
+
 }

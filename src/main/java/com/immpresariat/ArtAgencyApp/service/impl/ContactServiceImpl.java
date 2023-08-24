@@ -37,6 +37,12 @@ public class ContactServiceImpl implements ContactService {
         List<Contact> contacts = contactRepository.findAll();
         return contacts.stream().map(dtoMapper::mapContactToDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public ContactDTO create() {
+        Contact contact = contactRepository.save(new Contact());
+        return dtoMapper.mapContactToDTO(contact);
+    }
 }
 
 

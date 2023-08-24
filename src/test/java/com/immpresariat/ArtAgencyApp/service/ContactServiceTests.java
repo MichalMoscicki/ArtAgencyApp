@@ -86,6 +86,24 @@ public class ContactServiceTests {
 
     }
 
+    @DisplayName("JUnit test for Contact create method")
+    @Test
+    public void given_whenCreate_thenReturnContactDTOObject() {
+        //given - precondition or setup
+        given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
+        given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
+
+
+        //when - action or the behavior that we are going to test
+        ContactDTO contactDTO = contactService.create();
+
+        //then - verify the output
+        assertNotNull(contactDTO);
+        verify(contactRepository, times(1)).save(any(Contact.class));
+        verify(dtoMapper, times(1)).mapContactToDTO(any(Contact.class));
+
+    }
+
 
 }
 

@@ -1,41 +1,39 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
-import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
+import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
+import com.immpresariat.ArtAgencyApp.service.ContactService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/contacts")
 public class ContactController {
 
-    ContactRepository contactRepository;
+    ContactService contactService;
 
-//    public ContactController(ContactRepository contactRepository) {
-//        this.contactRepository = contactRepository;
-//    }
-//
-//    @GetMapping("")
-//    public List<Contact> getAll() {
-//        return contactRepository.findAll();
-//    }
-
-    /*
-    ContactDTOService contactDTOService;
-
-    public ContactController(ContactDTOService contactDTOService) {
-        this.contactDTOService = contactDTOService;
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ContactDTO> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(contactDTOService.getByInstitutionID(id), HttpStatus.OK);
+    public ContactController(ContactService contactService) {
+        this.contactService = contactService;
     }
 
     @GetMapping("")
     public List<ContactDTO> getAll() {
-        return contactDTOService.getAll();
+        return contactService.getAll();
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ContactDTO> create() {
+
+        return new ResponseEntity<>(contactService.create(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ContactDTO> getById(@PathVariable Long id) {
+        return new ResponseEntity<>(contactService.getById(id), HttpStatus.OK);
     }
 
 
- */
 
 }
