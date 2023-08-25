@@ -2,15 +2,9 @@ package com.immpresariat.ArtAgencyApp.service.impl;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
-import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
-import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
-import com.immpresariat.ArtAgencyApp.repository.EventRepository;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
-import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
-import com.immpresariat.ArtAgencyApp.service.EventService;
 import com.immpresariat.ArtAgencyApp.service.InstitutionService;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
@@ -24,19 +18,13 @@ import java.util.stream.Collectors;
 public class    InstitutionServiceImpl implements InstitutionService {
 
     final private InstitutionRepository institutionRepository;
-    final private ContactPersonRepository contactPersonRepository;
-    final private EventRepository eventRepository;
     final private InputCleaner inputCleaner;
     final private DTOMapper dtoMapper;
 
     public InstitutionServiceImpl(InstitutionRepository institutionRepository,
-                                  ContactPersonRepository contactPersonRepository,
-                                  EventRepository eventRepository,
                                   InputCleaner inputCleaner,
                                   DTOMapper dtoMapper) {
         this.institutionRepository = institutionRepository;
-        this.contactPersonRepository = contactPersonRepository;
-        this.eventRepository = eventRepository;
         this.inputCleaner = inputCleaner;
         this.dtoMapper = dtoMapper;
     }
@@ -93,7 +81,6 @@ public class    InstitutionServiceImpl implements InstitutionService {
 
     @Override
     public void deleteWithAssociatedData(Long id) {
-
         institutionRepository.deleteById(id);
 
     }

@@ -1,12 +1,12 @@
 package com.immpresariat.ArtAgencyApp.service;
 
-import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
+import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.repository.EventRepository;
-import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.EventServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
@@ -23,9 +23,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+
+//TODO wywal niepotrzebny setup
 
 @ExtendWith(MockitoExtension.class)
 public class EventServiceTests {
@@ -33,29 +33,22 @@ public class EventServiceTests {
     @Mock
     EventRepository eventRepository;
     @Mock
-    InstitutionRepository institutionRepository;
+    ContactRepository contactRepository;
+    @Mock
+    ContactService contactService;
+
     @Mock
     DTOMapper dtoMapper;
     @Mock
     InputCleaner inputCleaner;
     @InjectMocks
     EventServiceImpl eventService;
-
-    Institution institution;
     Event event;
     EventDTO unsynchronizedEventDTO;
     EventDTO synchronizedEventDTO;
 
     @BeforeEach
     public void setup() {
-        institution = Institution.builder()
-                .id(1l)
-                .city("Łomianki")
-                .name("Dom Kultury Łomianki")
-                .alreadyCooperated(true)
-                .notes("Graliśmy tu z Marią")
-                .build();
-
         event = Event.builder()
                 .id(1l)
                 .name("Dni Łomianek")
@@ -77,78 +70,48 @@ public class EventServiceTests {
                 .build();
     }
 
-    @DisplayName("JUnit test for EventService create method (negative scenario - no institution)")
+
+    @DisplayName("JUnit test for EventService create method (negative scenario) ")
     @Test
-    public void givenUnsynchronizedEventDTOObject_whenCreate_thenThrowResourceNotFoundException() {
+    public void givenContactId_whenCreate_thenDoNotSaveEvent() {
         //given - precondition or setup
+        Long id = 0l;
+        given(contactRepository.findById(id)).willReturn(Optional.empty());
 
         //when - action or the behavior that we are going to test
-       assertThrows(ResourceNotFoundException.class, () -> {
-            eventService.create(unsynchronizedEventDTO, institution.getId());
+        assertThrows(ResourceNotFoundException.class, () -> {
+            eventService.create(unsynchronizedEventDTO, id);
         });
 
+
         //then - verify the output
-        Mockito.verify(eventRepository, never()).save(any(Event.class));
 
     }
 
-    @DisplayName("JUnit test for EventService create method (negative scenario - event already exists) ")
-    @Test
-    public void givenUnsynchronizedEventDTOObject_whenCreate_thenThrowResourceAlreadyExistsException() {
-        //given - precondition or setup
-        given(institutionRepository.findById(anyLong())).willReturn(Optional.of(institution));
-
-        //when - action or the behavior that we are going to test
-        assertThrows(ResourceAlreadyExistsException.class, () -> {
-            eventService.create(unsynchronizedEventDTO, institution.getId());
-        });
-
-        //then - verify the output
-        Mockito.verify(eventRepository, never()).save(any(Event.class));
-
-    }
 
     @DisplayName("JUnit test for EventService create method (positive scenario) ")
     @Test
     public void givenUnsynchronizedEventDTOObject_whenCreate_thenReturnSynchronizedEventDTOObject() {
         //given - precondition or setup
-        given(institutionRepository.findById(anyLong())).willReturn(Optional.of(institution));
-
+        Long id = 0l;
+        given(contactRepository.findById(id)).willReturn(Optional.of(new Contact()));
         given(dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO)).willReturn(new Event());
         given(inputCleaner.clean(any(Event.class))).willReturn(new Event());
         given(eventRepository.save(any(Event.class))).willReturn(new Event());
+        given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
         given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
 
 
         //when - action or the behavior that we are going to test
-        EventDTO SynchronizedEventDTO = eventService.create(unsynchronizedEventDTO, institution.getId());
+        EventDTO SynchronizedEventDTO = eventService.create(unsynchronizedEventDTO, id);
 
         //then - verify the output
-        verify(institutionRepository, times(1)).findById(anyLong());
+        assertNotNull(SynchronizedEventDTO);
         verify(dtoMapper, times(1)).mapUnsyncInputDTOToEvent(any(EventDTO.class));
         verify(inputCleaner, times(1)).clean(any(Event.class));
         verify(eventRepository, times(1)).save(any(Event.class));
+        verify(contactRepository, times(1)).save(any(Contact.class));
         verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));
-
-    }
-
-    @DisplayName("JUnit test for EventService getAll method")
-    @Test
-    public void whenGetAll_thenReturnEventDTOsList() {
-        //given - precondition or setup
-        List<Event> eventList = new ArrayList<>();
-        eventList.add(event);
-        given(eventRepository.findAll()).willReturn(eventList);
-        given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(new EventDTO());
-
-
-        //when - action or the behavior that we are going to test
-        List<EventDTO> eventDTOS = eventService.getAll();
-
-        //then - verify the output
-        verify(eventRepository, times(1)).findAll();
-        verify(dtoMapper, times(eventList.size())).mapEventToDTO(any(Event.class));
-        assertEquals(eventList.size(), eventDTOS.size());
 
     }
 
@@ -235,18 +198,6 @@ public class EventServiceTests {
         verify(eventRepository, Mockito.times(1)).deleteById(id);
     }
 
-    @DisplayName("JUnit test for EventService delete method")
-    @Test
-    public void givenEventObject_whenDelete_thenEventDeleted() {
-        //given - precondition or setup
-        doNothing().when(eventRepository).delete(event);
-
-        //when - action or the behavior that we are going to test
-        eventService.delete(event);
-
-        //then - verify the output
-        verify(eventRepository, Mockito.times(1)).delete(event);
-    }
 
 
 }

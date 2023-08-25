@@ -2,6 +2,9 @@ package com.immpresariat.ArtAgencyApp.service.impl;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Contact;
+import com.immpresariat.ArtAgencyApp.models.ContactPerson;
+import com.immpresariat.ArtAgencyApp.models.Event;
+import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactService;
@@ -43,6 +46,7 @@ public class ContactServiceImpl implements ContactService {
         Contact contact = contactRepository.save(new Contact());
         return dtoMapper.mapContactToDTO(contact);
     }
+
 }
 
 

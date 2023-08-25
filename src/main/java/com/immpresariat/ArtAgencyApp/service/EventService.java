@@ -9,15 +9,12 @@ import java.util.List;
 @Service
 public interface EventService {
 
-    EventDTO create(EventDTO unsynchronizedEventDTO, Long institutionId);
-
-    List<EventDTO> getAll();
+    EventDTO create(EventDTO unsynchronizedEventDTO, Long contactId);
 
     EventDTO getById(Long id);
 
     EventDTO update(EventDTO eventDTO);
 
     void delete(Long id);
-    void delete(Event event);
 
 }

@@ -17,13 +17,6 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @GetMapping("/api/v1/events")
-    @ResponseStatus(HttpStatus.OK)
-    public List<EventDTO> getAll(){
-       return eventService.getAll();
-    }
-
-
 
 
 }

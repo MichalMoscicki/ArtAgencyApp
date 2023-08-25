@@ -1,53 +1,61 @@
 package com.immpresariat.ArtAgencyApp.service.impl;
 
-import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.Event;
-import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
+import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.repository.EventRepository;
-import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.EventService;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-    private final InstitutionRepository institutionRepository;
+    private final ContactRepository contactRepository;
     private final InputCleaner inputCleaner;
     private final DTOMapper dtoMapper;
 
-    public EventServiceImpl(EventRepository eventRepository, InstitutionRepository institutionRepository, InputCleaner inputCleaner, DTOMapper dtoMapper) {
+    public EventServiceImpl(EventRepository eventRepository,
+                            ContactRepository contactRepository,
+                            InputCleaner inputCleaner,
+                            DTOMapper dtoMapper) {
         this.eventRepository = eventRepository;
-        this.institutionRepository = institutionRepository;
+        this.contactRepository = contactRepository;
         this.inputCleaner = inputCleaner;
         this.dtoMapper = dtoMapper;
     }
 
     @Override
-    public EventDTO create(EventDTO unsynchronizedEventDTO, Long institutionId) {
-
-        Institution institution = ensureInstitutionExists(institutionId);
-        ensureEventNotExists(unsynchronizedEventDTO, institution);
-
+    public EventDTO create(EventDTO unsynchronizedEventDTO, Long contactId) {
+        Contact contact = ensureContactExist(contactId);
         Event unsynchronizedEvent = dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO);
         Event synchronizedEvent = eventRepository.save(inputCleaner.clean(unsynchronizedEvent));
+        updateContact(contact, synchronizedEvent);
+
         return dtoMapper.mapEventToDTO(synchronizedEvent);
 
     }
 
-    @Override
-    public List<EventDTO> getAll() {
-        List<Event> event = eventRepository.findAll();
-        return event.stream().map(dtoMapper::mapEventToDTO).collect(Collectors.toList());
+    private void updateContact(Contact contact, Event synchronizedEvent) {
+        List<Event> contactEvents;
+        if (contact.getEvents() == null) {
+            contactEvents = new ArrayList<>();
+        } else {
+            contactEvents = contact.getEvents();
+        }
+        contactEvents.add(synchronizedEvent);
+        contact.setEvents(contactEvents);
+        contactRepository.save(contact);
     }
 
     @Override
@@ -59,9 +67,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDTO update(EventDTO eventDTO) {
         Event event = ensureEventExists(eventDTO.getId());
-       event.setName(eventDTO.getName());
-       event.setDescription(eventDTO.getDescription());
-       event.setMonthWhenOrganized(event.getMonthWhenOrganized());
+        event.setName(eventDTO.getName());
+        event.setDescription(eventDTO.getDescription());
+        event.setMonthWhenOrganized(event.getMonthWhenOrganized());
         Event eventDb = eventRepository.save(inputCleaner.clean(event));
         return dtoMapper.mapEventToDTO(eventDb);
     }
@@ -69,20 +77,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public void delete(Long id) {
         eventRepository.deleteById(id);
-    }
-
-    @Override
-    public void delete(Event event) {
-        eventRepository.delete(event);
-    }
-
-
-    private Institution ensureInstitutionExists(Long institutionId) {
-        Optional<Institution> institutionOptional = institutionRepository.findById(institutionId);
-        if (institutionOptional.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("No institution with id: %s", institutionId));
-        }
-        return institutionOptional.get();
     }
 
     private Event ensureEventExists(Long id) {
@@ -93,12 +87,12 @@ public class EventServiceImpl implements EventService {
         return eventOptional.get();
     }
 
-    private void ensureEventNotExists(EventDTO unsynchronizedEventDTO, Institution institution) {
-//        Optional<Event> eventOptional = eventRepository.
-//                findEventByNameAndInstitution(unsynchronizedEventDTO.getName(), institution);
-//        if (eventOptional.isPresent()) {
-//            throw new ResourceAlreadyExistsException(String.format("Institution %s already contains event: %s", institution, unsynchronizedEventDTO.getName()));
-//        }
+    private Contact ensureContactExist(Long id) {
+        Optional<Contact> contactOptional = contactRepository.findById(id);
+        if (contactOptional.isEmpty()) {
+            throw new ResourceNotFoundException("No contact with id: " + id);
+        }
+        return contactOptional.get();
     }
 
 }
