@@ -1,5 +1,6 @@
 package com.immpresariat.ArtAgencyApp.service.impl;
 
+
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.Event;
@@ -11,11 +12,9 @@ import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -69,7 +68,7 @@ public class EventServiceImpl implements EventService {
         Event event = ensureEventExists(eventDTO.getId());
         event.setName(eventDTO.getName());
         event.setDescription(eventDTO.getDescription());
-        event.setMonthWhenOrganized(event.getMonthWhenOrganized());
+        event.setMonthWhenOrganized(eventDTO.getMonthWhenOrganized());
         Event eventDb = eventRepository.save(inputCleaner.clean(event));
         return dtoMapper.mapEventToDTO(eventDb);
     }
@@ -83,8 +82,9 @@ public class EventServiceImpl implements EventService {
         Optional<Event> eventOptional = eventRepository.findById(id);
         if (eventOptional.isEmpty()) {
             throw new ResourceNotFoundException(String.format("No event with id: %s", id));
+        } else {
+            return eventOptional.get();
         }
-        return eventOptional.get();
     }
 
     private Contact ensureContactExist(Long id) {
