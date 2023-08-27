@@ -3,7 +3,6 @@ package com.immpresariat.ArtAgencyApp.service;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.Event;
-import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.repository.EventRepository;
@@ -25,8 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-//TODO wywal niepotrzebny setup
-
 @ExtendWith(MockitoExtension.class)
 public class EventServiceTests {
 
@@ -34,9 +31,6 @@ public class EventServiceTests {
     EventRepository eventRepository;
     @Mock
     ContactRepository contactRepository;
-    @Mock
-    ContactService contactService;
-
     @Mock
     DTOMapper dtoMapper;
     @Mock

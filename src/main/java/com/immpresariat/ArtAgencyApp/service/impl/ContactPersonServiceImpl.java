@@ -1,17 +1,18 @@
 package com.immpresariat.ArtAgencyApp.service.impl;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
-import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
+import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,25 +21,26 @@ import java.util.stream.Collectors;
 public class ContactPersonServiceImpl implements ContactPersonService {
 
     ContactPersonRepository contactPersonRepository;
-    InstitutionRepository institutionRepository;
+    ContactRepository contactRepository;
     InputCleaner inputCleaner;
     DTOMapper dtoMapper;
 
     public ContactPersonServiceImpl(ContactPersonRepository contactPersonRepository,
-                                    InstitutionRepository institutionRepository,
+                                    ContactRepository contactRepository,
                                     InputCleaner inputCleaner,
                                     DTOMapper dtoMapper) {
         this.contactPersonRepository = contactPersonRepository;
-        this.institutionRepository = institutionRepository;
+        this.contactRepository = contactRepository;
         this.inputCleaner = inputCleaner;
         this.dtoMapper = dtoMapper;
     }
 
     @Override
-    public ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long institutionId) {
-        Institution institution = ensureInstitutionExists(institutionId);
+    public ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long contactId) {
+        Contact contact = ensureContactExists(contactId);
         ContactPerson unsyncContactPerson = dtoMapper.mapUnsyncDTOToContactPerson(unsyncContactPersonDTO);
         ContactPerson synchronizedContactPerson = contactPersonRepository.save(inputCleaner.clean(unsyncContactPerson));
+        updateContact(contact, synchronizedContactPerson);
         return dtoMapper.mapContactPersonToDTO(synchronizedContactPerson);
     }
 
@@ -72,17 +74,12 @@ public class ContactPersonServiceImpl implements ContactPersonService {
         contactPersonRepository.deleteById(id);
     }
 
-    @Override
-    public void delete(ContactPerson contactPerson) {
-        contactPersonRepository.delete(contactPerson);
-    }
-
-    private Institution ensureInstitutionExists(Long institutionId) {
-        Optional<Institution> institutionOptional = institutionRepository.findById(institutionId);
-        if (institutionOptional.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("No institution with id: %s", institutionId));
+    private Contact ensureContactExists(Long contactId) {
+        Optional<Contact> contactOptional = contactRepository.findById(contactId);
+        if (contactOptional.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("No institution with id: %s", contactId));
         }
-        return institutionOptional.get();
+        return contactOptional.get();
     }
 
     private ContactPerson ensureContactPersonExists(Long id) {
@@ -91,5 +88,18 @@ public class ContactPersonServiceImpl implements ContactPersonService {
             throw new ResourceNotFoundException(String.format("No contactPerson with id: %s", id));
         }
         return contactPersonOptional.get();
+    }
+
+
+    private void updateContact(Contact contact, ContactPerson synchronizedContactPerson) {
+        List<ContactPerson> contactPeople;
+        if (contact.getContactPeople() == null) {
+            contactPeople = new ArrayList<>();
+        } else {
+            contactPeople = contact.getContactPeople();
+        }
+        contactPeople.add(synchronizedContactPerson);
+        contact.setContactPeople(contactPeople);
+        contactRepository.save(contact);
     }
 }

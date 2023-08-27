@@ -1,10 +1,12 @@
 package com.immpresariat.ArtAgencyApp.service;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
+import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.ContactPersonServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
@@ -31,7 +33,7 @@ public class ContactPersonServiceTest {
     @Mock
     ContactPersonRepository contactPersonRepository;
     @Mock
-    InstitutionRepository institutionRepository;
+    ContactRepository contactRepository;
     @Mock
     DTOMapper dtoMapper;
     @Mock
@@ -39,20 +41,12 @@ public class ContactPersonServiceTest {
     @InjectMocks
     ContactPersonServiceImpl contactPersonService;
 
-    Institution institution;
     ContactPerson contactPerson;
     ContactPersonDTO unsyncContactPersonDTO;
     ContactPersonDTO synchronizedContactPersonDTO;
 
     @BeforeEach
     public void setup() {
-        institution = Institution.builder()
-                .id(1l)
-                .city("Łomianki")
-                .name("Dom Kultury Łomianki")
-                .alreadyCooperated(true)
-                .notes("Graliśmy tu z Marią")
-                .build();
 
         contactPerson = ContactPerson.builder()
                 .id(0L)
@@ -84,13 +78,14 @@ public class ContactPersonServiceTest {
 
     @DisplayName("JUnit test for contactPersonService create method (negative scenario - no institution)")
     @Test
-    public void givenUnsyncContactPersonDTOObject_whenCreate_thenThrowResourceNotFoundException() {
+    public void givenInstitutionId_whenCreate_thenThrowResourceNotFoundException() {
         //given - precondition or setup
-        given(institutionRepository.findById(anyLong())).willReturn(Optional.empty());
+        Long contactId = 0L;
+        given(contactRepository.findById(contactId)).willReturn(Optional.empty());
 
         //when - action or the behavior that we are going to test
         assertThrows(ResourceNotFoundException.class, () -> {
-            contactPersonService.create(unsyncContactPersonDTO, institution.getId());
+            contactPersonService.create(unsyncContactPersonDTO, contactId);
         });
 
         //then - verify the output
@@ -102,23 +97,28 @@ public class ContactPersonServiceTest {
     @Test
     public void givenUnsyncContactPersonDTOObject_whenCreate_thenReturnSynchronizedContactPersonDTOObject() {
         //given - precondition or setup
-        given(institutionRepository.findById(anyLong())).willReturn(Optional.of(institution));
+        Long contactId = 0L;
+        given(contactRepository.findById(anyLong())).willReturn(Optional.of(new Contact()));
         given(dtoMapper.mapUnsyncDTOToContactPerson(unsyncContactPersonDTO)).willReturn(new ContactPerson());
         given(inputCleaner.clean(any(ContactPerson.class))).willReturn(new ContactPerson());
         given(contactPersonRepository.save(any(ContactPerson.class))).willReturn(new ContactPerson());
+        given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
         given(dtoMapper.mapContactPersonToDTO(any(ContactPerson.class))).willReturn(synchronizedContactPersonDTO);
 
         //when - action or the behavior that we are going to test
-        ContactPersonDTO synchronizedContactPersonDTO = contactPersonService.create(unsyncContactPersonDTO, institution.getId());
+        ContactPersonDTO synchronizedContactPersonDTO = contactPersonService.create(unsyncContactPersonDTO, contactId);
 
         //then - verify the output
-        verify(institutionRepository, times(1)).findById(anyLong());
+        assertNotNull(synchronizedContactPersonDTO);
+        verify(contactRepository, times(1)).findById(anyLong());
         verify(dtoMapper, times(1)).mapUnsyncDTOToContactPerson(any(ContactPersonDTO.class));
         verify(inputCleaner, times(1)).clean(any(ContactPerson.class));
         verify(contactPersonRepository, times(1)).save(any(ContactPerson.class));
+        verify(contactRepository, times(1)).save(any(Contact.class));
         verify(dtoMapper, times(1)).mapContactPersonToDTO(any(ContactPerson.class));
 
     }
+
 
     @DisplayName("JUnit test for contactPersonService getAll method")
     @Test
@@ -186,7 +186,6 @@ public class ContactPersonServiceTest {
 
     }
 
-
     @DisplayName("JUnit test for contactPersonService update method (positive scenario)")
     @Test
     public void givenEventDTOObject_whenUpdate_thenReturnEventDTO() {
@@ -224,19 +223,5 @@ public class ContactPersonServiceTest {
         //then - verify the output
         verify(contactPersonRepository, Mockito.times(1)).deleteById(id);
     }
-
-    @DisplayName("JUnit test for contactPersonService delete method")
-    @Test
-    public void givenEventObject_whenDelete_thenEventDeleted() {
-        //given - precondition or setup
-        doNothing().when(contactPersonRepository).delete(contactPerson);
-
-        //when - action or the behavior that we are going to test
-        contactPersonService.delete(contactPerson);
-
-        //then - verify the output
-        verify(contactPersonRepository, Mockito.times(1)).delete(contactPerson);
-    }
-
 
 }
