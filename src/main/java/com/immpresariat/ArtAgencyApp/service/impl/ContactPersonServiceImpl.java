@@ -77,7 +77,7 @@ public class ContactPersonServiceImpl implements ContactPersonService {
     private Contact ensureContactExists(Long contactId) {
         Optional<Contact> contactOptional = contactRepository.findById(contactId);
         if (contactOptional.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("No institution with id: %s", contactId));
+            throw new ResourceNotFoundException(String.format("No contact with id: %s", contactId));
         }
         return contactOptional.get();
     }
@@ -89,7 +89,6 @@ public class ContactPersonServiceImpl implements ContactPersonService {
         }
         return contactPersonOptional.get();
     }
-
 
     private void updateContact(Contact contact, ContactPerson synchronizedContactPerson) {
         List<ContactPerson> contactPeople;

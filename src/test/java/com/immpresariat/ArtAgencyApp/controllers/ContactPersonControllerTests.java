@@ -2,8 +2,10 @@ package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
+import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
+import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
-import com.immpresariat.ArtAgencyApp.service.EventService;
+import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,72 +20,73 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = EventController.class)
-public class EventControllerTests {
+@WebMvcTest(controllers = ContactPersonController.class)
+public class ContactPersonControllerTests {
+
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private EventService eventService;
+    private ContactPersonService contactPersonService;
     @Autowired
     ObjectMapper objectMapper;
 
-    EventDTO eventDTO;
-    List<EventDTO> eventDTOList;
+    ContactPersonDTO contactPersonDTO;
+    List<ContactPersonDTO> contactPeopleDTOList;
 
     @BeforeEach
     public void setup() {
-        eventDTO = EventDTO.builder()
+        contactPersonDTO = ContactPersonDTO.builder()
                 .id(0L)
-                .name("Dożmynki")
-                .monthWhenOrganized(1)
-                .description("")
+                .firstName("Jan")
+                .lastName("Kowalski")
+                .role("Dyrektor")
+                .phone("+48791272394")
+                .email("dyr@dyr.pl")
                 .build();
 
-        eventDTOList = new ArrayList<>();
-        eventDTOList.add(eventDTO);
-
+        contactPeopleDTOList = new ArrayList<>();
+        contactPeopleDTOList.add(contactPersonDTO);
     }
 
-    //todo a co jak nie ma takiego kontaktu? negatywny scenariusz wydaje się potrzebny
 
-    @DisplayName("JUnit test for create Event REST Api")
+    @DisplayName("JUnit test for create ContactPerson REST Api")
     @Test
-    public void whenCreate_thenReturnEventDTOObject() throws Exception {
+    public void givenContactPersonDTO_whenCreate_thenReturnEventDTOObject() throws Exception {
         //given - precondition or setup
         Long contactId = 0L;
-        EventDTO unsyncEventDTO = eventDTO;
-        unsyncEventDTO.setId(null);
 
-        when(eventService.create(unsyncEventDTO, contactId)).thenReturn(eventDTO);
+        when(contactPersonService.create(contactPersonDTO, contactId)).thenReturn(contactPersonDTO);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(post(String.format("/api/v1/contacts/%s/events", 0))
+        ResultActions response = mockMvc.perform(post(String.format("/api/v1/contacts/%s/contact-people", 0))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventDTO)));
+                .content(objectMapper.writeValueAsString(contactPersonDTO)));
 
 
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isCreated());
+
     }
 
-    @DisplayName("JUnit test for getById Event REST Api (negative scenario)")
+    @DisplayName("JUnit test for getById ContactPerson REST Api (negative scenario)")
     @Test
     public void givenId_whenGetById_thenReturnResourceNotFoundException() throws Exception {
         //given - precondition or setup
-        Long eventId = 0L;
-        String message = "No event with id: " + eventId;
+        Long contactPersonId = 0L;
+        String message = "No contactPerson with id: " + contactPersonId;
 
-        when(eventService.getById(eventId)).thenThrow(new ResourceNotFoundException(message));
+        when(contactPersonService.getById(contactPersonId)).thenThrow(new ResourceNotFoundException(message));
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get(String.format("/api/v1/events/%s", eventId)));
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contact-people/%s", contactPersonId)));
 
 
         //then - verify the output
@@ -92,16 +95,16 @@ public class EventControllerTests {
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-    @DisplayName("JUnit test for getById Event REST Api (positive scenario)")
+    @DisplayName("JUnit test for getById ContactPerson REST Api (positive scenario)")
     @Test
     public void givenId_whenGetById_thenReturnEventDTOObject() throws Exception {
         //given - precondition or setup
         Long eventId = 0L;
 
-        when(eventService.getById(eventId)).thenReturn(eventDTO);
+        when(contactPersonService.getById(eventId)).thenReturn(contactPersonDTO);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get(String.format("/api/v1/events/%s", eventId)));
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contact-people/%s", eventId)));
 
         //then - verify the output
         response.andDo(print())
@@ -109,19 +112,19 @@ public class EventControllerTests {
     }
 
 
-    @DisplayName("JUnit test for update Event REST Api (negative scenario)")
+    @DisplayName("JUnit test for update ContactPerson REST Api (negative scenario)")
     @Test
     public void givenId_whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
-        Long eventId = 0L;
-        String message = "No event with id: " + eventId;
-        when(eventService.update(eventDTO)).thenThrow(new ResourceNotFoundException(message));
+        Long contactPersonId = 0L;
+        String message = "No contactPerson with id: " + contactPersonId;
+        when(contactPersonService.update(contactPersonDTO)).thenThrow(new ResourceNotFoundException(message));
 
 
         //when - action or the behavior that we are going to test
-      ResultActions response = mockMvc.perform(put(String.format("/api/v1/events/%s", eventId))
+        ResultActions response = mockMvc.perform(put(String.format("/api/v1/contact-people/%s", contactPersonId))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventDTO)));
+                .content(objectMapper.writeValueAsString(contactPersonDTO)));
 
 
         //then - verify the output
@@ -132,49 +135,46 @@ public class EventControllerTests {
 
     }
 
-    @DisplayName("JUnit test for update Event REST Api (positive scenario)")
+    @DisplayName("JUnit test for update ContactPerson REST Api (positive scenario)")
     @Test
     public void givenEventDTO_whenUpdate_thenReturnEventDTOObject() throws Exception {
         //given - precondition or setup
-        Long eventId = 0L;
-        when(eventService.update(eventDTO)).thenReturn(eventDTO);
+        Long contactPersonId = 0L;
+        when(contactPersonService.update(contactPersonDTO)).thenReturn(contactPersonDTO);
 
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(put(String.format("/api/v1/events/%s", eventId))
+        ResultActions response = mockMvc.perform(put(String.format("/api/v1/contact-people/%s", contactPersonId))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventDTO)));
+                .content(objectMapper.writeValueAsString(contactPersonDTO)));
 
 
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", CoreMatchers.is(eventId)));
-
+                .andExpect(jsonPath("$.id", CoreMatchers.is(contactPersonId)));
 
     }
 
-
-    @DisplayName("JUnit test for delete Event REST Api")
+    @DisplayName("JUnit test for delete ContactPerson REST Api")
     @Test
     public void givenId_whenDelete_thenReturnMessage() throws Exception {
         //given - precondition or setup
-        Long eventId = 0L;
-        String message = "Successfully deleted event with id: 0";
+        Long contactPersonId = 0L;
+        String message = "Successfully deleted contactPerson with id: 0";
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/events/%s", eventId)));
+        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contact-people/%s", contactPersonId)));
 
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", CoreMatchers.is(message)));
 
-        verify(eventService, times(1)).delete(anyLong());
+        verify(contactPersonService, times(1)).delete(anyLong());
 
 
     }
-
 
 
 }
