@@ -30,7 +30,7 @@ public class ContactServiceImpl implements ContactService {
     public ContactDTO getById(Long id) {
         Optional<Contact> contactOptional = contactRepository.findById(id);
         if(contactOptional.isEmpty()){
-            throw new ResourceNotFoundException("No contact with give id: " + id);
+            throw new ResourceNotFoundException("No contact with given id: " + id);
         }
         return dtoMapper.mapContactToDTO(contactOptional.get());
     }

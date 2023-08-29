@@ -1,7 +1,7 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import com.immpresariat.ArtAgencyApp.service.InstitutionService;
@@ -16,12 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,7 +33,6 @@ public class InstitutionControllerTests {
     ObjectMapper objectMapper;
 
     InstitutionDTO institutionDTO;
-    List<InstitutionDTO> institutionDTOS;
 
     @BeforeEach
     public void setup() {
@@ -51,84 +45,18 @@ public class InstitutionControllerTests {
                 .notes("")
                 .build();
 
-        institutionDTOS = new ArrayList<>();
-        institutionDTOS.add(institutionDTO);
-
     }
 
-    @DisplayName("JUnit test for getAll Institution REST Api")
-    @Test
-    public void givenInstitutionDTOsList_whenGetAll_thenReturnStatusOk() throws Exception {
-        // given
-        when(institutionService.getAll()).thenReturn(institutionDTOS);
-
-        // when
-        ResultActions response = mockMvc.perform(get("/api/v1/institutions"));
-
-        // then
-        response.andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", CoreMatchers.is(institutionDTOS.size())));
-    }
-
-    @DisplayName("JUnit test for getById Institution REST Api (negative scenario)")
-    @Test
-    public void givenId_whenFindById_thenThrowResourceNotFoundException() throws Exception {
-        //given - precondition or setup
-        given(institutionService.getById(anyLong())).willThrow(new ResourceNotFoundException("No institution with given id"));
-
-        //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get(String.format("/api/v1/institutions/%s", institutionDTO.getId())));
-
-
-        //then - verify the output
-        response.andDo(print())
-                .andExpect(status().is4xxClientError());
-
-    }
-
-    @DisplayName("JUnit test for getById Institution REST Api (positive scenario)")
-    @Test
-    public void givenId_whenFindById_thenReturnInstitutionDTOObject() throws Exception {
-        //given - precondition or setup
-        given(institutionService.getById(anyLong())).willReturn(institutionDTO);
-
-        //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get(String.format("/api/v1/institutions/%s", institutionDTO.getId())));
-
-
-        //then - verify the output
-        response.andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", CoreMatchers.is(0)));
-
-    }
-
-    @DisplayName("JUnit test for create InstitutionRestApi (negative scenario)")
-    @Test
-    public void givenInstitutionDTOObject_whenCreate_thenThrowsResourceAlreadyExistsException() throws Exception {
-        //given - precondition or setup
-        given(institutionService.create(institutionDTO)).willThrow(new ResourceAlreadyExistsException("Resource Already Exists"));
-
-        //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(post("/api/v1/institutions/0")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(institutionDTO)));
-
-
-        //then - verify the output
-        response.andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-
-    @DisplayName("JUnit test for create InstitutionRestApi (positive scenario)")
+    @DisplayName("JUnit test for create Institution REST Api")
     @Test
     public void givenInstitutionDTOObject_whenCreate_thenReturnInstitutionDTOObject() throws Exception {
         //given - precondition or setup
-        given(institutionService.create(institutionDTO)).willReturn(institutionDTO);
+        Long contactId = 0l;
+
+        given(institutionService.create(institutionDTO, contactId)).willReturn(institutionDTO);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(post("/api/v1/institutions/0")
+        ResultActions response = mockMvc.perform(post("/api/v1/contacts/0/institutions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(institutionDTO)));
 
@@ -138,6 +66,45 @@ public class InstitutionControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", CoreMatchers.is(0)));
     }
+
+    @DisplayName("JUnit test for getById Institution REST Api (negative scenario)")
+    @Test
+    public void givenId_whenGetById_thenThrowResourceNotFoundException() throws Exception {
+        //given - precondition or setup
+        Long id = 0L;
+        String message = "No institution with given id";
+        given(institutionService.getById(id)).willThrow(new ResourceNotFoundException(message));
+
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/institutions/%s", id)));
+
+
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
+
+    }
+
+    @DisplayName("JUnit test for getById Institution REST Api (positive scenario)")
+    @Test
+    public void givenId_whenFindById_thenReturnInstitutionDTOObject() throws Exception {
+        //given - precondition or setup
+        Long id = 0L;
+        given(institutionService.getById(id)).willReturn(institutionDTO);
+
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/institutions/%s", id)));
+
+
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", CoreMatchers.is(0)));
+
+    }
+
+
 
 
     @DisplayName("JUnit test for update InstitutionRestApi (negative scenario)")
@@ -176,11 +143,12 @@ public class InstitutionControllerTests {
     }
 
 
-    @DisplayName("JUnit test for delete InstitutionRestApi")
+    @DisplayName("JUnit test for delete Institution REST Api")
     @Test
     public void givenInstitutionId_whenDelete_thenInstitutionDeleted() throws Exception {
         //given - precondition or setup
         Long id = 0L;
+        String message = "Successfully deleted institution with id: " + id;
 
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(delete("/api/v1/institutions/0"));
@@ -188,7 +156,7 @@ public class InstitutionControllerTests {
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", CoreMatchers.is(String.format("Institution with id: %s deleted successfully", id))));
+                .andExpect(jsonPath("$", CoreMatchers.is(message)));
 
     }
 

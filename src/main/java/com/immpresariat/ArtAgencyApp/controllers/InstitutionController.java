@@ -6,10 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
-@RequestMapping("api/v1/institutions")
 public class InstitutionController {
 
     private final InstitutionService institutionService;
@@ -18,30 +17,30 @@ public class InstitutionController {
         this.institutionService = institutionService;
     }
 
-    @GetMapping("")
-    @ResponseStatus(HttpStatus.OK)
-    public List<InstitutionDTO> getAll(){
-        return institutionService.getAll();
+
+    @PostMapping("/api/v1/contacts/{contactId}/institutions")
+    public ResponseEntity<InstitutionDTO> create(@RequestBody InstitutionDTO unsynchronizedDTO,
+                                                 @PathVariable Long contactId){
+        return new ResponseEntity<>(institutionService.create(unsynchronizedDTO, contactId), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<InstitutionDTO> getById(@PathVariable Long id){
-        return new ResponseEntity<>(institutionService.getById(id), HttpStatus.OK);
+
+    @GetMapping("/api/v1/institutions/{institutionId}")
+    public ResponseEntity<InstitutionDTO> getById(@PathVariable Long institutionId){
+        return new ResponseEntity<>(institutionService.getById(institutionId), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<InstitutionDTO> create(@RequestBody InstitutionDTO unsynchronizedDTO){
-        return new ResponseEntity<>(institutionService.create(unsynchronizedDTO), HttpStatus.CREATED);
-    }
-    @PutMapping("/{id}")
+
+    @PutMapping("/api/v1/institutions/{institutionId} ")
     public ResponseEntity<InstitutionDTO> update(@RequestBody InstitutionDTO institutionDTO){
         return new ResponseEntity<>(institutionService.update(institutionDTO), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable Long id){
-        institutionService.deleteWithAssociatedData(id);
-        return new ResponseEntity<>(String.format("Institution with id: %s deleted successfully", id), HttpStatus.OK);
+
+    @DeleteMapping("/api/v1/institutions/{institutionId}")
+    public ResponseEntity<String> update(@PathVariable Long institutionId){
+        institutionService.deleteById(institutionId);
+        return new ResponseEntity<>("Successfully deleted institution with id: " + institutionId, HttpStatus.OK);
     }
 
 

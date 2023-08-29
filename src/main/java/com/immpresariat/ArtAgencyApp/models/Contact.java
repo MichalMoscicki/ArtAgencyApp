@@ -19,15 +19,13 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Event> events;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<ContactPerson> contactPeople;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Institution> institutions;
-
-
 
 }
