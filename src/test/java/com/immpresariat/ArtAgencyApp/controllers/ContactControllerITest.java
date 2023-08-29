@@ -1,4 +1,4 @@
-package com.immpresariat.ArtAgencyApp.integration;
+package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;

@@ -16,5 +16,5 @@ public interface ContactPersonService {
 
     ContactPersonDTO update(ContactPersonDTO updatedContactPersonDTO);
 
-    void delete(Long id);
+    void delete(Long contactPersonId, Long contactId);
 }

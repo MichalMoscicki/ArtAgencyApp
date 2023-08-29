@@ -1,12 +1,12 @@
-package com.immpresariat.ArtAgencyApp.integration;
+package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.immpresariat.ArtAgencyApp.models.Contact;
-import com.immpresariat.ArtAgencyApp.models.Event;
-import com.immpresariat.ArtAgencyApp.payload.EventDTO;
+import com.immpresariat.ArtAgencyApp.models.ContactPerson;
+import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
+import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
-import com.immpresariat.ArtAgencyApp.repository.EventRepository;
-import com.immpresariat.ArtAgencyApp.service.EventService;
+import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,17 +30,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class EventControllerITest {
+public class ContactPersonControllerITests {
+
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private EventRepository eventRepository;
+    private ContactPersonRepository contactPersonRepository;
     @Autowired
     private ContactRepository contactRepository;
     @Autowired
-    EventService eventService;
-
+    ContactPersonService contactPersonService;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -50,16 +50,16 @@ public class EventControllerITest {
     }
 
     @Test
-    public void whenCreate_thenReturnEventDTOObject() throws Exception {
+    public void whenCreate_thenReturnContactPersonDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
-        EventDTO unsyncEventDTO = createSampleEventDTO(null);
+        ContactPersonDTO unsyncContactPersonDTO = createSampleContactPersonDTO(null);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(post(String.format("/api/v1/contacts/%s/events", contactId))
+        ResultActions response = mockMvc.perform(post(String.format("/api/v1/contacts/%s/contact-people", contactId))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(unsyncEventDTO)));
+                .content(objectMapper.writeValueAsString(unsyncContactPersonDTO)));
 
         //then - verify the output
         response.andDo(print())
@@ -67,21 +67,22 @@ public class EventControllerITest {
                 .andExpect(jsonPath("$.id", CoreMatchers.notNullValue()));
     }
 
+
     @Test
-    public void whenCreate_thenEventAddedToContact() throws Exception {
+    public void whenCreate_thenContactPersonAddedToContact() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
-        EventDTO unsyncEventDTO = createSampleEventDTO(null);
+        ContactPersonDTO unsyncContactPersonDTO = createSampleContactPersonDTO(null);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(post(String.format("/api/v1/contacts/%s/events", contactId))
+        ResultActions response = mockMvc.perform(post(String.format("/api/v1/contacts/%s/contact-people", contactId))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(unsyncEventDTO)));
+                .content(objectMapper.writeValueAsString(unsyncContactPersonDTO)));
 
         //then - verify the output
         Contact updatedContact = contactRepository.findById(contactId).get();
-        assertEquals(updatedContact.getEvents().size(), 1);
+        assertEquals(updatedContact.getContactPeople().size(), 1);
 
     }
 
@@ -91,11 +92,11 @@ public class EventControllerITest {
         //given - precondition or setup
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
-        Long eventId = 0L;
-        String message = String.format("No event with id: %s", eventId);
+        Long contactPersonId = 0L;
+        String message = String.format("No contactPerson with id: %s", contactPersonId);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s/events/%s", contactId, eventId)));
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s/contact-people/%s", contactId, contactPersonId)));
 
 
         //then - verify the output
@@ -106,19 +107,19 @@ public class EventControllerITest {
 
 
     @Test
-    public void whenGetById_thenReturnEventDTOObject() throws Exception {
+    public void whenGetById_thenReturnContactPersonDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
-        EventDTO syncDTO = eventService.create(createSampleEventDTO(null), contactId);
+        ContactPersonDTO syncDTO = contactPersonService.create(createSampleContactPersonDTO(null), contactId);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s/events/%s", contactId, syncDTO.getId())));
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s/contact-people/%s", contactId, syncDTO.getId())));
 
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", CoreMatchers.is(syncDTO.getName())));
+                .andExpect(jsonPath("$.firstName", CoreMatchers.is(syncDTO.getFirstName())));
     }
 
 
@@ -128,15 +129,15 @@ public class EventControllerITest {
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
 
-        Long institutionId = 0L;
-        EventDTO notExistingEvent = createSampleEventDTO(institutionId);
+        Long contactPersonId = 0L;
+        ContactPersonDTO notExistingContactPerson = createSampleContactPersonDTO(contactPersonId);
 
-        String message = String.format("No event with id: %s", institutionId);
+        String message = String.format("No contactPerson with id: %s", contactPersonId);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(put(String.format("/api/v1/contacts/%s/events/%s", contactId, institutionId))
+        ResultActions response = mockMvc.perform(put(String.format("/api/v1/contacts/%s/contact-people/%s", contactId, contactPersonId))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(notExistingEvent)));
+                .content(objectMapper.writeValueAsString(notExistingContactPerson)));
 
 
         //then - verify the output
@@ -147,48 +148,50 @@ public class EventControllerITest {
 
 
     @Test
-    public void testUpdateEvent() throws Exception {
+    public void testUpdateContactPerson() throws Exception {
         // Given
         Contact contact = createSampleContact();
-        Event unsyncEvent = createSampleEvent("Event", "Niezbyt udany", 6);
-        Event syncEvent = eventRepository.save(unsyncEvent);
-        contact.setEvents(Collections.singletonList(syncEvent));
+        ContactPerson unsyncContactPerson = createSampleContactPerson("Olof", "Palme", "+48111222333", "olof.palme@gmail.com", "dyrektor");
+        ContactPerson syncContactPerson = contactPersonRepository.save(unsyncContactPerson);
+        contact.setContactPeople(Collections.singletonList(syncContactPerson));
         contactRepository.save(contact);
 
         Long contactId = contact.getId();
-        Long institutionId = syncEvent.getId();
-        EventDTO updatedIEventDTO = createSampleEventDTO(institutionId);
+        Long contactPersonId = syncContactPerson.getId();
+        ContactPersonDTO updatedContactPersonDTO = createSampleContactPersonDTO(contactPersonId);
 
         // When
         ResultActions response = mockMvc.perform(
-                put(String.format("/api/v1/contacts/%s/events/%s", contactId, institutionId))
+                put(String.format("/api/v1/contacts/%s/contact-people/%s", contactId, contactPersonId))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedIEventDTO))
+                        .content(objectMapper.writeValueAsString(updatedContactPersonDTO))
         );
 
         // Then
         response.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(institutionId.intValue())))
-                .andExpect(jsonPath("$.name", is(updatedIEventDTO.getName())))
-                .andExpect(jsonPath("$.description", is(updatedIEventDTO.getDescription())))
-                .andExpect(jsonPath("$.monthWhenOrganized", is(updatedIEventDTO.getMonthWhenOrganized())));
+                .andExpect(jsonPath("$.id", is(contactPersonId.intValue())))
+                .andExpect(jsonPath("$.firstName", is(updatedContactPersonDTO.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(updatedContactPersonDTO.getLastName())))
+                .andExpect(jsonPath("$.email", is(updatedContactPersonDTO.getEmail())))
+                .andExpect(jsonPath("$.phone", is(updatedContactPersonDTO.getPhone())))
+                .andExpect(jsonPath("$.role", is(updatedContactPersonDTO.getRole())));
     }
 
 
     @Test
-    public void whenDelete_thenEventDeleted() throws Exception {
+    public void whenDelete_thenContactPersonDeleted() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
 
-        EventDTO syncDTO = eventService.create(createSampleEventDTO(null), contactId);
-        Long eventId = syncDTO.getId();
+        ContactPersonDTO syncDTO = contactPersonService.create(createSampleContactPersonDTO(null), contactId);
+        Long contactPersonId = syncDTO.getId();
 
-        String message = "Successfully deleted event with id: " + eventId;
+        String message = "Successfully deleted contactPerson with id: " + contactPersonId;
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s/events/%s", contactId, eventId)));
+        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s/contact-people/%s", contactId, contactPersonId)));
 
         //then - verify the output
         response.andDo(print())
@@ -201,11 +204,11 @@ public class EventControllerITest {
     public void givenNoContact_whenDelete_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long contactId = 0L;
-        Long eventId = 1L;
+        Long contactPersonId = 1L;
         String message = String.format("No contact with id: %s", contactId);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s/events/%s", contactId, eventId)));
+        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s/contact-people/%s", contactId, contactPersonId)));
 
 
         //then - verify the output
@@ -215,15 +218,15 @@ public class EventControllerITest {
     }
 
     @Test
-    public void givenNoEvent_whenDelete_thenThrowResourceNotFoundException() throws Exception {
+    public void givenNoContactPerson_whenDelete_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
-        Long eventId = 1L;
-        String message = String.format("No event with id: %s", eventId);
+        Long contactPersonId = 1L;
+        String message = String.format("No contactPerson with id: %s", contactPersonId);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s/events/%s", contactId, eventId)));
+        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s/contact-people/%s", contactId, contactPersonId)));
 
 
         //then - verify the output
@@ -232,35 +235,38 @@ public class EventControllerITest {
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
-
     private void cleanDB() {
         List<Contact> contacts = contactRepository.findAll();
         for (Contact contact : contacts) {
-            contact.setEvents(new ArrayList<>());
+            contact.setContactPeople(new ArrayList<>());
             contactRepository.save(contact);
         }
-        eventRepository.deleteAll();
+        contactPersonRepository.deleteAll();
     }
 
     private Contact createSampleContact() {
         return contactRepository.save(new Contact());
     }
 
-    private EventDTO createSampleEventDTO(Long eventId) {
-        return EventDTO.builder()
-                .id(eventId)
-                .name("Melanż")
-                .description("Bardzo dobry")
-                .monthWhenOrganized(6)
+    private ContactPersonDTO createSampleContactPersonDTO(Long contactPersonId) {
+        return ContactPersonDTO.builder()
+                .id(contactPersonId)
+                .firstName("Jan")
+                .lastName("Kowalski")
+                .phone("+48791272305")
+                .email("jan.kowalski@gmail.com")
+                .role("dyrektor")
                 .build();
     }
 
-    private Event createSampleEvent(String name, String description, int monthWhenOrganised) {
-        return Event.builder()
-                .name(name)
-                .description(description)
-                .monthWhenOrganized(monthWhenOrganised)
+    private ContactPerson createSampleContactPerson(String firstName, String lastName, String phone, String email, String role) {
+        return ContactPerson.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .phone(phone)
+                .email(email)
+                .role(role)
                 .build();
     }
+
 }

@@ -1,4 +1,4 @@
-package com.immpresariat.ArtAgencyApp.integration;
+package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.immpresariat.ArtAgencyApp.models.Contact;

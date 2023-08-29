@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class ContactPersonDTO {
 
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String role;

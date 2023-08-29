@@ -70,8 +70,11 @@ public class ContactPersonServiceImpl implements ContactPersonService {
     }
 
     @Override
-    public void delete(Long id) {
-        contactPersonRepository.deleteById(id);
+    public void delete(Long contactPersonId, Long contactId) {
+        Contact contact = ensureContactExists(contactId);
+        ContactPerson contactPerson = ensureContactPersonExists(contactPersonId);
+        removeContactPersonFromContact(contact, contactPerson);
+        contactPersonRepository.deleteById(contactId);
     }
 
     private Contact ensureContactExists(Long contactId) {
@@ -98,6 +101,13 @@ public class ContactPersonServiceImpl implements ContactPersonService {
             contactPeople = contact.getContactPeople();
         }
         contactPeople.add(synchronizedContactPerson);
+        contact.setContactPeople(contactPeople);
+        contactRepository.save(contact);
+    }
+
+    private void removeContactPersonFromContact(Contact contact, ContactPerson contactPerson) {
+        List<ContactPerson> contactPeople = contact.getContactPeople();
+        contactPeople.remove(contactPerson);
         contact.setContactPeople(contactPeople);
         contactRepository.save(contact);
     }

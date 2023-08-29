@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1/contacts/{contactId}/contact-people")
 public class ContactPersonController {
 
     private final ContactPersonService contactPersonService;
@@ -16,26 +17,27 @@ public class ContactPersonController {
         this.contactPersonService = contactPersonService;
     }
 
-    @PostMapping("/api/v1/contacts/{contactId}/contact-people")
+    @PostMapping()
     public ResponseEntity<ContactPersonDTO> create(@PathVariable Long contactId,
                                            @RequestBody ContactPersonDTO contactPersonDTO){
         return new ResponseEntity<>(contactPersonService.create(contactPersonDTO, contactId), HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/v1/contact-people/{contactPersonId}")
+    @GetMapping("{contactPersonId}")
     public ResponseEntity<ContactPersonDTO> getById(@PathVariable Long contactPersonId){
         return new ResponseEntity<>(contactPersonService.getById(contactPersonId), HttpStatus.OK);
     }
 
-    @PutMapping("/api/v1/contact-people/{contactPersonId}")
+    @PutMapping("{contactPersonId}")
     public ResponseEntity<ContactPersonDTO> update(@RequestBody ContactPersonDTO contactPersonDTO){
         return new ResponseEntity<>(contactPersonService.update(contactPersonDTO), HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/api/v1/contact-people/{contactPersonId}")
-    public ResponseEntity<String> delete(@PathVariable Long contactPersonId){
-        contactPersonService.delete(contactPersonId);
+    @DeleteMapping("{contactPersonId}")
+    public ResponseEntity<String> delete(@PathVariable Long contactPersonId,
+                                         @PathVariable Long contactId){
+        contactPersonService.delete(contactPersonId, contactId);
         return new ResponseEntity<>("   Successfully deleted contactPerson with id: " + contactPersonId, HttpStatus.OK);
     }
 
