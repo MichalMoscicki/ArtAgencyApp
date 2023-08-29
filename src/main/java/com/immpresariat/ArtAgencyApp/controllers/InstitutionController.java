@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/api/v1/contacts/{contactId}/institutions")
 public class InstitutionController {
 
     private final InstitutionService institutionService;
@@ -18,28 +19,29 @@ public class InstitutionController {
     }
 
 
-    @PostMapping("/api/v1/contacts/{contactId}/institutions")
+    @PostMapping
     public ResponseEntity<InstitutionDTO> create(@RequestBody InstitutionDTO unsynchronizedDTO,
                                                  @PathVariable Long contactId){
         return new ResponseEntity<>(institutionService.create(unsynchronizedDTO, contactId), HttpStatus.CREATED);
     }
 
 
-    @GetMapping("/api/v1/institutions/{institutionId}")
+    @GetMapping("{institutionId}")
     public ResponseEntity<InstitutionDTO> getById(@PathVariable Long institutionId){
         return new ResponseEntity<>(institutionService.getById(institutionId), HttpStatus.OK);
     }
 
 
-    @PutMapping("/api/v1/institutions/{institutionId} ")
+    @PutMapping("{institutionId}")
     public ResponseEntity<InstitutionDTO> update(@RequestBody InstitutionDTO institutionDTO){
         return new ResponseEntity<>(institutionService.update(institutionDTO), HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/api/v1/institutions/{institutionId}")
-    public ResponseEntity<String> update(@PathVariable Long institutionId){
-        institutionService.deleteById(institutionId);
+    @DeleteMapping("{institutionId}")
+    public ResponseEntity<String> update(@PathVariable Long institutionId,
+                                         @PathVariable Long contactId){
+        institutionService.delete(institutionId, contactId);
         return new ResponseEntity<>("Successfully deleted institution with id: " + institutionId, HttpStatus.OK);
     }
 

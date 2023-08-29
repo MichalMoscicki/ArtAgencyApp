@@ -55,27 +55,30 @@ public class InstitutionServiceImpl implements InstitutionService {
 
     @Override
     public InstitutionDTO update(InstitutionDTO updatedInstitutionDTO) {
+        ensureInstitutionExists(updatedInstitutionDTO.getId());
+        Institution updatedInstitution = dtoMapper.mapDTOToInstitution(updatedInstitutionDTO);
+        Institution institutionDB = institutionRepository.save(inputCleaner.clean(updatedInstitution));
+        return dtoMapper.mapInstitutionToDTO(institutionDB);
 
-
-        Long id = updatedInstitutionDTO.getId();
-        Optional<Institution> institutionOptional = institutionRepository.findById(id);
-
-        if (institutionOptional.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("No institution with id: %s", id));
-        } else {
-            Institution updatedInstitution = dtoMapper.mapDTOToInstitution(updatedInstitutionDTO);
-            Institution institutionDB = institutionRepository.save(inputCleaner.clean(updatedInstitution));
-            return dtoMapper.mapInstitutionToDTO(institutionDB);
-        }
     }
-
 
     @Override
-    public void deleteById(Long id) {
-        institutionRepository.deleteById(id);
+    public void delete(Long institutionId, Long contactId) {
+
+        Contact contact = ensureContactExists(contactId);
+        Institution institution = ensureInstitutionExists(institutionId);
+        removeInstitutionFromContact(contact, institution);
+        institutionRepository.deleteById(institutionId);
 
     }
 
+
+    private void removeInstitutionFromContact(Contact contact, Institution institution) {
+        List<Institution> contactInstitutions = contact.getInstitutions();
+        contactInstitutions.remove(institution);
+        contact.setInstitutions(contactInstitutions);
+        contactRepository.save(contact);
+    }
 
     private Contact ensureContactExists(Long contactId) {
         Optional<Contact> contactOptional = contactRepository.findById(contactId);

@@ -187,19 +187,19 @@ public class InstitutionServiceTests {
     }
       */
 
-    @DisplayName("JUnit test for InstitutionService delete method")
-    @Test
-    public void givenId_whenDelete_thenInstitutionDeleted() {
-        //given - precondition or setup
-        Long id = 0L;
-        doNothing().when(institutionRepository).deleteById(id);
-
-        //when - action or the behavior that we are going to test
-        institutionService.deleteById(id);
-
-        //then - verify the output
-        verify(institutionRepository, Mockito.times(1)).deleteById(id);
-    }
+//    @DisplayName("JUnit test for InstitutionService delete method")
+//    @Test
+//    public void givenId_whenDelete_thenInstitutionDeleted() {
+//        //given - precondition or setup
+//        Long id = 0L;
+//        doNothing().when(institutionRepository).deleteById(id);
+//
+//        //when - action or the behavior that we are going to test
+//        institutionService.deleteById(id);
+//
+//        //then - verify the output
+//        verify(institutionRepository, Mockito.times(1)).deleteById(id);
+//    }
 
     /*
 

@@ -12,7 +12,7 @@ public interface InstitutionService {
 
     InstitutionDTO getById(Long id);
 
-    void deleteById(Long id);
+    void delete(Long institutionId, Long contactId);
 
 
 }
