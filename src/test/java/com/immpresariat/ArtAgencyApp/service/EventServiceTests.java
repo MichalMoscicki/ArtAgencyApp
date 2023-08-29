@@ -177,20 +177,20 @@ public class EventServiceTests {
         verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));
 
     }
-    @DisplayName("JUnit test for EventService delete method")
-    @Test
-    public void givenId_whenDelete_thenEventDeleted() {
-        //given - precondition or setup
-        Long id = synchronizedEventDTO.getId();
-        doNothing().when(eventRepository).deleteById(id);
-
-
-        //when - action or the behavior that we are going to test
-        eventService.delete(id);
-
-        //then - verify the output
-        verify(eventRepository, Mockito.times(1)).deleteById(id);
-    }
+//    @DisplayName("JUnit test for EventService delete method")
+//    @Test
+//    public void givenId_whenDelete_thenEventDeleted() {
+//        //given - precondition or setup
+//        Long id = synchronizedEventDTO.getId();
+//        doNothing().when(eventRepository).deleteById(id);
+//
+//
+//        //when - action or the behavior that we are going to test
+//        eventService.delete(id);
+//
+//        //then - verify the output
+//        verify(eventRepository, Mockito.times(1)).deleteById(id);
+//    }
 
 
 

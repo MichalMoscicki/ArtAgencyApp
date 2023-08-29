@@ -72,7 +72,6 @@ public class InstitutionServiceImpl implements InstitutionService {
 
     }
 
-
     private void removeInstitutionFromContact(Contact contact, Institution institution) {
         List<Institution> contactInstitutions = contact.getInstitutions();
         contactInstitutions.remove(institution);

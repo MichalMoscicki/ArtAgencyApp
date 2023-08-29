@@ -36,25 +36,13 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDTO create(EventDTO unsynchronizedEventDTO, Long contactId) {
-        Contact contact = ensureContactExist(contactId);
+        Contact contact = ensureContactExists(contactId);
         Event unsynchronizedEvent = dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO);
         Event synchronizedEvent = eventRepository.save(inputCleaner.clean(unsynchronizedEvent));
         updateContact(contact, synchronizedEvent);
 
         return dtoMapper.mapEventToDTO(synchronizedEvent);
 
-    }
-
-    private void updateContact(Contact contact, Event synchronizedEvent) {
-        List<Event> contactEvents;
-        if (contact.getEvents() == null) {
-            contactEvents = new ArrayList<>();
-        } else {
-            contactEvents = contact.getEvents();
-        }
-        contactEvents.add(synchronizedEvent);
-        contact.setEvents(contactEvents);
-        contactRepository.save(contact);
     }
 
     @Override
@@ -74,8 +62,24 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void delete(Long id) {
-        eventRepository.deleteById(id);
+    public void delete(Long eventId, Long contactId) {
+
+        Contact contact = ensureContactExists(contactId);
+        Event event = ensureEventExists(eventId);
+        removeEventFromContact(contact, event);
+        eventRepository.deleteById(eventId);
+    }
+
+    private void updateContact(Contact contact, Event synchronizedEvent) {
+        List<Event> contactEvents;
+        if (contact.getEvents() == null) {
+            contactEvents = new ArrayList<>();
+        } else {
+            contactEvents = contact.getEvents();
+        }
+        contactEvents.add(synchronizedEvent);
+        contact.setEvents(contactEvents);
+        contactRepository.save(contact);
     }
 
     private Event ensureEventExists(Long id) {
@@ -87,12 +91,19 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    private Contact ensureContactExist(Long id) {
+    private Contact ensureContactExists(Long id) {
         Optional<Contact> contactOptional = contactRepository.findById(id);
         if (contactOptional.isEmpty()) {
             throw new ResourceNotFoundException("No contact with id: " + id);
         }
         return contactOptional.get();
+    }
+
+    private void removeEventFromContact(Contact contact, Event event) {
+        List<Event> contactEvents = contact.getEvents();
+        contactEvents.remove(event);
+        contact.setEvents(contactEvents);
+        contactRepository.save(contact);
     }
 
 }

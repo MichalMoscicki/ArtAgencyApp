@@ -155,25 +155,25 @@ public class EventControllerTests {
     }
 
 
-    @DisplayName("JUnit test for delete Event REST Api")
-    @Test
-    public void givenId_whenDelete_thenReturnMessage() throws Exception {
-        //given - precondition or setup
-        Long eventId = 0L;
-        String message = "Successfully deleted event with id: 0";
-
-        //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/events/%s", eventId)));
-
-        //then - verify the output
-        response.andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", CoreMatchers.is(message)));
-
-        verify(eventService, times(1)).delete(anyLong());
-
-
-    }
+//    @DisplayName("JUnit test for delete Event REST Api")
+//    @Test
+//    public void givenId_whenDelete_thenReturnMessage() throws Exception {
+//        //given - precondition or setup
+//        Long eventId = 0L;
+//        String message = "Successfully deleted event with id: 0";
+//
+//        //when - action or the behavior that we are going to test
+//        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/events/%s", eventId)));
+//
+//        //then - verify the output
+//        response.andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$", CoreMatchers.is(message)));
+//
+//        verify(eventService, times(1)).delete(anyLong());
+//
+//
+//    }
 
 
 

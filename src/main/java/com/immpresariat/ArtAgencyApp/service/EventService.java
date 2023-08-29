@@ -12,6 +12,6 @@ public interface EventService {
 
     EventDTO update(EventDTO eventDTO);
 
-    void delete(Long id);
+    void delete(Long eventId, Long contactId);
 
 }

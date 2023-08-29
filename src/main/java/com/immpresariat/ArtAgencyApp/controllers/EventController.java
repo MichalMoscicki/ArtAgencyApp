@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/api/v1/contacts/{contactId}/events")
 public class EventController {
     private final EventService eventService;
 
@@ -15,28 +16,29 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @PostMapping("/api/v1/contacts/{contactId}/events")
+    @PostMapping()
     public ResponseEntity<EventDTO> create(@PathVariable Long contactId,
                                            @RequestBody EventDTO eventDTO){
         return new ResponseEntity<>(eventService.create(eventDTO, contactId), HttpStatus.CREATED);
 
     }
 
-    @GetMapping("/api/v1/events/{eventId}")
+    @GetMapping("{eventId}")
     public ResponseEntity<EventDTO> getById(@PathVariable Long eventId){
         return new ResponseEntity<>(eventService.getById(eventId), HttpStatus.OK);
     }
 
-    //TODO event service zrwaca null, muszę ogarnąć czemu.
-    @PutMapping("/api/v1/events/{eventId}")
+
+    @PutMapping("{eventId}")
     public ResponseEntity<EventDTO> update(@RequestBody EventDTO eventDTO){
         return new ResponseEntity<>(eventService.update(eventDTO), HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/api/v1/events/{eventId}")
-    public ResponseEntity<String> delete(@PathVariable Long eventId){
-        eventService.delete(eventId);
+    @DeleteMapping("{eventId}")
+    public ResponseEntity<String> delete(@PathVariable Long eventId,
+                                         @PathVariable Long contactId){
+        eventService.delete(eventId, contactId);
         return new ResponseEntity<>("   Successfully deleted event with id: " + eventId, HttpStatus.OK);
     }
 
