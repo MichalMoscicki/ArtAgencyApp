@@ -34,6 +34,12 @@ public class ContactController {
         return new ResponseEntity<>(contactService.getById(id), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        contactService.deleteWithAssociatedData(id);
+        return new ResponseEntity<>("Successfully deleted contact with id: " + id, HttpStatus.OK);
+    }
+
 
 
 }
