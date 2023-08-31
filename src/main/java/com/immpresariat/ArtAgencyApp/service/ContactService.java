@@ -10,8 +10,5 @@ public interface ContactService {
     ContactDTO getById(Long Id);
     List<ContactDTO> getAll();
     ContactDTO create();
-
     void deleteWithAssociatedData(Long id);
-
-
 }

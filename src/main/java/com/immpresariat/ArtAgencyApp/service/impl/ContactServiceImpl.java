@@ -10,10 +10,7 @@ import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.repository.EventRepository;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
-import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import com.immpresariat.ArtAgencyApp.service.ContactService;
-import com.immpresariat.ArtAgencyApp.service.EventService;
-import com.immpresariat.ArtAgencyApp.service.InstitutionService;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +66,6 @@ public class ContactServiceImpl implements ContactService {
         deleteAssociatedContactPeople(contact);
         contactRepository.deleteById(id);
     }
-
     private Contact ensureContactExists(Long id) {
         Optional<Contact> contactOptional = contactRepository.findById(id);
         if (contactOptional.isEmpty()) {

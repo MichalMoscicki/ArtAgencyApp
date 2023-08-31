@@ -1,6 +1,5 @@
 package com.immpresariat.ArtAgencyApp.models;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
