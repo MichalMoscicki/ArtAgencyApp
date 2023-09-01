@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,20 +89,76 @@ public class ContactServiceTests {
 
     @DisplayName("JUnit test for Contact create method")
     @Test
-    public void given_whenCreate_thenReturnContactDTOObject() {
+    public void givenUnsyncContactDTO_whenCreate_thenReturnContactDTOObject() {
         //given - precondition or setup
+        ContactDTO uncynsContactDTO = ContactDTO.builder()
+                .title("Opener Festival")
+                .alreadyCooperated(false)
+                .build();
+
+        given(dtoMapper.mapDTOToContact(any(ContactDTO.class))).willReturn(new Contact());
         given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
         given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
 
 
         //when - action or the behavior that we are going to test
-        ContactDTO contactDTO = contactService.create();
+        ContactDTO contactDTO = contactService.create(uncynsContactDTO);
 
         //then - verify the output
         assertNotNull(contactDTO);
+        verify(dtoMapper, times(1)).mapDTOToContact(any(ContactDTO.class));
         verify(contactRepository, times(1)).save(any(Contact.class));
         verify(dtoMapper, times(1)).mapContactToDTO(any(Contact.class));
+    }
 
+    @DisplayName("JUnit test for Contact Update method (negative Scenario)")
+    @Test
+    public void givenContactDTO_whenUpdate_thenThrowResourceNotFoundException() {
+        //given - precondition or setup
+        ContactDTO contactDTO = ContactDTO.builder()
+                .id(0L)
+                .title("Opener Festival")
+                .alreadyCooperated(false)
+                .build();
+
+        given(contactRepository.findById(contactDTO.getId())).willReturn(Optional.empty());
+
+        //when - action or the behavior that we are going to test
+        assertThrows(ResourceNotFoundException.class, () -> {
+            contactService.getById(contactDTO.getId());
+        });
+
+        //then - verify the output
+        verify(dtoMapper, never()).mapDTOToContact(any(ContactDTO.class));
+        verify(contactRepository, never()).save(any(Contact.class));
+        verify(dtoMapper, never()).mapContactToDTO(any(Contact.class));
+    }
+
+
+    @DisplayName("JUnit test for Contact Update method (positive Scenario)")
+    @Test
+    public void givenContactDTO_whenUpdate_thenReturnContactDTOObject() {
+        //given - precondition or setup
+        ContactDTO contactDTO = ContactDTO.builder()
+                .id(0L)
+                .title("Opener Festival")
+                .alreadyCooperated(false)
+                .build();
+
+        given(contactRepository.findById(contactDTO.getId())).willReturn(Optional.of(new Contact()));
+        given(dtoMapper.mapDTOToContact(any(ContactDTO.class))).willReturn(new Contact());
+        given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
+        given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
+
+
+        //when - action or the behavior that we are going to test
+        ContactDTO contactDTODb = contactService.update(contactDTO);
+
+        //then - verify the output
+        assertNotNull(contactDTODb);
+        verify(dtoMapper, times(1)).mapDTOToContact(any(ContactDTO.class));
+        verify(contactRepository, times(1)).save(any(Contact.class));
+        verify(dtoMapper, times(1)).mapContactToDTO(any(Contact.class));
     }
 
 

@@ -8,7 +8,4 @@ import java.util.Optional;
 
 public interface InstitutionRepository extends JpaRepository<Institution, Long> {
 
-    @Query("select i from Institution i where i.name=:name and i.city=:city")
-    Optional<Institution> findInstitutionByNameAndCity(String name, String city);
-
 }

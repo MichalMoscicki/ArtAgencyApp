@@ -15,6 +15,7 @@ import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,8 +54,17 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactDTO create() {
-        Contact contact = contactRepository.save(new Contact());
+    public ContactDTO create(ContactDTO unsyncContactDTO) {
+        unsyncContactDTO.setUpdated(new Date());
+        Contact contact = contactRepository.save(dtoMapper.mapDTOToContact(unsyncContactDTO));
+        return dtoMapper.mapContactToDTO(contact);
+    }
+
+    @Override
+    public ContactDTO update(ContactDTO contactDTO) {
+        ensureContactExists(contactDTO.getId());
+        contactDTO.setUpdated(new Date());
+        Contact contact = contactRepository.save(dtoMapper.mapDTOToContact(contactDTO));
         return dtoMapper.mapContactToDTO(contact);
     }
 

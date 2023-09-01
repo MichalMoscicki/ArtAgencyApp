@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -25,13 +26,10 @@ import java.util.List;
 public class DTOMapperTests {
 
     DTOMapper dtoMapper;
-
     Long institutionId;
     Institution institution;
-
     Long eventId;
     Event event;
-
     Long contactPersonId;
     ContactPerson contactPerson;
 
@@ -41,24 +39,23 @@ public class DTOMapperTests {
     public void setup() {
         dtoMapper = new DTOMapper();
 
-        institutionId = 1l;
+        institutionId = 1L;
         institution = Institution.builder()
                 .id(institutionId)
                 .name("DK Praga")
                 .notes("Super miejsce")
-                .alreadyCooperated(true)
                 .city("Warszawa")
                 .category("dom kultury")
                 .build();
 
-        eventId = 1l;
+        eventId = 1L;
         event = Event.builder()
                 .id(eventId)
                 .name("Dni Miasta")
                 .description("")
                 .build();
 
-        contactPersonId = 1l;
+        contactPersonId = 1L;
         contactPerson = ContactPerson.builder()
                 .id(contactPersonId)
                 .email("test@test.pl")
@@ -85,7 +82,6 @@ public class DTOMapperTests {
         assertEquals(institution.getCity(), institutionDTO.getCity());
         assertEquals(institution.getNotes(), institutionDTO.getNotes());
         assertEquals(institution.getCategory(), institutionDTO.getCategory());
-        assertEquals(institution.isAlreadyCooperated(), institutionDTO.isAlreadyCooperated());
 
     }
 
@@ -98,7 +94,6 @@ public class DTOMapperTests {
                 .city("Chotomów")
                 .notes("Cool miejsce")
                 .category("DK")
-                .alreadyCooperated(true)
                 .build();
 
 
@@ -112,7 +107,6 @@ public class DTOMapperTests {
         assertEquals(inputInstitutionDTO.getCity(), unsynchronizedInstitution.getCity());
         assertEquals(inputInstitutionDTO.getCategory(), unsynchronizedInstitution.getCategory());
         assertEquals(inputInstitutionDTO.getNotes(), unsynchronizedInstitution.getNotes());
-        assertEquals(inputInstitutionDTO.isAlreadyCooperated(), unsynchronizedInstitution.isAlreadyCooperated());
 
     }
 
@@ -127,7 +121,6 @@ public class DTOMapperTests {
                 .city("Chotomów")
                 .notes("Cool miejsce")
                 .category("DK")
-                .alreadyCooperated(true)
                 .build();
 
         //when - action or the behavior that we are going to test
@@ -140,7 +133,6 @@ public class DTOMapperTests {
         assertEquals(institutionDTO.getCity(), synchronizedInstitution.getCity());
         assertEquals(institutionDTO.getCategory(), synchronizedInstitution.getCategory());
         assertEquals(institutionDTO.getNotes(), synchronizedInstitution.getNotes());
-        assertEquals(institutionDTO.isAlreadyCooperated(), synchronizedInstitution.isAlreadyCooperated());
 
     }
 
@@ -282,6 +274,9 @@ public class DTOMapperTests {
     public void givenContactObject_whenMapContactToDTO_thenContactDTOObject() {
         //given - precondition or setup
         Contact contact = new Contact();
+        contact.setTitle("Nowy Kontakt");
+        contact.setAlreadyCooperated(false);
+        contact.setUpdated(new Date());
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
         List<Event> events = new ArrayList<>();
@@ -297,6 +292,9 @@ public class DTOMapperTests {
 
         //then - verify the output
         assertNotNull(contactDTO);
+        assertEquals(contact.getUpdated(), contactDTO.getUpdated());
+        assertEquals(contact.isAlreadyCooperated(), contactDTO.isAlreadyCooperated());
+        assertEquals(contact.getTitle(), contactDTO.getTitle());
         assertEquals(institutions.size(), contactDTO.getInstitutions().size());
         assertEquals(events.size(), contactDTO.getEvents().size());
         assertEquals(contactPeople.size(), contactDTO.getContactPeople().size());
@@ -308,6 +306,9 @@ public class DTOMapperTests {
     public void givenContactDTOObject_whenMapContactToDTO_thenContactObject() {
         //given - precondition or setup
         ContactDTO contactDTO = new ContactDTO();
+        contactDTO.setTitle("Nowy Kontakt");
+        contactDTO.setAlreadyCooperated(false);
+        contactDTO.setUpdated(new Date());
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
         List<Event> events = new ArrayList<>();
@@ -323,6 +324,9 @@ public class DTOMapperTests {
 
         //then - verify the output
         assertNotNull(contact);
+        assertEquals(contact.getUpdated(), contactDTO.getUpdated());
+        assertEquals(contact.isAlreadyCooperated(), contactDTO.isAlreadyCooperated());
+        assertEquals(contact.getTitle(), contactDTO.getTitle());
         assertEquals(institutions.size(), contact.getInstitutions().size());
         assertEquals(events.size(), contact.getEvents().size());
         assertEquals(contactPeople.size(), contact.getContactPeople().size());

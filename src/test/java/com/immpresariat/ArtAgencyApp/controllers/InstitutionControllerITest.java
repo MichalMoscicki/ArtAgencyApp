@@ -149,7 +149,7 @@ public class InstitutionControllerITest {
        public void testUpdateInstitution() throws Exception {
            // Given
            Contact contact = createSampleContact();
-           Institution unsyncInstitution = createSampleInstitution("Dk Głogów", "Głogów", true, "DK", "");
+           Institution unsyncInstitution = createSampleInstitution("Dk Głogów", "Głogów",  "DK", "");
            Institution syncInstitution = institutionRepository.save(unsyncInstitution);
            contact.setInstitutions(Collections.singletonList(syncInstitution));
            contactRepository.save(contact);
@@ -171,7 +171,6 @@ public class InstitutionControllerITest {
                    .andExpect(jsonPath("$.id", is(institutionId.intValue())))
                    .andExpect(jsonPath("$.name", is(updatedInstitutionDTO.getName())))
                    .andExpect(jsonPath("$.city", is(updatedInstitutionDTO.getCity())))
-                   .andExpect(jsonPath("$.alreadyCooperated", is(updatedInstitutionDTO.isAlreadyCooperated())))
                    .andExpect(jsonPath("$.category", is(updatedInstitutionDTO.getCategory())))
                    .andExpect(jsonPath("$.notes", is(updatedInstitutionDTO.getNotes())));
        }
@@ -238,11 +237,10 @@ public class InstitutionControllerITest {
         return contactRepository.save(new Contact());
     }
 
-    private Institution createSampleInstitution(String name, String city, boolean alreadyCooperated, String category, String notes) {
+    private Institution createSampleInstitution(String name, String city, String category, String notes) {
         return Institution.builder()
                 .name(name)
                 .city(city)
-                .alreadyCooperated(alreadyCooperated)
                 .category(category)
                 .notes(notes)
                 .build();
@@ -253,7 +251,6 @@ public class InstitutionControllerITest {
                 .id(institutionId)
                 .name("Dk Chotomów")
                 .city("Chotomów")
-                .alreadyCooperated(false)
                 .category("DK")
                 .notes("Są notatki")
                 .build();

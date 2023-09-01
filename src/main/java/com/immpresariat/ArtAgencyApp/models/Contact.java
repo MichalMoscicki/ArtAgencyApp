@@ -1,8 +1,10 @@
 package com.immpresariat.ArtAgencyApp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,6 +20,14 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
+    private String title;
+
+    private boolean alreadyCooperated;
+
+    private Date updated;
+
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Event> events;

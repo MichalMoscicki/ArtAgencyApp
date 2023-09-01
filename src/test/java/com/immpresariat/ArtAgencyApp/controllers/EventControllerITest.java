@@ -40,7 +40,6 @@ public class EventControllerITest {
     private ContactRepository contactRepository;
     @Autowired
     EventService eventService;
-
     @Autowired
     private ObjectMapper objectMapper;
 

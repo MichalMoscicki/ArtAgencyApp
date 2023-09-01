@@ -22,7 +22,6 @@ public class DTOMapper {
                 .city(institution.getCity())
                 .notes(institution.getNotes())
                 .category(institution.getCategory())
-                .alreadyCooperated(institution.isAlreadyCooperated())
                 .build();
     }
 
@@ -31,7 +30,6 @@ public class DTOMapper {
                 .name(inputInstitutionDTO.getName())
                 .city(inputInstitutionDTO.getCity())
                 .category(inputInstitutionDTO.getCategory())
-                .alreadyCooperated(inputInstitutionDTO.isAlreadyCooperated())
                 .notes(inputInstitutionDTO.getNotes())
                 .build();
     }
@@ -42,7 +40,6 @@ public class DTOMapper {
                 .name(institutionDTO.getName())
                 .city(institutionDTO.getCity())
                 .category(institutionDTO.getCategory())
-                .alreadyCooperated(institutionDTO.isAlreadyCooperated())
                 .notes(institutionDTO.getNotes())
                 .build();
     }
@@ -108,6 +105,9 @@ public class DTOMapper {
     public ContactDTO mapContactToDTO(Contact contact){
         return ContactDTO.builder()
                 .id(contact.getId())
+                .title(contact.getTitle())
+                .alreadyCooperated(contact.isAlreadyCooperated())
+                .updated(contact.getUpdated())
                 .events(contact.getEvents())
                 .contactPeople(contact.getContactPeople())
                 .institutions(contact.getInstitutions())
@@ -117,6 +117,9 @@ public class DTOMapper {
     public Contact mapDTOToContact(ContactDTO contactDTO){
         return Contact.builder()
                 .id(contactDTO.getId())
+                .title(contactDTO.getTitle())
+                .alreadyCooperated(contactDTO.isAlreadyCooperated())
+                .updated(contactDTO.getUpdated())
                 .events(contactDTO.getEvents())
                 .contactPeople(contactDTO.getContactPeople())
                 .institutions(contactDTO.getInstitutions())

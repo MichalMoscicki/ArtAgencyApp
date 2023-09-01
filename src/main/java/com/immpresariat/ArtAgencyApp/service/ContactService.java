@@ -9,6 +9,7 @@ public interface ContactService {
 
     ContactDTO getById(Long Id);
     List<ContactDTO> getAll();
-    ContactDTO create();
+    ContactDTO create(ContactDTO unsyncContactDTO);
+    ContactDTO update(ContactDTO contactDTO);
     void deleteWithAssociatedData(Long id);
 }

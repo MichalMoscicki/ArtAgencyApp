@@ -25,9 +25,13 @@ public class ContactController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ContactDTO> create() {
+    public ResponseEntity<ContactDTO> create(@RequestBody ContactDTO unsyncContactDTO) {
+        return new ResponseEntity<>(contactService.create(unsyncContactDTO), HttpStatus.CREATED);
+    }
 
-        return new ResponseEntity<>(contactService.create(), HttpStatus.CREATED);
+    @PutMapping("/{id}")
+    public ResponseEntity<ContactDTO> update(@RequestBody ContactDTO contactDTO) {
+        return new ResponseEntity<>(contactService.update(contactDTO), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

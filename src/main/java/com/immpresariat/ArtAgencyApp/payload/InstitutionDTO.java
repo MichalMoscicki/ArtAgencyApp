@@ -16,7 +16,6 @@ public class InstitutionDTO {
     private String name;
     private String city;
     private String category;
-    private boolean alreadyCooperated = false;
     private String notes;
 
 }

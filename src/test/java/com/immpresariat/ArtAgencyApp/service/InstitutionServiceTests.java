@@ -50,7 +50,6 @@ public class InstitutionServiceTests {
                 .name("DK Głogów")
                 .notes("")
                 .city("Głogów")
-                .alreadyCooperated(true)
                 .category("DK")
                 .build();
 
@@ -58,7 +57,6 @@ public class InstitutionServiceTests {
                 .name("DK Głogów")
                 .notes("")
                 .city("Głogów")
-                .alreadyCooperated(true)
                 .category("DK")
                 .build();
 
@@ -67,7 +65,6 @@ public class InstitutionServiceTests {
                 .name("DK Głogów")
                 .notes("")
                 .city("Głogów")
-                .alreadyCooperated(true)
                 .category("DK")
                 .build();
     }
@@ -148,110 +145,6 @@ public class InstitutionServiceTests {
 
     }
 
-    /*
-    @DisplayName("JUnit test for InstitutionService update method (negative scenario)")
-    @Test
-    public void givenEventDTOObject_whenUpdate_thenThrowResourceNotFoundException() {
-        //given - precondition or setup
-        EventDTO inputDTO = synchronizedEventDTO;
-        given(eventRepository.findById(inputDTO.getId())).willReturn(Optional.empty());
-
-        //when - action or the behavior that we are going to test
-        assertThrows(ResourceNotFoundException.class, () -> {
-            eventService.update(inputDTO);
-        });
-        //then - verify the output
-
-    }
-
-    @DisplayName("JUnit test for InstitutionService update method (positive scenario)")
-    @Test
-    public void givenEventDTOObject_whenUpdate_thenReturnEventDTO() {
-        //given - precondition or setup
-        EventDTO inputDTO = synchronizedEventDTO;
-        given(eventRepository.findById(inputDTO.getId())).willReturn(Optional.of(event));
-        given(inputCleaner.clean(any(Event.class))).willReturn(new Event());
-        given(eventRepository.save(any(Event.class))).willReturn(new Event());
-        given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
-
-        //when - action or the behavior that we are going to test
-        EventDTO eventDTO = eventService.update(synchronizedEventDTO);
-
-        //then - verify the output
-        assertNotNull(eventDTO);
-        verify(eventRepository, times(1)).findById(anyLong());
-        verify(inputCleaner, times(1)).clean(any(Event.class));
-        verify(eventRepository, times(1)).save(any(Event.class));
-        verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));
-
-    }
-      */
-
-//    @DisplayName("JUnit test for InstitutionService delete method")
-//    @Test
-//    public void givenId_whenDelete_thenInstitutionDeleted() {
-//        //given - precondition or setup
-//        Long id = 0L;
-//        doNothing().when(institutionRepository).deleteById(id);
-//
-//        //when - action or the behavior that we are going to test
-//        institutionService.deleteById(id);
-//
-//        //then - verify the output
-//        verify(institutionRepository, Mockito.times(1)).deleteById(id);
-//    }
-
-    /*
-
-    @DisplayName("JUnit test for InstitutionService update method (negative scenario)")
-    @Test
-    public void givenInstitutionId_whenUpdateInstitution_thenThrowsException() {
-        //given - precondition or setup
-        synchronizedInstitutionDTO.setNotes("Notatki, żeby sprawdzić zmianę");
-        InstitutionDTO updatedInstitutionDTO = synchronizedInstitutionDTO;
-        given(institutionRepository.findById(anyLong())).willReturn(Optional.empty());
-
-
-        //when - action or the behavior that we are going to test
-        assertThrows(ResourceNotFoundException.class, () -> {
-            institutionService.update(updatedInstitutionDTO);
-        });
-
-        //then - verify the output
-        Mockito.verify(institutionRepository, never()).save(any(Institution.class));
-
-    }
-
-    @DisplayName("JUnit test for InstitutionService update method (positive scenario)")
-    @Test
-    public void givenIdAndUpdatedInstitution_whenUpdateInstitution_thenReturnUpdatedInstitutionDTO() {
-
-        //given - precondition or setup
-        synchronizedInstitutionDTO.setNotes("Notatki, żeby sprawdzić zmianę");
-        InstitutionDTO updatedInstitutionDTO = synchronizedInstitutionDTO;
-
-        given(institutionRepository.findById(anyLong())).willReturn(Optional.of(new Institution()));
-        given(dtoMapper.mapDTOToInstitution(updatedInstitutionDTO)).willReturn(new Institution());
-        given(inputCleaner.clean(any(Institution.class))).willReturn(new Institution());
-        given(institutionRepository.save(any(Institution.class))).willReturn(new Institution());
-        given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(updatedInstitutionDTO);
-
-
-        //when - action or the behavior that we are going to test
-        InstitutionDTO updatedInstitutionDTODb = institutionService.update(updatedInstitutionDTO);
-
-        //then - verify the output
-        assertThat(updatedInstitutionDTODb).isNotNull();
-        verify(institutionRepository, times(1)).findById(anyLong());
-        verify(dtoMapper, times(1)).mapDTOToInstitution(any(InstitutionDTO.class));
-        verify(inputCleaner, times(1)).clean(any(Institution.class));
-        verify(institutionRepository, times(1)).save(any(Institution.class));
-        verify(dtoMapper, times(1)).mapInstitutionToDTO(any(Institution.class));
-        assertThat(updatedInstitutionDTO).isEqualTo(updatedInstitutionDTODb);
-
-    }
-
-     */
 
 
 }
