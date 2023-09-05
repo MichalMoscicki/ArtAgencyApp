@@ -1,5 +1,6 @@
 package com.immpresariat.ArtAgencyApp.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
@@ -23,6 +24,7 @@ public class ContactDTO {
 
     private boolean alreadyCooperated;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date updated;
 
     private List<Institution> institutions;
