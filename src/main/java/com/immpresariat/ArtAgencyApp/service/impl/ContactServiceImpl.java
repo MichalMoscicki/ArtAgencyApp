@@ -12,6 +12,7 @@ import com.immpresariat.ArtAgencyApp.repository.EventRepository;
 import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactService;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
+import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,17 +29,20 @@ public class ContactServiceImpl implements ContactService {
     private final ContactPersonRepository contactPersonRepository;
     private final InstitutionRepository institutionRepository;
     private final DTOMapper dtoMapper;
+    private final InputCleaner inputCleaner;
 
     public ContactServiceImpl(ContactRepository contactRepository,
                               EventRepository eventRepository,
                               ContactPersonRepository contactPersonRepository,
                               InstitutionRepository institutionRepository,
-                              DTOMapper dtoMapper) {
+                              DTOMapper dtoMapper,
+                              InputCleaner inputCleaner) {
         this.contactRepository = contactRepository;
         this.eventRepository = eventRepository;
         this.contactPersonRepository = contactPersonRepository;
         this.institutionRepository = institutionRepository;
         this.dtoMapper = dtoMapper;
+        this.inputCleaner = inputCleaner;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO create(ContactDTO unsyncContactDTO) {
         unsyncContactDTO.setUpdated(new Date());
-        Contact contact = contactRepository.save(dtoMapper.mapDTOToContact(unsyncContactDTO));
+        Contact contact = contactRepository.save(inputCleaner.clean(dtoMapper.mapDTOToContact(unsyncContactDTO)));
         return dtoMapper.mapContactToDTO(contact);
     }
 
@@ -64,7 +68,7 @@ public class ContactServiceImpl implements ContactService {
     public ContactDTO update(ContactDTO contactDTO) {
         ensureContactExists(contactDTO.getId());
         contactDTO.setUpdated(new Date());
-        Contact contact = contactRepository.save(dtoMapper.mapDTOToContact(contactDTO));
+        Contact contact = contactRepository.save(inputCleaner.clean(dtoMapper.mapDTOToContact(contactDTO)));
         return dtoMapper.mapContactToDTO(contact);
     }
 

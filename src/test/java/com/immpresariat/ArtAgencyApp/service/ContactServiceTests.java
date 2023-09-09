@@ -6,6 +6,7 @@ import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.ContactServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
+import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +31,16 @@ public class ContactServiceTests {
     @Mock
     ContactRepository contactRepository;
 
+    @Mock
+    InputCleaner inputCleaner;
+
     @InjectMocks
     ContactServiceImpl contactService;
 
 
-   @DisplayName("JUnit test for Contact getAll method")
+
+
+    @DisplayName("JUnit test for Contact getAll method")
    @Test
    public void given_whenGetAll_thenReturnListOfContactDTO() {
        //given - precondition or setup
@@ -99,6 +105,7 @@ public class ContactServiceTests {
         given(dtoMapper.mapDTOToContact(any(ContactDTO.class))).willReturn(new Contact());
         given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
         given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
+        given(inputCleaner.clean(any(Contact.class))).willReturn(new Contact());
 
 
         //when - action or the behavior that we are going to test
@@ -149,6 +156,7 @@ public class ContactServiceTests {
         given(dtoMapper.mapDTOToContact(any(ContactDTO.class))).willReturn(new Contact());
         given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
         given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
+        given(inputCleaner.clean(any(Contact.class))).willReturn(new Contact());
 
 
         //when - action or the behavior that we are going to test

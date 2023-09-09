@@ -36,6 +36,9 @@ public class InputCleaner {
     public Contact clean(Contact contact){
         contact.setTitle(contact.getTitle().trim());
         contact.setDescription(contact.getDescription().trim());
+        contact.setEmail(contact.getEmail().trim());
+        contact.setPhone(contact.getPhone().trim());
+        contact.setWebPage(contact.getWebPage().trim());
         return contact;
     }
 

@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -271,13 +273,16 @@ public class DTOMapperTests {
 
     @DisplayName("JUnit test for mapContactToDTO method")
     @Test
-    public void givenContactObject_whenMapContactToDTO_thenContactDTOObject() {
+    public void givenContactObject_whenMapContactToDTO_thenContactDTOObject() throws MalformedURLException {
         //given - precondition or setup
         Contact contact = new Contact();
         contact.setTitle("Nowy Kontakt");
         contact.setAlreadyCooperated(false);
         contact.setDescription("Opis");
         contact.setUpdated(new Date());
+        contact.setPhone("+48111222333");
+        contact.setEmail("abc@gmail.com");
+        contact.setWebPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html");
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
         List<Event> events = new ArrayList<>();
@@ -300,18 +305,24 @@ public class DTOMapperTests {
         assertEquals(institutions.size(), contactDTO.getInstitutions().size());
         assertEquals(events.size(), contactDTO.getEvents().size());
         assertEquals(contactPeople.size(), contactDTO.getContactPeople().size());
+        assertEquals(contact.getEmail(), contactDTO.getEmail());
+        assertEquals(contact.getWebPage(), contactDTO.getWebPage());
+        assertEquals(contact.getPhone(), contactDTO.getPhone());
 
     }
 
     @DisplayName("JUnit test for mapDTOToContact method")
     @Test
-    public void givenContactDTOObject_whenMapContactToDTO_thenContactObject() {
+    public void givenContactDTOObject_whenMapContactToDTO_thenContactObject() throws MalformedURLException {
         //given - precondition or setup
         ContactDTO contactDTO = new ContactDTO();
         contactDTO.setTitle("Nowy Kontakt");
         contactDTO.setAlreadyCooperated(false);
         contactDTO.setDescription("Opis");
         contactDTO.setUpdated(new Date());
+        contactDTO.setPhone("+48111222333");
+        contactDTO.setEmail("abc@gmail.com");
+        contactDTO.setWebPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html");
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
         List<Event> events = new ArrayList<>();
@@ -334,6 +345,9 @@ public class DTOMapperTests {
         assertEquals(institutions.size(), contact.getInstitutions().size());
         assertEquals(events.size(), contact.getEvents().size());
         assertEquals(contactPeople.size(), contact.getContactPeople().size());
+        assertEquals(contact.getEmail(), contactDTO.getEmail());
+        assertEquals(contact.getWebPage(), contactDTO.getWebPage());
+        assertEquals(contact.getPhone(), contactDTO.getPhone());
 
     }
 

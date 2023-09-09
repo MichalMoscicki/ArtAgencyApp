@@ -6,6 +6,7 @@ import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import lombok.*;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,12 @@ public class ContactDTO {
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date updated;
+
+    private String phone;
+
+    private String email;
+
+    private String webPage;
 
     private List<Institution> institutions;
 
