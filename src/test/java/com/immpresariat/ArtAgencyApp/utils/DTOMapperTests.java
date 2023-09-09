@@ -276,6 +276,7 @@ public class DTOMapperTests {
         Contact contact = new Contact();
         contact.setTitle("Nowy Kontakt");
         contact.setAlreadyCooperated(false);
+        contact.setDescription("Opis");
         contact.setUpdated(new Date());
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
@@ -294,6 +295,7 @@ public class DTOMapperTests {
         assertNotNull(contactDTO);
         assertEquals(contact.getUpdated(), contactDTO.getUpdated());
         assertEquals(contact.isAlreadyCooperated(), contactDTO.isAlreadyCooperated());
+        assertEquals(contact.getDescription(), contactDTO.getDescription());
         assertEquals(contact.getTitle(), contactDTO.getTitle());
         assertEquals(institutions.size(), contactDTO.getInstitutions().size());
         assertEquals(events.size(), contactDTO.getEvents().size());
@@ -308,6 +310,7 @@ public class DTOMapperTests {
         ContactDTO contactDTO = new ContactDTO();
         contactDTO.setTitle("Nowy Kontakt");
         contactDTO.setAlreadyCooperated(false);
+        contactDTO.setDescription("Opis");
         contactDTO.setUpdated(new Date());
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
@@ -326,6 +329,7 @@ public class DTOMapperTests {
         assertNotNull(contact);
         assertEquals(contact.getUpdated(), contactDTO.getUpdated());
         assertEquals(contact.isAlreadyCooperated(), contactDTO.isAlreadyCooperated());
+        assertEquals(contact.getDescription(), contactDTO.getDescription());
         assertEquals(contact.getTitle(), contactDTO.getTitle());
         assertEquals(institutions.size(), contact.getInstitutions().size());
         assertEquals(events.size(), contact.getEvents().size());

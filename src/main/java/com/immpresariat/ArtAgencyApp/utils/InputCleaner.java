@@ -1,5 +1,6 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
@@ -30,6 +31,12 @@ public class InputCleaner {
             contactPerson.setRole(contactPerson.getRole().trim().toLowerCase());
         }
         return contactPerson;
+    }
+
+    public Contact clean(Contact contact){
+        contact.setTitle(contact.getTitle().trim());
+        contact.setDescription(contact.getDescription().trim());
+        return contact;
     }
 
 }

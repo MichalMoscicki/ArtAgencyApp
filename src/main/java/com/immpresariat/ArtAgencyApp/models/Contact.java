@@ -24,6 +24,8 @@ public class Contact {
     @NotBlank
     private String title;
 
+    private String description;
+
     private boolean alreadyCooperated;
 
     private Date updated;

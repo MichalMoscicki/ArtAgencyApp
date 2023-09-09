@@ -1,5 +1,6 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
@@ -18,9 +19,9 @@ class InputCleanerTest {
         inputCleaner = new InputCleaner();
     }
 
-    @DisplayName("JUnit test for trim institution method")
+    @DisplayName("JUnit test for clean institution method")
     @Test
-    public void givenInstitutionObject_whenTrim_thenReturnTrimmedInstitutionObject() {
+    public void givenInstitutionObject_whenClean_thenReturnCleanedInstitutionObject() {
         //given - precondition or setup
         Institution institution = Institution.builder()
                 .name(" Dom Kultury ")
@@ -30,20 +31,20 @@ class InputCleanerTest {
                 .build();
 
         //when - action or the behavior that we are going to test
-        Institution trimmedInstitution = inputCleaner.clean(institution);
+        Institution cleanedInstitution = inputCleaner.clean(institution);
 
 
         //then - verify the output
-        assertEquals("Dom Kultury", trimmedInstitution.getName());
-        assertEquals("Notatki", trimmedInstitution.getNotes());
-        assertEquals("Jakieś miasto", trimmedInstitution.getCity());
-        assertEquals("dom kultury", trimmedInstitution.getCategory());
+        assertEquals("Dom Kultury", cleanedInstitution.getName());
+        assertEquals("Notatki", cleanedInstitution.getNotes());
+        assertEquals("Jakieś miasto", cleanedInstitution.getCity());
+        assertEquals("dom kultury", cleanedInstitution.getCategory());
 
     }
 
-    @DisplayName("JUnit test for trim event method")
+    @DisplayName("JUnit test for clean event method")
     @Test
-    public void givenEventObject_whenTrim_thenReturnTrimmedEventObject() {
+    public void givenEventObject_whenClean_thenReturnCleanedEventObject() {
         //given - precondition or setup
         Event event = Event.builder()
                 .name("  Biba")
@@ -52,18 +53,18 @@ class InputCleanerTest {
 
 
         //when - action or the behavior that we are going to test
-        Event trimmedEvent = inputCleaner.clean(event);
+        Event cleanedEvent = inputCleaner.clean(event);
 
 
         //then - verify the output
-        assertEquals("Biba", trimmedEvent.getName());
-        assertEquals("Cool biiiba", trimmedEvent.getDescription());
+        assertEquals("Biba", cleanedEvent.getName());
+        assertEquals("Cool biiiba", cleanedEvent.getDescription());
 
     }
 
-    @DisplayName("JUnit test for trim contactPerson method")
+    @DisplayName("JUnit test for clean contactPerson method")
     @Test
-    public void givenContactPersonObject_whenTrim_thenReturnTrimmedContactPersonObject() {
+    public void givenContactPersonObject_whenClean_thenReturnCleanedContactPersonObject() {
         //given - precondition or setup
         ContactPerson contactPerson = ContactPerson.builder()
                 .role(" Dyrektor")
@@ -74,15 +75,34 @@ class InputCleanerTest {
                 .build();
 
         //when - action or the behavior that we are going to test
-        ContactPerson trimmedContactPerson = inputCleaner.clean(contactPerson);
+        ContactPerson cleanedContactPerson = inputCleaner.clean(contactPerson);
 
 
         //then - verify the output
-        assertEquals("dyrektor", trimmedContactPerson.getRole());
-        assertEquals("mail@mail.pl", trimmedContactPerson.getEmail());
-        assertEquals("+48777222666", trimmedContactPerson.getPhone());
-        assertEquals("Jan", trimmedContactPerson.getFirstName());
-        assertEquals("Kowalski", trimmedContactPerson.getLastName());
+        assertEquals("dyrektor", cleanedContactPerson.getRole());
+        assertEquals("mail@mail.pl", cleanedContactPerson.getEmail());
+        assertEquals("+48777222666", cleanedContactPerson.getPhone());
+        assertEquals("Jan", cleanedContactPerson.getFirstName());
+        assertEquals("Kowalski", cleanedContactPerson.getLastName());
+
+    }
+
+    @DisplayName("JUnit test for clean contact method")
+    @Test
+    public void givenContactObject_whenTrim_thenReturnCleanedContactObject() {
+        //given - precondition or setup
+        Contact contact = Contact.builder()
+                .title(" DK Chotomów  ")
+                .description("   Opis  ")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Contact cleanedContact = inputCleaner.clean(contact);
+
+
+        //then - verify the output
+        assertEquals("DK Chotomów", cleanedContact.getTitle());
+        assertEquals("Opis", cleanedContact.getDescription());
 
     }
 
