@@ -8,6 +8,7 @@ import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.payload.EventDTO;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,6 @@ public class DTOMapperTests {
     ContactPerson contactPerson;
 
 
-
     @BeforeEach
     public void setup() {
         dtoMapper = new DTOMapper();
@@ -48,6 +48,9 @@ public class DTOMapperTests {
                 .notes("Super miejsce")
                 .city("Warszawa")
                 .category("dom kultury")
+                .phone("+48111222333")
+                .email("abc@gmail.com")
+                .webPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html")
                 .build();
 
         eventId = 1L;
@@ -84,6 +87,10 @@ public class DTOMapperTests {
         assertEquals(institution.getCity(), institutionDTO.getCity());
         assertEquals(institution.getNotes(), institutionDTO.getNotes());
         assertEquals(institution.getCategory(), institutionDTO.getCategory());
+        assertEquals(institution.getEmail(), institutionDTO.getEmail());
+        assertEquals(institution.getWebPage(), institutionDTO.getWebPage());
+        assertEquals(institution.getPhone(), institutionDTO.getPhone());
+
 
     }
 
@@ -96,6 +103,9 @@ public class DTOMapperTests {
                 .city("Chotomów")
                 .notes("Cool miejsce")
                 .category("DK")
+                .phone("+48111222333")
+                .email("abc@gmail.com")
+                .webPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html")
                 .build();
 
 
@@ -109,6 +119,9 @@ public class DTOMapperTests {
         assertEquals(inputInstitutionDTO.getCity(), unsynchronizedInstitution.getCity());
         assertEquals(inputInstitutionDTO.getCategory(), unsynchronizedInstitution.getCategory());
         assertEquals(inputInstitutionDTO.getNotes(), unsynchronizedInstitution.getNotes());
+        assertEquals(inputInstitutionDTO.getEmail(), unsynchronizedInstitution.getEmail());
+        assertEquals(inputInstitutionDTO.getWebPage(), unsynchronizedInstitution.getWebPage());
+        assertEquals(inputInstitutionDTO.getPhone(), unsynchronizedInstitution.getPhone());
 
     }
 
@@ -123,6 +136,9 @@ public class DTOMapperTests {
                 .city("Chotomów")
                 .notes("Cool miejsce")
                 .category("DK")
+                .phone("+48111222333")
+                .email("abc@gmail.com")
+                .webPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html")
                 .build();
 
         //when - action or the behavior that we are going to test
@@ -135,8 +151,12 @@ public class DTOMapperTests {
         assertEquals(institutionDTO.getCity(), synchronizedInstitution.getCity());
         assertEquals(institutionDTO.getCategory(), synchronizedInstitution.getCategory());
         assertEquals(institutionDTO.getNotes(), synchronizedInstitution.getNotes());
+        assertEquals(institutionDTO.getEmail(), synchronizedInstitution.getEmail());
+        assertEquals(institutionDTO.getWebPage(), synchronizedInstitution.getWebPage());
+        assertEquals(institutionDTO.getPhone(), synchronizedInstitution.getPhone());
 
     }
+
 
     @DisplayName("JUnit test for map Event to DTO")
     @Test
@@ -220,6 +240,7 @@ public class DTOMapperTests {
         assertEquals(contactPerson.getPhone(), contactPersonDTO.getPhone());
 
     }
+
     @DisplayName("JUnit test for map DTO to ContactPerson")
     @Test
     public void givenContactPersonDTOObject_whenMapDtoToContactPerson_thenReturnContactPersonObject() {
@@ -280,9 +301,8 @@ public class DTOMapperTests {
         contact.setAlreadyCooperated(false);
         contact.setDescription("Opis");
         contact.setUpdated(new Date());
-        contact.setPhone("+48111222333");
-        contact.setEmail("abc@gmail.com");
-        contact.setWebPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html");
+
+
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
         List<Event> events = new ArrayList<>();
@@ -305,9 +325,7 @@ public class DTOMapperTests {
         assertEquals(institutions.size(), contactDTO.getInstitutions().size());
         assertEquals(events.size(), contactDTO.getEvents().size());
         assertEquals(contactPeople.size(), contactDTO.getContactPeople().size());
-        assertEquals(contact.getEmail(), contactDTO.getEmail());
-        assertEquals(contact.getWebPage(), contactDTO.getWebPage());
-        assertEquals(contact.getPhone(), contactDTO.getPhone());
+
 
     }
 
@@ -320,9 +338,7 @@ public class DTOMapperTests {
         contactDTO.setAlreadyCooperated(false);
         contactDTO.setDescription("Opis");
         contactDTO.setUpdated(new Date());
-        contactDTO.setPhone("+48111222333");
-        contactDTO.setEmail("abc@gmail.com");
-        contactDTO.setWebPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html");
+
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
         List<Event> events = new ArrayList<>();
@@ -345,9 +361,6 @@ public class DTOMapperTests {
         assertEquals(institutions.size(), contact.getInstitutions().size());
         assertEquals(events.size(), contact.getEvents().size());
         assertEquals(contactPeople.size(), contact.getContactPeople().size());
-        assertEquals(contact.getEmail(), contactDTO.getEmail());
-        assertEquals(contact.getWebPage(), contactDTO.getWebPage());
-        assertEquals(contact.getPhone(), contactDTO.getPhone());
 
     }
 

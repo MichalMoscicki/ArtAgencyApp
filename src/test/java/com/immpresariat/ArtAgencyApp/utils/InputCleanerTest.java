@@ -28,6 +28,9 @@ class InputCleanerTest {
                 .notes("   Notatki    ")
                 .city(" Jakieś miasto  ")
                 .category(" dom kultury ")
+                .webPage(" https://www.google.com/search ")
+                .phone(" +48938475970 ")
+                .email(" abc@.gmail.com")
                 .build();
 
         //when - action or the behavior that we are going to test
@@ -39,6 +42,9 @@ class InputCleanerTest {
         assertEquals("Notatki", cleanedInstitution.getNotes());
         assertEquals("Jakieś miasto", cleanedInstitution.getCity());
         assertEquals("dom kultury", cleanedInstitution.getCategory());
+        assertEquals("+48938475970", cleanedInstitution.getPhone());
+        assertEquals("https://www.google.com/search", cleanedInstitution.getWebPage());
+        assertEquals("abc@.gmail.com", cleanedInstitution.getEmail());
 
     }
 
@@ -94,9 +100,6 @@ class InputCleanerTest {
         Contact contact = Contact.builder()
                 .title(" DK Chotomów  ")
                 .description("   Opis  ")
-                .webPage(" https://www.google.com/search ")
-                .phone(" +48938475970 ")
-                .email(" abc@.gmail.com")
                 .build();
 
         //when - action or the behavior that we are going to test
@@ -106,9 +109,7 @@ class InputCleanerTest {
         //then - verify the output
         assertEquals("DK Chotomów", cleanedContact.getTitle());
         assertEquals("Opis", cleanedContact.getDescription());
-        assertEquals("+48938475970", cleanedContact.getPhone());
-        assertEquals("https://www.google.com/search", cleanedContact.getWebPage());
-        assertEquals("abc@.gmail.com", cleanedContact.getEmail());
+
     }
 
 

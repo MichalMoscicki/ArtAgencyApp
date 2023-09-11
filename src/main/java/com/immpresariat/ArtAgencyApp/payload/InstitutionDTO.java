@@ -18,4 +18,10 @@ public class InstitutionDTO {
     private String category;
     private String notes;
 
+    private String phone;
+
+    private String email;
+
+    private String webPage;
+
 }

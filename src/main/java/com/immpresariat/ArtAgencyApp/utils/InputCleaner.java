@@ -14,9 +14,17 @@ public class InputCleaner {
       institution.setCity(institution.getCity().trim());
       institution.setCategory(institution.getCategory().trim());
       institution.setNotes(institution.getNotes().trim());
+        if(institution.getEmail() != null){
+            institution.setEmail(institution.getEmail().trim());
+        }
+        if(institution.getPhone() != null){
+            institution.setPhone(institution.getPhone().trim());
+        }
+        if(institution.getWebPage() != null){
+            institution.setWebPage(institution.getWebPage().trim());
+        }
         return institution;
     }
-
     public Event clean(Event event){
         event.setName(event.getName().trim());
         event.setDescription(event.getDescription().trim());
@@ -32,21 +40,11 @@ public class InputCleaner {
         }
         return contactPerson;
     }
-
     public Contact clean(Contact contact){
         contact.setTitle(contact.getTitle().trim());
 
         if(contact.getDescription() != null){
             contact.setDescription(contact.getDescription().trim());
-        }
-        if(contact.getEmail() != null){
-            contact.setEmail(contact.getEmail().trim());
-        }
-        if(contact.getPhone() != null){
-            contact.setPhone(contact.getPhone().trim());
-        }
-        if(contact.getWebPage() != null){
-            contact.setWebPage(contact.getWebPage().trim());
         }
         return contact;
     }

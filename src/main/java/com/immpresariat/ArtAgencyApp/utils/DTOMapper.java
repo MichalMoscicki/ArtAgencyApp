@@ -22,6 +22,9 @@ public class DTOMapper {
                 .city(institution.getCity())
                 .notes(institution.getNotes())
                 .category(institution.getCategory())
+                .phone(institution.getPhone())
+                .email(institution.getEmail())
+                .webPage(institution.getWebPage())
                 .build();
     }
 
@@ -30,6 +33,9 @@ public class DTOMapper {
                 .name(inputInstitutionDTO.getName())
                 .city(inputInstitutionDTO.getCity())
                 .category(inputInstitutionDTO.getCategory())
+                .phone(inputInstitutionDTO.getPhone())
+                .email(inputInstitutionDTO.getEmail())
+                .webPage(inputInstitutionDTO.getWebPage())
                 .notes(inputInstitutionDTO.getNotes())
                 .build();
     }
@@ -41,6 +47,9 @@ public class DTOMapper {
                 .city(institutionDTO.getCity())
                 .category(institutionDTO.getCategory())
                 .notes(institutionDTO.getNotes())
+                .phone(institutionDTO.getPhone())
+                .email(institutionDTO.getEmail())
+                .webPage(institutionDTO.getWebPage())
                 .build();
     }
 
@@ -109,9 +118,6 @@ public class DTOMapper {
                 .alreadyCooperated(contact.isAlreadyCooperated())
                 .updated(contact.getUpdated())
                 .description(contact.getDescription())
-                .phone(contact.getPhone())
-                .email(contact.getEmail())
-                .webPage(contact.getWebPage())
                 .events(contact.getEvents())
                 .contactPeople(contact.getContactPeople())
                 .institutions(contact.getInstitutions())
@@ -124,9 +130,6 @@ public class DTOMapper {
                 .title(contactDTO.getTitle())
                 .alreadyCooperated(contactDTO.isAlreadyCooperated())
                 .description(contactDTO.getDescription())
-                .phone(contactDTO.getPhone())
-                .email(contactDTO.getEmail())
-                .webPage(contactDTO.getWebPage())
                 .updated(contactDTO.getUpdated())
                 .events(contactDTO.getEvents())
                 .contactPeople(contactDTO.getContactPeople())

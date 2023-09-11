@@ -33,16 +33,6 @@ public class Contact {
 
     private Date updated;
 
-    private String webPage;
-
-    @Pattern(regexp = "^(?:[\\\\+]?[(]?[0-9]{2}[)]?-?[0-9]{3}[-\\\\s\\\\.]?[0-9]{4,6}|null)?$",
-            message = "Invalid phone number. Proper structure: \"+\"[dial number][number]. Eg: +481111222333")
-    private String phone;
-
-    @Nullable
-    @Email(message = "Invalid email")
-    private String email;
-
     @OneToMany(fetch = FetchType.EAGER)
     private List<Event> events;
 
