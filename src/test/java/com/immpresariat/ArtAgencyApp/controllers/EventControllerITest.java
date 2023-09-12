@@ -43,6 +43,7 @@ public class EventControllerITest {
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @BeforeEach
     public void setup() {
         cleanDB();
@@ -243,7 +244,10 @@ public class EventControllerITest {
     }
 
     private Contact createSampleContact() {
-        return contactRepository.save(new Contact());
+        Contact contact = Contact.builder()
+                .title("Testowy Kontakt")
+                .build();
+        return contactRepository.save(contact);
     }
 
     private EventDTO createSampleEventDTO(Long eventId) {
