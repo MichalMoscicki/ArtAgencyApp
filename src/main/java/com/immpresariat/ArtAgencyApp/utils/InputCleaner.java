@@ -33,8 +33,12 @@ public class InputCleaner {
     public ContactPerson clean(ContactPerson contactPerson){
         contactPerson.setFirstName(contactPerson.getFirstName().trim());
         contactPerson.setLastName(contactPerson.getLastName().trim());
-        contactPerson.setEmail(contactPerson.getEmail().trim());
-        contactPerson.setPhone(contactPerson.getPhone().trim());
+        if(contactPerson.getEmail() != null){
+            contactPerson.setEmail(contactPerson.getEmail().trim());
+        }
+        if (contactPerson.getPhone() != null){
+            contactPerson.setPhone(contactPerson.getPhone().trim());
+        }
         if(contactPerson.getRole() != null){
             contactPerson.setRole(contactPerson.getRole().trim().toLowerCase());
         }

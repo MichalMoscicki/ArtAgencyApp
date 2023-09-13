@@ -93,9 +93,27 @@ class InputCleanerTest {
 
     }
 
+    @DisplayName("JUnit test for clean contactPerson method (no phone and email)")
+    @Test
+    public void givenContactPersonObjectNoPhoneAndEmail_whenClean_thenReturnCleanedContactPersonObject() {
+        //given - precondition or setup
+        ContactPerson contactPerson = ContactPerson.builder()
+                .firstName("   Jan  ")
+                .lastName(" Kowalski   ")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        ContactPerson cleanedContactPerson = inputCleaner.clean(contactPerson);
+
+        //then - verify the output
+        assertEquals("Jan", cleanedContactPerson.getFirstName());
+        assertEquals("Kowalski", cleanedContactPerson.getLastName());
+
+    }
+
     @DisplayName("JUnit test for clean contact method (all fields field)")
     @Test
-    public void givenContactObject_whenTrim_thenReturnCleanedContactObject() {
+    public void givenContactObject_whenClean_thenReturnCleanedContactObject() {
         //given - precondition or setup
         Contact contact = Contact.builder()
                 .title(" DK Chotomów  ")
