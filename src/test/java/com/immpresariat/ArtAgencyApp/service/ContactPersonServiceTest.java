@@ -180,7 +180,7 @@ public class ContactPersonServiceTest {
 
         //when - action or the behavior that we are going to test
         assertThrows(ResourceNotFoundException.class, () -> {
-            contactPersonService.update(inputDTO);
+            contactPersonService.update(inputDTO, anyLong());
         });
         //then - verify the output
 
@@ -192,13 +192,14 @@ public class ContactPersonServiceTest {
         //given - precondition or setup
         ContactPersonDTO inputDTO = synchronizedContactPersonDTO;
         given(contactPersonRepository.findById(inputDTO.getId())).willReturn(Optional.of(contactPerson));
+        given(contactRepository.findById(anyLong())).willReturn(Optional.of(new Contact()));
 
         given(inputCleaner.clean(any(ContactPerson.class))).willReturn(new ContactPerson());
         given(contactPersonRepository.save(any(ContactPerson.class))).willReturn(new ContactPerson());
         given(dtoMapper.mapContactPersonToDTO(any(ContactPerson.class))).willReturn(synchronizedContactPersonDTO);
 
         //when - action or the behavior that we are going to test
-        ContactPersonDTO contactPersonDTO = contactPersonService.update(synchronizedContactPersonDTO);
+        ContactPersonDTO contactPersonDTO = contactPersonService.update(synchronizedContactPersonDTO, anyLong());
 
         //then - verify the output
         assertNotNull(contactPersonDTO);

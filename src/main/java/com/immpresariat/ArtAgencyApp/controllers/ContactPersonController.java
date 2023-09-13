@@ -29,8 +29,9 @@ public class ContactPersonController {
     }
 
     @PutMapping("{contactPersonId}")
-    public ResponseEntity<ContactPersonDTO> update(@RequestBody ContactPersonDTO contactPersonDTO){
-        return new ResponseEntity<>(contactPersonService.update(contactPersonDTO), HttpStatus.OK);
+    public ResponseEntity<ContactPersonDTO> update(@PathVariable Long contactId,
+                                                   @RequestBody ContactPersonDTO contactPersonDTO){
+        return new ResponseEntity<>(contactPersonService.update(contactPersonDTO, contactId), HttpStatus.OK);
     }
 
 

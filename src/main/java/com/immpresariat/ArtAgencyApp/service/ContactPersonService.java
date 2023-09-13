@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface ContactPersonService {
 
-    ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long institutionId);
+    ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long contactId);
 
     List<ContactPersonDTO> getAll();
 
     ContactPersonDTO getById(Long id);
 
-    ContactPersonDTO update(ContactPersonDTO updatedContactPersonDTO);
+    ContactPersonDTO update(ContactPersonDTO updatedContactPersonDTO, Long contactId);
 
     void delete(Long contactPersonId, Long contactId);
 }

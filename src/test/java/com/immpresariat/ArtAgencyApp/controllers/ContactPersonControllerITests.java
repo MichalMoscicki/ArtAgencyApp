@@ -19,10 +19,13 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -73,6 +76,7 @@ public class ContactPersonControllerITests {
         //given - precondition or setup
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
+        Date updated = contact.getUpdated();
         ContactPersonDTO unsyncContactPersonDTO = createSampleContactPersonDTO(null);
 
         //when - action or the behavior that we are going to test
@@ -83,6 +87,7 @@ public class ContactPersonControllerITests {
         //then - verify the output
         Contact updatedContact = contactRepository.findById(contactId).get();
         assertEquals(updatedContact.getContactPeople().size(), 1);
+        assertNotEquals(updated, updatedContact.getUpdated());
 
     }
 
@@ -159,6 +164,7 @@ public class ContactPersonControllerITests {
         Long contactId = contact.getId();
         Long contactPersonId = syncContactPerson.getId();
         ContactPersonDTO updatedContactPersonDTO = createSampleContactPersonDTO(contactPersonId);
+        Date updated = contact.getUpdated();
 
         // When
         ResultActions response = mockMvc.perform(
@@ -176,6 +182,9 @@ public class ContactPersonControllerITests {
                 .andExpect(jsonPath("$.email", is(updatedContactPersonDTO.getEmail())))
                 .andExpect(jsonPath("$.phone", is(updatedContactPersonDTO.getPhone())))
                 .andExpect(jsonPath("$.role", is(updatedContactPersonDTO.getRole())));
+
+        Contact updatedContact = contactRepository.findById(contactId).get();
+        assertNotEquals(updated, updatedContact.getUpdated());
     }
 
 
@@ -248,6 +257,7 @@ public class ContactPersonControllerITests {
         Contact contact = Contact.builder()
                 .title("Opener Festival")
                 .alreadyCooperated(true)
+                .updated(new Date())
                 .build();
 
         return contactRepository.save(contact);

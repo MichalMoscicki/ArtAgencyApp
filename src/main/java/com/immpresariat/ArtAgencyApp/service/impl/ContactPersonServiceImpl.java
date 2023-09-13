@@ -13,6 +13,7 @@ import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ public class ContactPersonServiceImpl implements ContactPersonService {
         Contact contact = ensureContactExists(contactId);
         ContactPerson unsyncContactPerson = dtoMapper.mapUnsyncDTOToContactPerson(unsyncContactPersonDTO);
         ContactPerson synchronizedContactPerson = contactPersonRepository.save(inputCleaner.clean(unsyncContactPerson));
+
         updateContact(contact, synchronizedContactPerson);
         return dtoMapper.mapContactPersonToDTO(synchronizedContactPerson);
     }
@@ -57,7 +59,7 @@ public class ContactPersonServiceImpl implements ContactPersonService {
     }
 
     @Override
-    public ContactPersonDTO update(ContactPersonDTO updatedContactPersonDTO) {
+    public ContactPersonDTO update(ContactPersonDTO updatedContactPersonDTO, Long contactId) {
         ContactPerson contactPerson = ensureContactPersonExists(updatedContactPersonDTO.getId());
         contactPerson.setFirstName(updatedContactPersonDTO.getFirstName());
         contactPerson.setLastName(updatedContactPersonDTO.getLastName());
@@ -66,6 +68,8 @@ public class ContactPersonServiceImpl implements ContactPersonService {
         contactPerson.setEmail(updatedContactPersonDTO.getEmail());
 
         ContactPerson contactPersonDB = contactPersonRepository.save(inputCleaner.clean(contactPerson));
+        updateContactUpdatedField(contactId);
+
         return dtoMapper.mapContactPersonToDTO(contactPersonDB);
     }
 
@@ -102,6 +106,18 @@ public class ContactPersonServiceImpl implements ContactPersonService {
         }
         contactPeople.add(synchronizedContactPerson);
         contact.setContactPeople(contactPeople);
+        contact.setUpdated(new Date());
+        contactRepository.save(contact);
+    }
+
+    private void updateContactUpdatedField(long contactId) {
+        Optional<Contact> contactOptional = contactRepository.findById(contactId);
+        if (contactOptional.isEmpty()) {
+            throw new ResourceNotFoundException("No contact with id:" + contactId);
+        }
+
+        Contact contact = contactOptional.get();
+        contact.setUpdated(new Date());
         contactRepository.save(contact);
     }
 
