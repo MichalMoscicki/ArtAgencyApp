@@ -14,6 +14,7 @@ import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,10 +53,11 @@ public class InstitutionServiceImpl implements InstitutionService {
     }
 
     @Override
-    public InstitutionDTO update(InstitutionDTO updatedInstitutionDTO) {
+    public InstitutionDTO update(InstitutionDTO updatedInstitutionDTO, Long contactId) {
         ensureInstitutionExists(updatedInstitutionDTO.getId());
         Institution updatedInstitution = dtoMapper.mapDTOToInstitution(updatedInstitutionDTO);
         Institution institutionDB = institutionRepository.save(inputCleaner.clean(updatedInstitution));
+        updateContactUpdatedField(contactId);
         return dtoMapper.mapInstitutionToDTO(institutionDB);
 
     }
@@ -102,7 +104,20 @@ public class InstitutionServiceImpl implements InstitutionService {
         }
         institutions.add(synchronizedInstitution);
         contact.setInstitutions(institutions);
+        contact.setUpdated(new Date());
         contactRepository.save(contact);
     }
+
+    private void updateContactUpdatedField(long contactId) {
+        Optional<Contact> contactOptional = contactRepository.findById(contactId);
+        if (contactOptional.isEmpty()) {
+            throw new ResourceNotFoundException("No contact with id:" + contactId);
+        }
+
+        Contact contact = contactOptional.get();
+        contact.setUpdated(new Date());
+        contactRepository.save(contact);
+    }
+
 
 }

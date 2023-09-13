@@ -8,7 +8,7 @@ public interface InstitutionService {
 
     InstitutionDTO create(InstitutionDTO institutionDTO, Long contactId);
 
-    InstitutionDTO update(InstitutionDTO updatedInstitutionDTO);
+    InstitutionDTO update(InstitutionDTO updatedInstitutionDTO, Long contactId);
 
     InstitutionDTO getById(Long id);
 

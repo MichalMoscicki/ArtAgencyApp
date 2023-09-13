@@ -44,7 +44,7 @@ public class EventServiceTests {
     @BeforeEach
     public void setup() {
         event = Event.builder()
-                .id(1l)
+                .id(1L)
                 .name("Dni Łomianek")
                 .description("Impreza plenerowa")
                 .monthWhenOrganized(6)
@@ -69,7 +69,7 @@ public class EventServiceTests {
     @Test
     public void givenContactId_whenCreate_thenDoNotSaveEvent() {
         //given - precondition or setup
-        Long id = 0l;
+        Long id = 0L;
         given(contactRepository.findById(id)).willReturn(Optional.empty());
 
         //when - action or the behavior that we are going to test
@@ -87,7 +87,7 @@ public class EventServiceTests {
     @Test
     public void givenUnsynchronizedEventDTOObject_whenCreate_thenReturnSynchronizedEventDTOObject() {
         //given - precondition or setup
-        Long id = 0l;
+        Long id = 0L;
         given(contactRepository.findById(id)).willReturn(Optional.of(new Contact()));
         given(dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO)).willReturn(new Event());
         given(inputCleaner.clean(any(Event.class))).willReturn(new Event());

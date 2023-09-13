@@ -33,8 +33,9 @@ public class InstitutionController {
 
 
     @PutMapping("{institutionId}")
-    public ResponseEntity<InstitutionDTO> update(@RequestBody InstitutionDTO institutionDTO){
-        return new ResponseEntity<>(institutionService.update(institutionDTO), HttpStatus.OK);
+    public ResponseEntity<InstitutionDTO> update(@PathVariable Long contactId,
+                                                 @RequestBody InstitutionDTO institutionDTO){
+        return new ResponseEntity<>(institutionService.update(institutionDTO, contactId), HttpStatus.OK);
     }
 
 

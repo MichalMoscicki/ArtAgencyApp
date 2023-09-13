@@ -19,10 +19,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -72,7 +74,9 @@ public class InstitutionControllerITest {
         //given - precondition or setup
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
+        Date updated = contact.getUpdated();
         InstitutionDTO unsyncInstitutionDTO = createSampleInstitutionDTO(null);
+
 
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(post(String.format("/api/v1/contacts/%s/institutions", contactId))
@@ -82,27 +86,28 @@ public class InstitutionControllerITest {
         //then - verify the output
         Contact updatedContact = contactRepository.findById(contactId).get();
         assertEquals(updatedContact.getInstitutions().size(), 1);
+        assertNotEquals(updated, updatedContact.getUpdated());
 
     }
 
 
-        @Test
-        public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
-            //given - precondition or setup
-            Contact contact = createSampleContact();
-            Long contactId = contact.getId();
-            Long institutionId = 0L;
-            String message = String.format("No institution with id: %s", institutionId);
+    @Test
+    public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
+        //given - precondition or setup
+        Contact contact = createSampleContact();
+        Long contactId = contact.getId();
+        Long institutionId = 0L;
+        String message = String.format("No institution with id: %s", institutionId);
 
-            //when - action or the behavior that we are going to test
-            ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId)));
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId)));
 
 
-            //then - verify the output
-            response.andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
-        }
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
+    }
 
 
     @Test
@@ -122,79 +127,83 @@ public class InstitutionControllerITest {
     }
 
 
-   @Test
-   public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
-       //given - precondition or setup
-       Contact contact = createSampleContact();
-       Long contactId = contact.getId();
+    @Test
+    public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
+        //given - precondition or setup
+        Contact contact = createSampleContact();
+        Long contactId = contact.getId();
 
-       Long institutionId = 0L;
-       InstitutionDTO notExistingInstitution = createSampleInstitutionDTO(institutionId);
+        Long institutionId = 0L;
+        InstitutionDTO notExistingInstitution = createSampleInstitutionDTO(institutionId);
 
-       String message = String.format("No institution with id: %s", institutionId);
+        String message = String.format("No institution with id: %s", institutionId);
 
-       //when - action or the behavior that we are going to test
-       ResultActions response = mockMvc.perform(put(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId))
-               .contentType(MediaType.APPLICATION_JSON)
-               .content(objectMapper.writeValueAsString(notExistingInstitution)));
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(put(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(notExistingInstitution)));
 
 
-       //then - verify the output
-       response.andDo(print())
-               .andExpect(status().isNotFound())
-               .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
-   }
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
+    }
 
-       @Test
-       public void testUpdateInstitution() throws Exception {
-           // Given
-           Contact contact = createSampleContact();
-           Institution unsyncInstitution = createSampleInstitution("Dk Głogów", "Głogów",  "DK", "");
-           Institution syncInstitution = institutionRepository.save(unsyncInstitution);
-           contact.setInstitutions(Collections.singletonList(syncInstitution));
-           contactRepository.save(contact);
+    @Test
+    public void testUpdateInstitution() throws Exception {
+        // Given
+        Contact contact = createSampleContact();
+        Institution unsyncInstitution = createSampleInstitution("Dk Głogów", "Głogów", "DK", "");
+        Institution syncInstitution = institutionRepository.save(unsyncInstitution);
+        contact.setInstitutions(Collections.singletonList(syncInstitution));
+        contactRepository.save(contact);
 
-           Long contactId = contact.getId();
-           Long institutionId = syncInstitution.getId();
-           InstitutionDTO updatedInstitutionDTO = createSampleInstitutionDTO(institutionId);
+        Long contactId = contact.getId();
+        Long institutionId = syncInstitution.getId();
+        InstitutionDTO updatedInstitutionDTO = createSampleInstitutionDTO(institutionId);
+        Date updated = contact.getUpdated();
 
-           // When
-           ResultActions response = mockMvc.perform(
-                   put(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId))
-                           .contentType(MediaType.APPLICATION_JSON)
-                           .content(objectMapper.writeValueAsString(updatedInstitutionDTO))
-           );
+        // When
+        ResultActions response = mockMvc.perform(
+                put(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedInstitutionDTO))
+        );
 
-           // Then
-           response.andDo(print())
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.id", is(institutionId.intValue())))
-                   .andExpect(jsonPath("$.name", is(updatedInstitutionDTO.getName())))
-                   .andExpect(jsonPath("$.city", is(updatedInstitutionDTO.getCity())))
-                   .andExpect(jsonPath("$.category", is(updatedInstitutionDTO.getCategory())))
-                   .andExpect(jsonPath("$.notes", is(updatedInstitutionDTO.getNotes())));
-       }
+        // Then
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(institutionId.intValue())))
+                .andExpect(jsonPath("$.name", is(updatedInstitutionDTO.getName())))
+                .andExpect(jsonPath("$.city", is(updatedInstitutionDTO.getCity())))
+                .andExpect(jsonPath("$.category", is(updatedInstitutionDTO.getCategory())))
+                .andExpect(jsonPath("$.notes", is(updatedInstitutionDTO.getNotes())));
 
-           @Test
-           public void whenDelete_thenInstitutionDeleted() throws Exception {
-               //given - precondition or setup
-               Contact contact = createSampleContact();
-               Long contactId = contact.getId();
+        Contact updatedContact = contactRepository.findById(contactId).get();
+        assertNotEquals(updated, updatedContact.getUpdated());
+    }
 
-               InstitutionDTO syncDTO = institutionService.create(createSampleInstitutionDTO(null), contactId);
-               Long institutionId = syncDTO.getId();
+    @Test
+    public void whenDelete_thenInstitutionDeleted() throws Exception {
+        //given - precondition or setup
+        Contact contact = createSampleContact();
+        Long contactId = contact.getId();
 
-               String message = "Successfully deleted institution with id: " + institutionId;
+        InstitutionDTO syncDTO = institutionService.create(createSampleInstitutionDTO(null), contactId);
+        Long institutionId = syncDTO.getId();
 
-               //when - action or the behavior that we are going to test
-               ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId)));
+        String message = "Successfully deleted institution with id: " + institutionId;
 
-               //then - verify the output
-               response.andDo(print())
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$", CoreMatchers.is(message)));
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(delete(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId)));
 
-           }
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", CoreMatchers.is(message)));
+
+    }
 
 
     @Test
@@ -234,7 +243,13 @@ public class InstitutionControllerITest {
 
 
     private Contact createSampleContact() {
-        return contactRepository.save(new Contact());
+        Contact contact = Contact.builder()
+                .title("Opener Festival")
+                .alreadyCooperated(true)
+                .updated(new Date())
+                .build();
+
+        return contactRepository.save(contact);
     }
 
     private Institution createSampleInstitution(String name, String city, String category, String notes) {
