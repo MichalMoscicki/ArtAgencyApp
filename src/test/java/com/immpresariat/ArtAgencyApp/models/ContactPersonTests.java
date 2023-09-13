@@ -13,13 +13,14 @@ public class ContactPersonTests {
     @DisplayName("JUnit test for phone number regex (positive scenario)")
     @Test
     public void shouldReturnTrue() {
-        String regex = "^[\\\\+]?[(]?[0-9]{2}[)]?-?[0-9]{3}[-\\\\s\\\\.]?[0-9]{4,6}$";
+        String regex = "^(?:[\\\\+]?[(]?[0-9]{2}[)]?-?[0-9]{3}[-\\\\s\\\\.]?[0-9]{4,6})?$";
         Pattern pattern = Pattern.compile(regex);
 
         assertTrue(matches(pattern, "111222333"));
         assertTrue(matches(pattern, "+48111222333"));
         assertTrue(matches(pattern, "+(48)111222333"));
         assertTrue(matches(pattern, "+(48)-111222333"));
+        assertTrue(matches(pattern, ""));
 
     }
 
