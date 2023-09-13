@@ -93,7 +93,7 @@ public class ContactPersonServiceTest {
 
     }
 
-    @DisplayName("JUnit test for EventService create method (positive scenario) ")
+    @DisplayName("JUnit test for ContactPersonService create method (positive scenario) ")
     @Test
     public void givenUnsyncContactPersonDTOObject_whenCreate_thenReturnSynchronizedContactPersonDTOObject() {
         //given - precondition or setup

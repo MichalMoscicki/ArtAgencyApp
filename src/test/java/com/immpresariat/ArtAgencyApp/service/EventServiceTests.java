@@ -150,7 +150,7 @@ public class EventServiceTests {
 
         //when - action or the behavior that we are going to test
         assertThrows(ResourceNotFoundException.class, () -> {
-            eventService.update(inputDTO);
+            eventService.update(inputDTO, anyLong());
         });
         //then - verify the output
 
@@ -162,12 +162,13 @@ public class EventServiceTests {
         //given - precondition or setup
         EventDTO inputDTO = synchronizedEventDTO;
         given(eventRepository.findById(inputDTO.getId())).willReturn(Optional.of(event));
+        given(contactRepository.findById(anyLong())).willReturn(Optional.of(new Contact()));
         given(inputCleaner.clean(any(Event.class))).willReturn(new Event());
         given(eventRepository.save(any(Event.class))).willReturn(new Event());
         given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
 
         //when - action or the behavior that we are going to test
-        EventDTO eventDTO = eventService.update(synchronizedEventDTO);
+        EventDTO eventDTO = eventService.update(synchronizedEventDTO, anyLong());
 
         //then - verify the output
         assertNotNull(eventDTO);
@@ -177,6 +178,8 @@ public class EventServiceTests {
         verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));
 
     }
+
+
 //    @DisplayName("JUnit test for EventService delete method")
 //    @Test
 //    public void givenId_whenDelete_thenEventDeleted() {

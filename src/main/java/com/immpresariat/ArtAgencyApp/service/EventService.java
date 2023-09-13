@@ -10,7 +10,7 @@ public interface EventService {
 
     EventDTO getById(Long id);
 
-    EventDTO update(EventDTO eventDTO);
+    EventDTO update(EventDTO eventDTO, Long contactId);
 
     void delete(Long eventId, Long contactId);
 

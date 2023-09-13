@@ -19,10 +19,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -73,6 +75,7 @@ public class EventControllerITest {
         Contact contact = createSampleContact();
         Long contactId = contact.getId();
         EventDTO unsyncEventDTO = createSampleEventDTO(null);
+        Date updated = contact.getUpdated();
 
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(post(String.format("/api/v1/contacts/%s/events", contactId))
@@ -82,6 +85,7 @@ public class EventControllerITest {
         //then - verify the output
         Contact updatedContact = contactRepository.findById(contactId).get();
         assertEquals(updatedContact.getEvents().size(), 1);
+        assertNotEquals(updated, updatedContact.getUpdated());
 
     }
 
@@ -158,6 +162,7 @@ public class EventControllerITest {
         Long contactId = contact.getId();
         Long institutionId = syncEvent.getId();
         EventDTO updatedIEventDTO = createSampleEventDTO(institutionId);
+        Date updated = contact.getUpdated();
 
         // When
         ResultActions response = mockMvc.perform(
@@ -173,6 +178,9 @@ public class EventControllerITest {
                 .andExpect(jsonPath("$.name", is(updatedIEventDTO.getName())))
                 .andExpect(jsonPath("$.description", is(updatedIEventDTO.getDescription())))
                 .andExpect(jsonPath("$.monthWhenOrganized", is(updatedIEventDTO.getMonthWhenOrganized())));
+
+        Contact updatedContact = contactRepository.findById(contactId).get();
+        assertNotEquals(updated, updatedContact.getUpdated());
     }
 
 
