@@ -25,9 +25,11 @@ public class ContactPerson {
     @Nullable
     private String role;
     @Email(message = "Invalid email")
+    @Nullable
     private String email;
     @Pattern(regexp = "^[\\\\+]?[(]?[0-9]{2}[)]?-?[0-9]{3}[-\\\\s\\\\.]?[0-9]{4,6}$",
             message = "Invalid phone number. Proper structure: \"+\"[dial number][number]. Eg: +481111222333")
+    @Nullable
     private String phone;
 
 }

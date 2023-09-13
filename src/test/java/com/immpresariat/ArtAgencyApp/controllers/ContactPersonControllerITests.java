@@ -245,7 +245,12 @@ public class ContactPersonControllerITests {
     }
 
     private Contact createSampleContact() {
-        return contactRepository.save(new Contact());
+        Contact contact = Contact.builder()
+                .title("Opener Festival")
+                .alreadyCooperated(true)
+                .build();
+
+        return contactRepository.save(contact);
     }
 
     private ContactPersonDTO createSampleContactPersonDTO(Long contactPersonId) {
