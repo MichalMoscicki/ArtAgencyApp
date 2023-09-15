@@ -1,6 +1,7 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
+import com.immpresariat.ArtAgencyApp.payload.ContactResponse;
 import com.immpresariat.ArtAgencyApp.service.ContactService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,10 @@ public class ContactController {
     }
 
     @GetMapping("")
-    public List<ContactDTO> getAll() {
-        return contactService.getAll();
+    public ContactResponse getAll(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                  @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+                                   ) {
+        return contactService.getAll(pageNo, pageSize);
     }
 
     @PostMapping("")

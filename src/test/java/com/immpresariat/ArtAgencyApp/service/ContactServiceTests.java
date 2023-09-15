@@ -3,6 +3,7 @@ package com.immpresariat.ArtAgencyApp.service;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
+import com.immpresariat.ArtAgencyApp.payload.ContactResponse;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.ContactServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
@@ -13,11 +14,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -27,37 +29,35 @@ public class ContactServiceTests {
 
     @Mock
     DTOMapper dtoMapper;
-
     @Mock
     ContactRepository contactRepository;
-
     @Mock
     InputCleaner inputCleaner;
-
     @InjectMocks
     ContactServiceImpl contactService;
 
-
-
-
     @DisplayName("JUnit test for Contact getAll method")
-   @Test
-   public void given_whenGetAll_thenReturnListOfContactDTO() {
-       //given - precondition or setup
-       List<Contact> contacts = new ArrayList<>();
-       contacts.add(new Contact());
-       given(contactRepository.findAll()).willReturn(contacts);
-       given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
+    @Test
+    public void given_whenGetAll_thenReturnListOfContactDTO() {
+        //given - precondition or setup
+        int pageNo = 0;
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Contact> mockPage = new PageImpl<>(Collections.singletonList(new Contact()));
+        List<ContactDTO> mockContent = Collections.singletonList(new ContactDTO());
 
-       //when - action or the behavior that we are going to test
-        List<ContactDTO> contactDTOS = contactService.getAll();
+        when(contactRepository.findAll(pageable)).thenReturn(mockPage);
+        when(dtoMapper.mapContactToDTO(any(Contact.class))).thenReturn(mockContent.get(0));
 
-       //then - verify the output
-       assertNotNull(contactDTOS);
-       assertEquals(contactDTOS.size(), contacts.size());
-       verify(contactRepository, times(1)).findAll();
-       verify(dtoMapper, times(contacts.size())).mapContactToDTO(any(Contact.class));
-   }
+        //when - action or the behavior that we are going to test
+        ContactResponse result = contactService.getAll(pageNo, pageSize);
+
+        //then - verify the output
+        assertEquals(mockContent, result.getContent());
+    }
+
+    //getAll spr wszystkie właściwości page (liczby)
+    //getAll spr wszystkie właściwości sortowania
 
     @DisplayName("JUnit test for Contact getById method (negative scenario)")
     @Test
@@ -68,8 +68,8 @@ public class ContactServiceTests {
 
         //when - action or the behavior that we are going to test
         assertThrows(ResourceNotFoundException.class, () -> {
-                    contactService.getById(id);
-                });
+            contactService.getById(id);
+        });
 
         //then - verify the output
     }

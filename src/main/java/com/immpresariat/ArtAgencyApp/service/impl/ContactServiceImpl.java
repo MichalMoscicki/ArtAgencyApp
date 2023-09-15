@@ -6,6 +6,7 @@ import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
+import com.immpresariat.ArtAgencyApp.payload.ContactResponse;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.repository.EventRepository;
@@ -13,13 +14,15 @@ import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.ContactService;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -52,14 +55,19 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<ContactDTO> getAll() {
-        List<Contact> contacts = contactRepository.findAll();
-        return contacts.stream().map(dtoMapper::mapContactToDTO).collect(Collectors.toList());
+    public ContactResponse getAll(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Contact> page = contactRepository.findAll(pageable);
+        List<Contact> contacts = page.getContent();
+        List<ContactDTO> content =  contacts.stream().map(dtoMapper::mapContactToDTO).toList();
+        return createResponse(page, content);
     }
+
+
 
     @Override
     public ContactDTO create(ContactDTO unsyncContactDTO) {
-        unsyncContactDTO.setUpdated(new Date());
+                unsyncContactDTO.setUpdated(new Date());
         Contact contact = contactRepository.save(inputCleaner.clean(dtoMapper.mapDTOToContact(unsyncContactDTO)));
         return dtoMapper.mapContactToDTO(contact);
     }
@@ -105,6 +113,16 @@ public class ContactServiceImpl implements ContactService {
         contact.setContactPeople(new ArrayList<>());
         contactRepository.save(contact);
         contactPersonRepository.deleteAll(contactPeople);
+    }
+    private ContactResponse createResponse(Page<Contact> page, List<ContactDTO> content) {
+        ContactResponse response = new ContactResponse();
+        response.setContent(content);
+        response.setPageSize(page.getSize());
+        response.setPageNo(page.getNumber());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLast(page.isLast());
+        return response;
     }
 }
 

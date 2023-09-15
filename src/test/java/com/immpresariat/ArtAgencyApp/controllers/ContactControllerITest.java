@@ -86,8 +86,26 @@ public class ContactControllerITest {
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", CoreMatchers.is(2)));
+                .andExpect(jsonPath("$.content.size()", CoreMatchers.is(2)));
     }
+
+    @Test
+    public void givenTwelveContactsObject_whenGetAll_thenReturnTenContactObjectsList() throws Exception {
+        //given - precondition or setup
+        for(int i = 0; i <=11; i++){
+            createSampleContact();
+        }
+
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/v1/contacts"));
+
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.size()", CoreMatchers.is(10)));
+    }
+
+
 
     @Test
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
@@ -182,7 +200,6 @@ public class ContactControllerITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", CoreMatchers.is(message)));
     }
-
 
     private Contact createSampleContact() {
         Contact contact = Contact.builder()

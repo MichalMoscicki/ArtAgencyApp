@@ -1,6 +1,7 @@
 package com.immpresariat.ArtAgencyApp.service;
 
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
+import com.immpresariat.ArtAgencyApp.payload.ContactResponse;
 
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public interface ContactService {
 
     ContactDTO getById(Long Id);
-    List<ContactDTO> getAll();
+    ContactResponse getAll(int pageNo, int pageSize);
     ContactDTO create(ContactDTO unsyncContactDTO);
     ContactDTO update(ContactDTO contactDTO);
     void deleteWithAssociatedData(Long id);
