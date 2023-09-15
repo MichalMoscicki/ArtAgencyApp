@@ -102,10 +102,13 @@ public class ContactControllerITest {
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content.size()", CoreMatchers.is(10)));
+                .andExpect(jsonPath("$.content.size()", CoreMatchers.is(10)))
+                .andExpect(jsonPath("$.totalElements", CoreMatchers.is(12)))
+                .andExpect(jsonPath("$.last", CoreMatchers.is(false)))
+                .andExpect(jsonPath("$.pageSize", CoreMatchers.is(10)));
+
+
     }
-
-
 
     @Test
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
@@ -181,8 +184,6 @@ public class ContactControllerITest {
                 .andExpect(jsonPath("$.updated", CoreMatchers.not(contact.getUpdated())));
 
     }
-
-
 
     @Test
     public void givenContactWithAssociatedData_whenDelete_thenContactDeleted() throws Exception {

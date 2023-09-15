@@ -64,7 +64,6 @@ public class ContactServiceImpl implements ContactService {
     }
 
 
-
     @Override
     public ContactDTO create(ContactDTO unsyncContactDTO) {
                 unsyncContactDTO.setUpdated(new Date());

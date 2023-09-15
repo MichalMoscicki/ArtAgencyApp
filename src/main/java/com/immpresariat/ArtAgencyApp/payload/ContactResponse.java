@@ -12,7 +12,7 @@ import java.util.List;
 public class ContactResponse {
     private List<ContactDTO> content;
     private int pageNo;
-    private int PageSize;
+    private int pageSize;
     private long totalElements;
     private int totalPages;
     private boolean last;

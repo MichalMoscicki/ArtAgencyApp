@@ -56,9 +56,6 @@ public class ContactServiceTests {
         assertEquals(mockContent, result.getContent());
     }
 
-    //getAll spr wszystkie właściwości page (liczby)
-    //getAll spr wszystkie właściwości sortowania
-
     @DisplayName("JUnit test for Contact getById method (negative scenario)")
     @Test
     public void givenId_whenGetById_thenThrowResourceNotFoundException() {
