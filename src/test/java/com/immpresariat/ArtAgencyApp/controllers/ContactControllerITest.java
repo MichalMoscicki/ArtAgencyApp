@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -77,8 +78,8 @@ public class ContactControllerITest {
     @Test
     public void whenGetAll_thenReturnContactObjectsList() throws Exception {
         //given - precondition or setup
-        Contact contact1 = createSampleContact();
-        Contact contact2 = createSampleContact();
+        Contact contact1 = createSampleContact("Opener Festival");
+        Contact contact2 = createSampleContact("Opener Festival");
 
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(get("/api/v1/contacts"));
@@ -93,7 +94,7 @@ public class ContactControllerITest {
     public void givenTwelveContactsObject_whenGetAll_thenReturnTenContactObjectsList() throws Exception {
         //given - precondition or setup
         for(int i = 0; i <=11; i++){
-            createSampleContact();
+            createSampleContact("Opener Festival");
         }
 
         //when - action or the behavior that we are going to test
@@ -109,6 +110,76 @@ public class ContactControllerITest {
 
 
     }
+
+    @Test
+    public void givenThreeContactsObject_whenGetAllDesc_thenReturnContactsInCorrectOrder() throws Exception {
+        //given - precondition or setup
+        Contact contact1 = createSampleContact("First");
+        Contact contact2 = createSampleContact("Second");
+        Contact contact3 = createSampleContact("Third");
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/v1/contacts"));
+
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].title", CoreMatchers.is(contact3.getTitle())))
+                .andExpect(jsonPath("$.content[1].title", CoreMatchers.is(contact2.getTitle())))
+                .andExpect(jsonPath("$.content[2].title", CoreMatchers.is(contact1.getTitle())));
+    }
+
+    @Test
+    public void givenThreeContactsObject_whenGetAllAsc_thenReturnContactsInCorrectOrder() throws Exception {
+        //given - precondition or setup
+        Contact contact1 = createSampleContact("First");
+        Contact contact2 = createSampleContact("Second");
+        Contact contact3 = createSampleContact("Third");
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/v1/contacts?sortDir=asc"));
+
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].title", CoreMatchers.is(contact1.getTitle())))
+                .andExpect(jsonPath("$.content[1].title", CoreMatchers.is(contact2.getTitle())))
+                .andExpect(jsonPath("$.content[2].title", CoreMatchers.is(contact3.getTitle())));
+    }
+
+    @Test
+    public void givenThreeContactsObject_whenGetAllSortByName_thenReturnContactsInCorrectOrder() throws Exception {
+        //given - precondition or setup
+        Contact contact1 = createSampleContact("First");
+        Contact contact2 = createSampleContact("Second");
+        Contact contact3 = createSampleContact("Third");
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/v1/contacts?sortBy=title"));
+
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].title", CoreMatchers.is(contact3.getTitle())))
+                .andExpect(jsonPath("$.content[1].title", CoreMatchers.is(contact2.getTitle())))
+                .andExpect(jsonPath("$.content[2].title", CoreMatchers.is(contact1.getTitle())));
+    }
+
+    @Test
+    public void givenThreeContactsObject_whenGetAllSortByNameAsc_thenReturnContactsInCorrectOrder() throws Exception {
+        //given - precondition or setup
+        Contact contact1 = createSampleContact("First");
+        Contact contact2 = createSampleContact("Second");
+        Contact contact3 = createSampleContact("Third");
+        //when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/v1/contacts?sortBy=title&sortDir=asc"));
+
+        //then - verify the output
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].title", CoreMatchers.is(contact1.getTitle())))
+                .andExpect(jsonPath("$.content[1].title", CoreMatchers.is(contact2.getTitle())))
+                .andExpect(jsonPath("$.content[2].title", CoreMatchers.is(contact3.getTitle())));
+    }
+
+
 
     @Test
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
@@ -127,7 +198,7 @@ public class ContactControllerITest {
     @Test
     public void whenGetById_thenReturnContactDTOObject() throws Exception {
         //given - precondition or setup
-        Contact contact = createSampleContact();
+        Contact contact = createSampleContact("Opener Festival");
         int id = Math.toIntExact(contact.getId());
 
         //when - action or the behavior that we are going to test
@@ -163,7 +234,7 @@ public class ContactControllerITest {
     @Test
     public void whenUpdate_thenReturnContactDTO() throws Exception {
         //given - precondition or setup
-        Contact contact = createSampleContact();
+        Contact contact = createSampleContact("Opener Festival");
 
         ContactDTO syncContactDTO = ContactDTO.builder()
                 .id(contact.getId())
@@ -202,9 +273,10 @@ public class ContactControllerITest {
                 .andExpect(jsonPath("$", CoreMatchers.is(message)));
     }
 
-    private Contact createSampleContact() {
+    private Contact createSampleContact(String name) {
         Contact contact = Contact.builder()
-                .title("Opener Festival")
+                .title(name)
+                .updated(new Date())
                 .alreadyCooperated(true)
                 .build();
 
@@ -245,7 +317,7 @@ public class ContactControllerITest {
         List<Institution> institutions = new ArrayList<>();
         institutions.add(institution);
 
-        Contact contact = createSampleContact();
+        Contact contact = createSampleContact("Opener Festival");
         contact.setContactPeople(contactPeople);
         contact.setInstitutions(institutions);
         contact.setEvents(eventsList);

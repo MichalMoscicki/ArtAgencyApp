@@ -6,6 +6,7 @@ import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.payload.ContactResponse;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.ContactServiceImpl;
+import com.immpresariat.ArtAgencyApp.utils.AppConstants;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.junit.jupiter.api.DisplayName;
@@ -14,10 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 import java.util.*;
 
@@ -42,7 +40,8 @@ public class ContactServiceTests {
         //given - precondition or setup
         int pageNo = 0;
         int pageSize = 10;
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Sort sort = Sort.by(AppConstants.DEFAULT_SORT_BY).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Contact> mockPage = new PageImpl<>(Collections.singletonList(new Contact()));
         List<ContactDTO> mockContent = Collections.singletonList(new ContactDTO());
 
@@ -50,7 +49,7 @@ public class ContactServiceTests {
         when(dtoMapper.mapContactToDTO(any(Contact.class))).thenReturn(mockContent.get(0));
 
         //when - action or the behavior that we are going to test
-        ContactResponse result = contactService.getAll(pageNo, pageSize);
+        ContactResponse result = contactService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
 
         //then - verify the output
         assertEquals(mockContent, result.getContent());

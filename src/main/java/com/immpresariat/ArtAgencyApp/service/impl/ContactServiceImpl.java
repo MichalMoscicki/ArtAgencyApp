@@ -17,6 +17,7 @@ import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -55,8 +56,12 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactResponse getAll(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public ContactResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Contact> page = contactRepository.findAll(pageable);
         List<Contact> contacts = page.getContent();
         List<ContactDTO> content =  contacts.stream().map(dtoMapper::mapContactToDTO).toList();
