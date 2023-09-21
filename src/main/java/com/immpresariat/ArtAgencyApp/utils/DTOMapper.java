@@ -1,21 +1,15 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
 
-import com.immpresariat.ArtAgencyApp.models.Contact;
-import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Event;
-import com.immpresariat.ArtAgencyApp.models.Institution;
-import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
-import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
-import com.immpresariat.ArtAgencyApp.payload.EventDTO;
-import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
+import com.immpresariat.ArtAgencyApp.models.*;
+import com.immpresariat.ArtAgencyApp.payload.*;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class DTOMapper {
 
-    public InstitutionDTO mapInstitutionToDTO (Institution institution){
+    public InstitutionDTO mapInstitutionToDTO(Institution institution) {
         return InstitutionDTO.builder()
                 .id(institution.getId())
                 .name(institution.getName())
@@ -28,7 +22,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Institution mapUnsyncDTOToInstitution(InstitutionDTO inputInstitutionDTO){
+    public Institution mapUnsyncDTOToInstitution(InstitutionDTO inputInstitutionDTO) {
         return Institution.builder()
                 .name(inputInstitutionDTO.getName())
                 .city(inputInstitutionDTO.getCity())
@@ -40,7 +34,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Institution mapDTOToInstitution(InstitutionDTO institutionDTO){
+    public Institution mapDTOToInstitution(InstitutionDTO institutionDTO) {
         return Institution.builder()
                 .id(institutionDTO.getId())
                 .name(institutionDTO.getName())
@@ -111,7 +105,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public ContactDTO mapContactToDTO(Contact contact){
+    public ContactDTO mapContactToDTO(Contact contact) {
         return ContactDTO.builder()
                 .id(contact.getId())
                 .title(contact.getTitle())
@@ -124,7 +118,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Contact mapDTOToContact(ContactDTO contactDTO){
+    public Contact mapDTOToContact(ContactDTO contactDTO) {
         return Contact.builder()
                 .id(contactDTO.getId())
                 .title(contactDTO.getTitle())
@@ -137,4 +131,29 @@ public class DTOMapper {
                 .build();
     }
 
+    public TaskDTO mapTaskToDTO(Task task) {
+        return TaskDTO.builder()
+                .id(task.getId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .activationDate(task.getActivationDate())
+                .isActive(task.isActive())
+                .finished(task.isFinished())
+                .updated(task.getUpdated())
+                .priority(task.getPriority())
+                .build();
+    }
+
+    public Task mapDTOToTask(TaskDTO taskDTO) {
+        return Task.builder()
+                .id(taskDTO.getId())
+                .title(taskDTO.getTitle())
+                .description(taskDTO.getDescription())
+                .activationDate(taskDTO.getActivationDate())
+                .isActive(taskDTO.isActive())
+                .finished(taskDTO.isFinished())
+                .updated(taskDTO.getUpdated())
+                .priority(taskDTO.getPriority())
+                .build();
+    }
 }

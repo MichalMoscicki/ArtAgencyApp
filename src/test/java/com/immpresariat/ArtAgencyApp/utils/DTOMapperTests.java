@@ -1,13 +1,7 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
-import com.immpresariat.ArtAgencyApp.models.Contact;
-import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Event;
-import com.immpresariat.ArtAgencyApp.models.Institution;
-import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
-import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
-import com.immpresariat.ArtAgencyApp.payload.EventDTO;
-import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
+import com.immpresariat.ArtAgencyApp.models.*;
+import com.immpresariat.ArtAgencyApp.payload.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -361,6 +355,68 @@ public class DTOMapperTests {
         assertEquals(institutions.size(), contact.getInstitutions().size());
         assertEquals(events.size(), contact.getEvents().size());
         assertEquals(contactPeople.size(), contact.getContactPeople().size());
+
+    }
+
+    @DisplayName("JUnit test for mapToTaskDTO method")
+    @Test
+    public void givenTask_whenMapToDTO_thenReturnDTO() {
+        //given - precondition or setup
+        Task task = Task.builder()
+                .id(0L)
+                .title("Test")
+                .description("Description")
+                .activationDate(LocalDate.now())
+                .isActive(true)
+                .finished(false)
+                .updated(new Date())
+                .priority(3)
+                .build();
+
+        //when - action or the behavior that we are going to test
+        TaskDTO taskDTO = dtoMapper.mapTaskToDTO(task);
+
+        //then - verify the output
+        assertNotNull(taskDTO);
+        assertEquals(task.getId(), taskDTO.getId());
+        assertEquals(task.getPriority(), taskDTO.getPriority());
+        assertEquals(task.getActivationDate(), taskDTO.getActivationDate());
+        assertEquals(task.isFinished(), taskDTO.isFinished());
+        assertEquals(task.isActive(), taskDTO.isActive());
+        assertEquals(task.getUpdated(), taskDTO.getUpdated());
+        assertEquals(task.getDescription(), taskDTO.getDescription());
+        assertEquals(task.getTitle(), taskDTO.getTitle());
+
+    }
+
+    @DisplayName("JUnit test for mapToTaskDTO method")
+    @Test
+    public void givenTaskDTO_whenMapToTask_thenReturnTask() {
+        //given - precondition or setup
+        TaskDTO taskDTO = TaskDTO.builder()
+                .id(0L)
+                .title("Test")
+                .description("Description")
+                .activationDate(LocalDate.now())
+                .isActive(true)
+                .finished(false)
+                .updated(new Date())
+                .priority(3)
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Task task = dtoMapper.mapDTOToTask(taskDTO);
+
+        //then - verify the output
+        assertNotNull(taskDTO);
+        assertEquals(task.getId(), taskDTO.getId());
+        assertEquals(task.getPriority(), taskDTO.getPriority());
+        assertEquals(task.getActivationDate(), taskDTO.getActivationDate());
+        assertEquals(task.isFinished(), taskDTO.isFinished());
+        assertEquals(task.isActive(), taskDTO.isActive());
+        assertEquals(task.getUpdated(), taskDTO.getUpdated());
+        assertEquals(task.getDescription(), taskDTO.getDescription());
+        assertEquals(task.getTitle(), taskDTO.getTitle());
 
     }
 
