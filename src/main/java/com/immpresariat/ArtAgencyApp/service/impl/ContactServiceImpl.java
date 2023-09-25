@@ -104,7 +104,6 @@ public class ContactServiceImpl implements ContactService {
         contact.setEvents(new ArrayList<>());
         contactRepository.save(contact);
         eventRepository.deleteAll(events);
-
     }
     private void deleteAssociatedInstitutions(Contact contact) {
         List<Institution> institutions = contact.getInstitutions();

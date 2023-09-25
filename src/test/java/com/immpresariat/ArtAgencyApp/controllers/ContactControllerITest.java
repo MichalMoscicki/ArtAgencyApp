@@ -179,8 +179,6 @@ public class ContactControllerITest {
                 .andExpect(jsonPath("$.content[2].title", CoreMatchers.is(contact3.getTitle())));
     }
 
-
-
     @Test
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup

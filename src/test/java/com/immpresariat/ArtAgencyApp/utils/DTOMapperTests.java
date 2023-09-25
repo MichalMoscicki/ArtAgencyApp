@@ -367,10 +367,11 @@ public class DTOMapperTests {
                 .title("Test")
                 .description("Description")
                 .activationDate(LocalDate.now())
-                .isActive(true)
+                .active(true)
                 .finished(false)
                 .updated(new Date())
                 .priority(3)
+                .attachment(new TaskAttachment())
                 .build();
 
         //when - action or the behavior that we are going to test
@@ -385,6 +386,7 @@ public class DTOMapperTests {
         assertEquals(task.isActive(), taskDTO.isActive());
         assertEquals(task.getUpdated(), taskDTO.getUpdated());
         assertEquals(task.getDescription(), taskDTO.getDescription());
+        assertEquals(task.getAttachment(), taskDTO.getAttachment());
         assertEquals(task.getTitle(), taskDTO.getTitle());
 
     }
@@ -398,7 +400,7 @@ public class DTOMapperTests {
                 .title("Test")
                 .description("Description")
                 .activationDate(LocalDate.now())
-                .isActive(true)
+                .active(true)
                 .finished(false)
                 .updated(new Date())
                 .priority(3)
@@ -416,6 +418,7 @@ public class DTOMapperTests {
         assertEquals(task.isActive(), taskDTO.isActive());
         assertEquals(task.getUpdated(), taskDTO.getUpdated());
         assertEquals(task.getDescription(), taskDTO.getDescription());
+        assertEquals(task.getAttachment(), taskDTO.getAttachment());
         assertEquals(task.getTitle(), taskDTO.getTitle());
 
     }

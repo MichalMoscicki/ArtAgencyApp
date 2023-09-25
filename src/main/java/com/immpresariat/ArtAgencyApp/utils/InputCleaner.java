@@ -1,9 +1,6 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
-import com.immpresariat.ArtAgencyApp.models.Contact;
-import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Event;
-import com.immpresariat.ArtAgencyApp.models.Institution;
+import com.immpresariat.ArtAgencyApp.models.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -51,6 +48,11 @@ public class InputCleaner {
             contact.setDescription(contact.getDescription().trim());
         }
         return contact;
+    }
+
+    public Task clean(Task task){
+        task.setTitle(task.getTitle().trim());
+        return task;
     }
 
 }

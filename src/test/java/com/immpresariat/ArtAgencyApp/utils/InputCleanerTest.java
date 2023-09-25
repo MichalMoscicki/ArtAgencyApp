@@ -1,9 +1,6 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
-import com.immpresariat.ArtAgencyApp.models.Contact;
-import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Event;
-import com.immpresariat.ArtAgencyApp.models.Institution;
+import com.immpresariat.ArtAgencyApp.models.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -111,7 +108,7 @@ class InputCleanerTest {
 
     }
 
-    @DisplayName("JUnit test for clean contact method (all fields field)")
+    @DisplayName("JUnit test for clean contact method (all fields)")
     @Test
     public void givenContactObject_whenClean_thenReturnCleanedContactObject() {
         //given - precondition or setup
@@ -145,6 +142,22 @@ class InputCleanerTest {
         //then - verify the output
         assertNotNull(cleanedContact);
         assertEquals("DK Chotomów", cleanedContact.getTitle());
+    }
+
+    @DisplayName("JUnit test for clean task method (only title)")
+    @Test
+    public void givenTaskObjectWithTitleOnly_whenTrim_thenReturnCleanedTaskObject() {
+        //given - precondition or setup
+        Task task = Task.builder()
+                .title("  Title ")
+                .priority(1).build();
+
+        //when - action or the behavior that we are going to test
+        Task cleanedTask = inputCleaner.clean(task);
+
+        //then - verify the output
+        assertNotNull(task);
+        assertEquals("Title", task.getTitle());
     }
 
 }

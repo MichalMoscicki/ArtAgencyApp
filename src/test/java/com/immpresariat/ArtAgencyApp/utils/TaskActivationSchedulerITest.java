@@ -4,8 +4,6 @@ import com.immpresariat.ArtAgencyApp.models.Task;
 import com.immpresariat.ArtAgencyApp.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -30,7 +28,7 @@ public class TaskActivationSchedulerITest {
         LocalDate currentDate = LocalDate.now();
         Task task = Task.builder()
                 .title("Test Task")
-                .isActive(false)
+                .active(false)
                 .priority(1)
                 .activationDate(currentDate)
                 .build();
@@ -38,7 +36,7 @@ public class TaskActivationSchedulerITest {
 
         Task task2 = Task.builder()
                 .title("Test Task2")
-                .isActive(false)
+                .active(false)
                 .priority(1)
                 .activationDate(currentDate.plusDays(1))
                 .build();

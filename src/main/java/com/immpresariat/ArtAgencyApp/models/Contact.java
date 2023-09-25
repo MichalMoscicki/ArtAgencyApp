@@ -42,4 +42,6 @@ public class Contact {
     @OneToMany(fetch = FetchType.EAGER)
     private List<Institution> institutions;
 
+
+
 }

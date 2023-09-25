@@ -1,9 +1,7 @@
 package com.immpresariat.ArtAgencyApp.service.impl;
 
-import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Contact;
-import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.InstitutionDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
@@ -54,6 +52,7 @@ public class InstitutionServiceImpl implements InstitutionService {
 
     @Override
     public InstitutionDTO update(InstitutionDTO updatedInstitutionDTO, Long contactId) {
+        //todo ensure contact exists
         ensureInstitutionExists(updatedInstitutionDTO.getId());
         Institution updatedInstitution = dtoMapper.mapDTOToInstitution(updatedInstitutionDTO);
         Institution institutionDB = institutionRepository.save(inputCleaner.clean(updatedInstitution));

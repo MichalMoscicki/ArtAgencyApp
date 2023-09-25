@@ -137,10 +137,11 @@ public class DTOMapper {
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .activationDate(task.getActivationDate())
-                .isActive(task.isActive())
+                .active(task.isActive())
                 .finished(task.isFinished())
                 .updated(task.getUpdated())
                 .priority(task.getPriority())
+                .attachment(task.getAttachment())
                 .build();
     }
 
@@ -150,10 +151,25 @@ public class DTOMapper {
                 .title(taskDTO.getTitle())
                 .description(taskDTO.getDescription())
                 .activationDate(taskDTO.getActivationDate())
-                .isActive(taskDTO.isActive())
+                .active(taskDTO.isActive())
                 .finished(taskDTO.isFinished())
                 .updated(taskDTO.getUpdated())
                 .priority(taskDTO.getPriority())
+                .attachment(taskDTO.getAttachment())
+                .build();
+    }
+
+    public TaskAttachmentDTO mapToDTO (TaskAttachment attachment){
+        return TaskAttachmentDTO.builder()
+                .id(attachment.getId())
+                .contacts(attachment.getContacts())
+                .build();
+    }
+
+    public TaskAttachment mapToEntity (TaskAttachmentDTO attachmentDTO){
+        return TaskAttachment.builder()
+                .id(attachmentDTO.getId())
+                .contacts(attachmentDTO.getContacts())
                 .build();
     }
 }
