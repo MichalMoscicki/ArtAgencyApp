@@ -52,7 +52,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO getById(Long id) {
         Contact contact = ensureContactExists(id);
-        return dtoMapper.mapContactToDTO(contact);
+        return dtoMapper.mapToDTO(contact);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ContactServiceImpl implements ContactService {
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Contact> page = contactRepository.findAll(pageable);
         List<Contact> contacts = page.getContent();
-        List<ContactDTO> content =  contacts.stream().map(dtoMapper::mapContactToDTO).toList();
+        List<ContactDTO> content =  contacts.stream().map(dtoMapper::mapToDTO).toList();
         return createResponse(page, content);
     }
 
@@ -72,16 +72,16 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO create(ContactDTO unsyncContactDTO) {
                 unsyncContactDTO.setUpdated(new Date());
-        Contact contact = contactRepository.save(inputCleaner.clean(dtoMapper.mapDTOToContact(unsyncContactDTO)));
-        return dtoMapper.mapContactToDTO(contact);
+        Contact contact = contactRepository.save(inputCleaner.clean(dtoMapper.mapToEntity(unsyncContactDTO)));
+        return dtoMapper.mapToDTO(contact);
     }
 
     @Override
     public ContactDTO update(ContactDTO contactDTO) {
         ensureContactExists(contactDTO.getId());
         contactDTO.setUpdated(new Date());
-        Contact contact = contactRepository.save(inputCleaner.clean(dtoMapper.mapDTOToContact(contactDTO)));
-        return dtoMapper.mapContactToDTO(contact);
+        Contact contact = contactRepository.save(inputCleaner.clean(dtoMapper.mapToEntity(contactDTO)));
+        return dtoMapper.mapToDTO(contact);
     }
 
     @Override

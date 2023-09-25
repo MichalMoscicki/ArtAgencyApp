@@ -46,7 +46,7 @@ public class ContactServiceTests {
         List<ContactDTO> mockContent = Collections.singletonList(new ContactDTO());
 
         when(contactRepository.findAll(pageable)).thenReturn(mockPage);
-        when(dtoMapper.mapContactToDTO(any(Contact.class))).thenReturn(mockContent.get(0));
+        when(dtoMapper.mapToDTO(any(Contact.class))).thenReturn(mockContent.get(0));
 
         //when - action or the behavior that we are going to test
         ContactResponse result = contactService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
@@ -77,7 +77,7 @@ public class ContactServiceTests {
         Long id = 0l;
         Contact contact = new Contact();
         given(contactRepository.findById(id)).willReturn(Optional.of(contact));
-        given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
+        given(dtoMapper.mapToDTO(any(Contact.class))).willReturn(new ContactDTO());
 
         //when - action or the behavior that we are going to test
         ContactDTO contactDTO = contactService.getById(id);
@@ -85,7 +85,7 @@ public class ContactServiceTests {
         //then - verify the output
         assertNotNull(contactDTO);
         verify(contactRepository, times(1)).findById(anyLong());
-        verify(dtoMapper, times(1)).mapContactToDTO(any(Contact.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Contact.class));
 
     }
 
@@ -98,9 +98,9 @@ public class ContactServiceTests {
                 .alreadyCooperated(false)
                 .build();
 
-        given(dtoMapper.mapDTOToContact(any(ContactDTO.class))).willReturn(new Contact());
+        given(dtoMapper.mapToEntity(any(ContactDTO.class))).willReturn(new Contact());
         given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
-        given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
+        given(dtoMapper.mapToDTO(any(Contact.class))).willReturn(new ContactDTO());
         given(inputCleaner.clean(any(Contact.class))).willReturn(new Contact());
 
 
@@ -109,9 +109,9 @@ public class ContactServiceTests {
 
         //then - verify the output
         assertNotNull(contactDTO);
-        verify(dtoMapper, times(1)).mapDTOToContact(any(ContactDTO.class));
+        verify(dtoMapper, times(1)).mapToEntity(any(ContactDTO.class));
         verify(contactRepository, times(1)).save(any(Contact.class));
-        verify(dtoMapper, times(1)).mapContactToDTO(any(Contact.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Contact.class));
     }
 
     @DisplayName("JUnit test for Contact Update method (negative Scenario)")
@@ -132,9 +132,9 @@ public class ContactServiceTests {
         });
 
         //then - verify the output
-        verify(dtoMapper, never()).mapDTOToContact(any(ContactDTO.class));
+        verify(dtoMapper, never()).mapToEntity(any(ContactDTO.class));
         verify(contactRepository, never()).save(any(Contact.class));
-        verify(dtoMapper, never()).mapContactToDTO(any(Contact.class));
+        verify(dtoMapper, never()).mapToDTO(any(Contact.class));
     }
 
 
@@ -149,9 +149,9 @@ public class ContactServiceTests {
                 .build();
 
         given(contactRepository.findById(contactDTO.getId())).willReturn(Optional.of(new Contact()));
-        given(dtoMapper.mapDTOToContact(any(ContactDTO.class))).willReturn(new Contact());
+        given(dtoMapper.mapToEntity(any(ContactDTO.class))).willReturn(new Contact());
         given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
-        given(dtoMapper.mapContactToDTO(any(Contact.class))).willReturn(new ContactDTO());
+        given(dtoMapper.mapToDTO(any(Contact.class))).willReturn(new ContactDTO());
         given(inputCleaner.clean(any(Contact.class))).willReturn(new Contact());
 
 
@@ -160,9 +160,9 @@ public class ContactServiceTests {
 
         //then - verify the output
         assertNotNull(contactDTODb);
-        verify(dtoMapper, times(1)).mapDTOToContact(any(ContactDTO.class));
+        verify(dtoMapper, times(1)).mapToEntity(any(ContactDTO.class));
         verify(contactRepository, times(1)).save(any(Contact.class));
-        verify(dtoMapper, times(1)).mapContactToDTO(any(Contact.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Contact.class));
     }
 
 

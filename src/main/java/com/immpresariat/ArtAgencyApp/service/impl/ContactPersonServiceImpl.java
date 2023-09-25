@@ -39,23 +39,24 @@ public class ContactPersonServiceImpl implements ContactPersonService {
     @Override
     public ContactPersonDTO create(ContactPersonDTO unsyncContactPersonDTO, Long contactId) {
         Contact contact = ensureContactExists(contactId);
-        ContactPerson unsyncContactPerson = dtoMapper.mapUnsyncDTOToContactPerson(unsyncContactPersonDTO);
+        ContactPerson unsyncContactPerson = dtoMapper.mapToEntity(unsyncContactPersonDTO);
         ContactPerson synchronizedContactPerson = contactPersonRepository.save(inputCleaner.clean(unsyncContactPerson));
 
         updateContact(contact, synchronizedContactPerson);
-        return dtoMapper.mapContactPersonToDTO(synchronizedContactPerson);
+        return dtoMapper.mapToDTO(synchronizedContactPerson);
+
     }
 
     @Override
     public List<ContactPersonDTO> getAll() {
         List<ContactPerson> contactPeople = contactPersonRepository.findAll();
-        return contactPeople.stream().map(dtoMapper::mapContactPersonToDTO).collect(Collectors.toList());
+        return contactPeople.stream().map(dtoMapper::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
     public ContactPersonDTO getById(Long id) {
         ContactPerson contactPerson = ensureContactPersonExists(id);
-        return dtoMapper.mapContactPersonToDTO(contactPerson);
+        return dtoMapper.mapToDTO(contactPerson);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class ContactPersonServiceImpl implements ContactPersonService {
         ContactPerson contactPersonDB = contactPersonRepository.save(inputCleaner.clean(contactPerson));
         updateContactUpdatedField(contactId);
 
-        return dtoMapper.mapContactPersonToDTO(contactPersonDB);
+        return dtoMapper.mapToDTO(contactPersonDB);
     }
 
     @Override

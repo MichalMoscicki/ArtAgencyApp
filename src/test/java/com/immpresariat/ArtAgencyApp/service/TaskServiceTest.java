@@ -1,10 +1,7 @@
 package com.immpresariat.ArtAgencyApp.service;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
-import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.Task;
-import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
-import com.immpresariat.ArtAgencyApp.payload.ContactResponse;
 import com.immpresariat.ArtAgencyApp.payload.TaskDTO;
 import com.immpresariat.ArtAgencyApp.payload.TaskResponse;
 import com.immpresariat.ArtAgencyApp.repository.TaskRepository;
@@ -47,20 +44,20 @@ public class TaskServiceTest {
     @Test
     public void givenUnsyncTaskDTO_whenCreate_thenReturnTaskDTOObject() {
         //given - precondition or setup
-        given(dtoMapper.mapDTOToTask(any(TaskDTO.class))).willReturn(new Task());
+        given(dtoMapper.mapToEntity(any(TaskDTO.class))).willReturn(new Task());
         given(inputCleaner.clean(any(Task.class))).willReturn(new Task());
         given(taskRepository.save(any(Task.class))).willReturn(new Task());
-        given(dtoMapper.mapTaskToDTO(any(Task.class))).willReturn(new TaskDTO());
+        given(dtoMapper.mapToDTO(any(Task.class))).willReturn(new TaskDTO());
 
         //when - action or the behavior that we are going to test
         TaskDTO taskDTO = taskService.create(new TaskDTO());
 
         //then - verify the output
         assertNotNull(taskDTO);
-        verify(dtoMapper, times(1)).mapDTOToTask(any(TaskDTO.class));
+        verify(dtoMapper, times(1)).mapToEntity(any(TaskDTO.class));
         verify(inputCleaner, times(1)).clean(any(Task.class));
         verify(taskRepository, times(1)).save(any(Task.class));
-        verify(dtoMapper, times(1)).mapTaskToDTO(any(Task.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Task.class));
     }
 
     @DisplayName("JUnit test for Task getById method (negative scenario)")
@@ -83,7 +80,7 @@ public class TaskServiceTest {
     public void whenGetById_thenReturnTaskObject() {
         //given - precondition or setup
         given(taskRepository.findById(anyLong())).willReturn(Optional.of(new Task()));
-        given(dtoMapper.mapTaskToDTO(any(Task.class))).willReturn(new TaskDTO());
+        given(dtoMapper.mapToDTO(any(Task.class))).willReturn(new TaskDTO());
 
 
         //when - action or the behavior that we are going to test
@@ -92,7 +89,7 @@ public class TaskServiceTest {
         //then - verify the output
         assertNotNull(taskDTO);
         verify(taskRepository, times(1)).findById(anyLong());
-        verify(dtoMapper, times(1)).mapTaskToDTO(any(Task.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Task.class));
     }
 
 
@@ -108,7 +105,7 @@ public class TaskServiceTest {
         List<TaskDTO> mockContent = Collections.singletonList(new TaskDTO());
 
         when(taskRepository.findAll(pageable)).thenReturn(mockPage);
-        when(dtoMapper.mapTaskToDTO(any(Task.class))).thenReturn(mockContent.get(0));
+        when(dtoMapper.mapToDTO(any(Task.class))).thenReturn(mockContent.get(0));
 
         //when - action or the behavior that we are going to test
         TaskResponse result = taskService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
@@ -129,7 +126,7 @@ public class TaskServiceTest {
         List<TaskDTO> mockContent = Collections.singletonList(new TaskDTO());
 
         when(taskRepository.findAllByActiveIsTrue(pageable)).thenReturn(mockPage);
-        when(dtoMapper.mapTaskToDTO(any(Task.class))).thenReturn(mockContent.get(0));
+        when(dtoMapper.mapToDTO(any(Task.class))).thenReturn(mockContent.get(0));
 
         //when - action or the behavior that we are going to test
         TaskResponse result = taskService.getActive(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
@@ -155,10 +152,10 @@ public class TaskServiceTest {
         });
 
         //then - verify the output
-        verify(dtoMapper, never()).mapDTOToTask(any(TaskDTO.class));
+        verify(dtoMapper, never()).mapToEntity(any(TaskDTO.class));
         verify(inputCleaner, never()).clean(any(Task.class));
         verify(taskRepository, never()).save(any(Task.class));
-        verify(dtoMapper, never()).mapTaskToDTO(any(Task.class));
+        verify(dtoMapper, never()).mapToDTO(any(Task.class));
     }
 
     @DisplayName("JUnit test for Task getById method (positive scenario)")
@@ -172,19 +169,19 @@ public class TaskServiceTest {
                 .build();
 
         given(taskRepository.findById(taskDTO.getId())).willReturn(Optional.of(new Task()));
-        given(dtoMapper.mapDTOToTask(taskDTO)).willReturn(new Task());
+        given(dtoMapper.mapToEntity(taskDTO)).willReturn(new Task());
         given(inputCleaner.clean(any(Task.class))).willReturn(new Task());
         given(taskRepository.save(any(Task.class))).willReturn(new Task());
-        given(dtoMapper.mapTaskToDTO(any(Task.class))).willReturn(new TaskDTO());
+        given(dtoMapper.mapToDTO(any(Task.class))).willReturn(new TaskDTO());
 
         //when - action or the behavior that we are going to test
         TaskDTO taskDTODb = taskService.update(taskDTO, taskDTO.getId());
 
         //then - verify the output
-        verify(dtoMapper, times(1)).mapDTOToTask(any(TaskDTO.class));
+        verify(dtoMapper, times(1)).mapToEntity(any(TaskDTO.class));
         verify(inputCleaner, times(1)).clean(any(Task.class));
         verify(taskRepository, times(1)).save(any(Task.class));
-        verify(dtoMapper, times(1)).mapTaskToDTO(any(Task.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Task.class));
     }
 
     @DisplayName("JUnit test for TaskService delete method")

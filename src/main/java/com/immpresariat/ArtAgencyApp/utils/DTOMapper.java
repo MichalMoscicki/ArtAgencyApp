@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DTOMapper {
 
-    public InstitutionDTO mapInstitutionToDTO(Institution institution) {
+    public InstitutionDTO mapToDTO(Institution institution) {
         return InstitutionDTO.builder()
                 .id(institution.getId())
                 .name(institution.getName())
@@ -22,19 +22,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Institution mapUnsyncDTOToInstitution(InstitutionDTO inputInstitutionDTO) {
-        return Institution.builder()
-                .name(inputInstitutionDTO.getName())
-                .city(inputInstitutionDTO.getCity())
-                .category(inputInstitutionDTO.getCategory())
-                .phone(inputInstitutionDTO.getPhone())
-                .email(inputInstitutionDTO.getEmail())
-                .webPage(inputInstitutionDTO.getWebPage())
-                .notes(inputInstitutionDTO.getNotes())
-                .build();
-    }
-
-    public Institution mapDTOToInstitution(InstitutionDTO institutionDTO) {
+    public Institution mapToEntity(InstitutionDTO institutionDTO) {
         return Institution.builder()
                 .id(institutionDTO.getId())
                 .name(institutionDTO.getName())
@@ -47,7 +35,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public EventDTO mapEventToDTO(Event event) {
+    public EventDTO mapToDTO(Event event) {
         return EventDTO.builder()
                 .id(event.getId())
                 .description(event.getDescription())
@@ -56,15 +44,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Event mapUnsyncInputDTOToEvent(EventDTO inputEventDTO) {
-        return Event.builder()
-                .name(inputEventDTO.getName())
-                .description(inputEventDTO.getDescription())
-                .monthWhenOrganized(inputEventDTO.getMonthWhenOrganized())
-                .build();
-    }
-
-    public Event mapDTOToEvent(EventDTO eventDTO) {
+    public Event mapToEntity(EventDTO eventDTO) {
         return Event.builder()
                 .id(eventDTO.getId())
                 .name(eventDTO.getName())
@@ -73,7 +53,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public ContactPersonDTO mapContactPersonToDTO(ContactPerson contactPerson) {
+    public ContactPersonDTO mapToDTO(ContactPerson contactPerson) {
         return ContactPersonDTO.builder()
                 .id(contactPerson.getId())
                 .firstName(contactPerson.getFirstName())
@@ -84,7 +64,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public ContactPerson mapDTOToContactPerson(ContactPersonDTO contactPersonDTO) {
+    public ContactPerson mapToEntity(ContactPersonDTO contactPersonDTO) {
         return ContactPerson.builder()
                 .id(contactPersonDTO.getId())
                 .firstName(contactPersonDTO.getFirstName())
@@ -95,17 +75,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public ContactPerson mapUnsyncDTOToContactPerson(ContactPersonDTO unsyncContactPersonDTO) {
-        return ContactPerson.builder()
-                .firstName(unsyncContactPersonDTO.getFirstName())
-                .lastName(unsyncContactPersonDTO.getLastName())
-                .phone(unsyncContactPersonDTO.getPhone())
-                .email(unsyncContactPersonDTO.getEmail())
-                .role(unsyncContactPersonDTO.getRole())
-                .build();
-    }
-
-    public ContactDTO mapContactToDTO(Contact contact) {
+    public ContactDTO mapToDTO(Contact contact) {
         return ContactDTO.builder()
                 .id(contact.getId())
                 .title(contact.getTitle())
@@ -118,7 +88,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Contact mapDTOToContact(ContactDTO contactDTO) {
+    public Contact mapToEntity(ContactDTO contactDTO) {
         return Contact.builder()
                 .id(contactDTO.getId())
                 .title(contactDTO.getTitle())
@@ -131,7 +101,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public TaskDTO mapTaskToDTO(Task task) {
+    public TaskDTO mapToDTO(Task task) {
         return TaskDTO.builder()
                 .id(task.getId())
                 .title(task.getTitle())
@@ -145,7 +115,7 @@ public class DTOMapper {
                 .build();
     }
 
-    public Task mapDTOToTask(TaskDTO taskDTO) {
+    public Task mapToEntity(TaskDTO taskDTO) {
         return Task.builder()
                 .id(taskDTO.getId())
                 .title(taskDTO.getTitle())

@@ -73,7 +73,7 @@ public class DTOMapperTests {
         //given - precondition or setup
 
         //when - action or the behavior that we are going to test
-        InstitutionDTO institutionDTO = dtoMapper.mapInstitutionToDTO(institution);
+        InstitutionDTO institutionDTO = dtoMapper.mapToDTO(institution);
 
         //then - verify the output
         assertEquals(institution.getId(), institutionDTO.getId());
@@ -88,36 +88,7 @@ public class DTOMapperTests {
 
     }
 
-    @DisplayName("JUnit test for map unsync DTO to Institution")
-    @Test
-    public void givenInstitutionDTOWithNoId_whenMapInputDTOToInstitution_thenReturnInstitutionObject() {
-        //given - precondition or setup
-        InstitutionDTO inputInstitutionDTO = InstitutionDTO.builder()
-                .name("DK Chotomów")
-                .city("Chotomów")
-                .notes("Cool miejsce")
-                .category("DK")
-                .phone("+48111222333")
-                .email("abc@gmail.com")
-                .webPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html")
-                .build();
 
-
-        //when - action or the behavior that we are going to test
-        Institution unsynchronizedInstitution = dtoMapper.mapUnsyncDTOToInstitution(inputInstitutionDTO);
-
-        //then - verify the output
-        assertNotNull(unsynchronizedInstitution);
-        assertNull(unsynchronizedInstitution.getId());
-        assertEquals(inputInstitutionDTO.getName(), unsynchronizedInstitution.getName());
-        assertEquals(inputInstitutionDTO.getCity(), unsynchronizedInstitution.getCity());
-        assertEquals(inputInstitutionDTO.getCategory(), unsynchronizedInstitution.getCategory());
-        assertEquals(inputInstitutionDTO.getNotes(), unsynchronizedInstitution.getNotes());
-        assertEquals(inputInstitutionDTO.getEmail(), unsynchronizedInstitution.getEmail());
-        assertEquals(inputInstitutionDTO.getWebPage(), unsynchronizedInstitution.getWebPage());
-        assertEquals(inputInstitutionDTO.getPhone(), unsynchronizedInstitution.getPhone());
-
-    }
 
 
     @DisplayName("JUnit test map DTO to Institution")
@@ -136,7 +107,7 @@ public class DTOMapperTests {
                 .build();
 
         //when - action or the behavior that we are going to test
-        Institution synchronizedInstitution = dtoMapper.mapDTOToInstitution(institutionDTO);
+        Institution synchronizedInstitution = dtoMapper.mapToEntity(institutionDTO);
 
         //then - verify the output
         assertNotNull(synchronizedInstitution);
@@ -158,7 +129,7 @@ public class DTOMapperTests {
         //given - precondition or setup
 
         //when - action or the behavior that we are going to test
-        EventDTO eventDTO = dtoMapper.mapEventToDTO(event);
+        EventDTO eventDTO = dtoMapper.mapToDTO(event);
 
         //then - verify the output
         assertEquals(event.getId(), eventDTO.getId());
@@ -166,30 +137,6 @@ public class DTOMapperTests {
         assertEquals(event.getMonthWhenOrganized(), eventDTO.getMonthWhenOrganized());
         assertEquals(event.getDescription(), eventDTO.getDescription());
 
-
-    }
-
-    @DisplayName("JUnit test for map unsync DTO to Event")
-    @Test
-    public void givenEventDTOWithNoId_whenMapInputDTOToEvent_thenReturnEventObject() {
-        //given - precondition or setup
-        EventDTO inputEventDTO = EventDTO.builder()
-                .name(event.getName())
-                .monthWhenOrganized(event.getMonthWhenOrganized())
-                .description(event.getDescription())
-                .build();
-
-
-        //when - action or the behavior that we are going to test
-        Event unsynchronizedEvent = dtoMapper.mapUnsyncInputDTOToEvent(inputEventDTO);
-
-
-        //then - verify the output
-        assertNotNull(unsynchronizedEvent);
-        assertNull(unsynchronizedEvent.getId());
-        assertEquals(inputEventDTO.getName(), unsynchronizedEvent.getName());
-        assertEquals(inputEventDTO.getMonthWhenOrganized(), unsynchronizedEvent.getMonthWhenOrganized());
-        assertEquals(inputEventDTO.getDescription(), unsynchronizedEvent.getDescription());
 
     }
 
@@ -206,7 +153,7 @@ public class DTOMapperTests {
                 .build();
 
         //when - action or the behavior that we are going to test
-        Event synchronizedEvent = dtoMapper.mapDTOToEvent(eventDTO);
+        Event synchronizedEvent = dtoMapper.mapToEntity(eventDTO);
 
         //then - verify the output
         assertNotNull(synchronizedEvent);
@@ -223,7 +170,7 @@ public class DTOMapperTests {
         //given - precondition or setup
 
         //when - action or the behavior that we are going to test
-        ContactPersonDTO contactPersonDTO = dtoMapper.mapContactPersonToDTO(contactPerson);
+        ContactPersonDTO contactPersonDTO = dtoMapper.mapToDTO(contactPerson);
 
         //then - verify the output
         assertEquals(contactPerson.getId(), contactPersonDTO.getId());
@@ -249,7 +196,7 @@ public class DTOMapperTests {
                 .build();
 
         //when - action or the behavior that we are going to test
-        ContactPerson contactPerson = dtoMapper.mapDTOToContactPerson(contactPersonDTO);
+        ContactPerson contactPerson = dtoMapper.mapToEntity(contactPersonDTO);
 
         //then - verify the output
         assertEquals(contactPersonDTO.getId(), contactPersonDTO.getId());
@@ -258,31 +205,6 @@ public class DTOMapperTests {
         assertEquals(contactPerson.getRole(), contactPersonDTO.getRole());
         assertEquals(contactPerson.getEmail(), contactPersonDTO.getEmail());
         assertEquals(contactPerson.getPhone(), contactPersonDTO.getPhone());
-
-    }
-
-    @DisplayName("JUnit test for map unsync DTO to ContactPerson")
-    @Test
-    public void givenUnsyncContactPersonDTOObject_whenMapDtoToContactPerson_thenReturnContactPersonObject() {
-        //given - precondition or setup
-        ContactPersonDTO UnsyncContactPersonDTO = ContactPersonDTO.builder()
-                .email("test@test.pl")
-                .phone("+48111222333")
-                .firstName("Jan")
-                .lastName("Kowalski")
-                .role("Dyrektor")
-                .build();
-
-        //when - action or the behavior that we are going to test
-        ContactPerson contactPerson = dtoMapper.mapUnsyncDTOToContactPerson(UnsyncContactPersonDTO);
-
-        //then - verify the output
-        assertNull(contactPerson.getId());
-        assertEquals(contactPerson.getFirstName(), UnsyncContactPersonDTO.getFirstName());
-        assertEquals(contactPerson.getLastName(), UnsyncContactPersonDTO.getLastName());
-        assertEquals(contactPerson.getRole(), UnsyncContactPersonDTO.getRole());
-        assertEquals(contactPerson.getEmail(), UnsyncContactPersonDTO.getEmail());
-        assertEquals(contactPerson.getPhone(), UnsyncContactPersonDTO.getPhone());
 
     }
 
@@ -308,7 +230,7 @@ public class DTOMapperTests {
         contact.setContactPeople(contactPeople);
 
         //when - action or the behavior that we are going to test
-        ContactDTO contactDTO = dtoMapper.mapContactToDTO(contact);
+        ContactDTO contactDTO = dtoMapper.mapToDTO(contact);
 
         //then - verify the output
         assertNotNull(contactDTO);
@@ -344,7 +266,7 @@ public class DTOMapperTests {
         contactDTO.setContactPeople(contactPeople);
 
         //when - action or the behavior that we are going to test
-        Contact contact = dtoMapper.mapDTOToContact(contactDTO);
+        Contact contact = dtoMapper.mapToEntity(contactDTO);
 
         //then - verify the output
         assertNotNull(contact);
@@ -375,7 +297,7 @@ public class DTOMapperTests {
                 .build();
 
         //when - action or the behavior that we are going to test
-        TaskDTO taskDTO = dtoMapper.mapTaskToDTO(task);
+        TaskDTO taskDTO = dtoMapper.mapToDTO(task);
 
         //then - verify the output
         assertNotNull(taskDTO);
@@ -407,7 +329,7 @@ public class DTOMapperTests {
                 .build();
 
         //when - action or the behavior that we are going to test
-        Task task = dtoMapper.mapDTOToTask(taskDTO);
+        Task task = dtoMapper.mapToEntity(taskDTO);
 
         //then - verify the output
         assertNotNull(taskDTO);

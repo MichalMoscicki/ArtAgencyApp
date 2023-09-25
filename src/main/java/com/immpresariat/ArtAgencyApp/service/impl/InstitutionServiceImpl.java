@@ -38,26 +38,26 @@ public class InstitutionServiceImpl implements InstitutionService {
     @Override
     public InstitutionDTO create(InstitutionDTO unsynchronizedInstitutionDTO, Long contactId) {
         Contact contact = ensureContactExists(contactId);
-        Institution unsynchronizedInstitution = dtoMapper.mapUnsyncDTOToInstitution(unsynchronizedInstitutionDTO);
+        Institution unsynchronizedInstitution = dtoMapper.mapToEntity(unsynchronizedInstitutionDTO);
         Institution synchronizedInstitution = institutionRepository.save(inputCleaner.clean(unsynchronizedInstitution));
         updateContact(contact, synchronizedInstitution);
-        return dtoMapper.mapInstitutionToDTO(synchronizedInstitution);
+        return dtoMapper.mapToDTO(synchronizedInstitution);
     }
 
     @Override
     public InstitutionDTO getById(Long id) {
         Institution institution = ensureInstitutionExists(id);
-        return dtoMapper.mapInstitutionToDTO(institution);
+        return dtoMapper.mapToDTO(institution);
     }
 
     @Override
     public InstitutionDTO update(InstitutionDTO updatedInstitutionDTO, Long contactId) {
         //todo ensure contact exists
         ensureInstitutionExists(updatedInstitutionDTO.getId());
-        Institution updatedInstitution = dtoMapper.mapDTOToInstitution(updatedInstitutionDTO);
+        Institution updatedInstitution = dtoMapper.mapToEntity(updatedInstitutionDTO);
         Institution institutionDB = institutionRepository.save(inputCleaner.clean(updatedInstitution));
         updateContactUpdatedField(contactId);
-        return dtoMapper.mapInstitutionToDTO(institutionDB);
+        return dtoMapper.mapToDTO(institutionDB);
 
     }
 

@@ -19,7 +19,6 @@ import static org.mockito.BDDMockito.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -89,11 +88,11 @@ public class EventServiceTests {
         //given - precondition or setup
         Long id = 0L;
         given(contactRepository.findById(id)).willReturn(Optional.of(new Contact()));
-        given(dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO)).willReturn(new Event());
+        given(dtoMapper.mapToEntity(unsynchronizedEventDTO)).willReturn(new Event());
         given(inputCleaner.clean(any(Event.class))).willReturn(new Event());
         given(eventRepository.save(any(Event.class))).willReturn(new Event());
         given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
-        given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
+        given(dtoMapper.mapToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
 
 
         //when - action or the behavior that we are going to test
@@ -101,11 +100,11 @@ public class EventServiceTests {
 
         //then - verify the output
         assertNotNull(SynchronizedEventDTO);
-        verify(dtoMapper, times(1)).mapUnsyncInputDTOToEvent(any(EventDTO.class));
+        verify(dtoMapper, times(1)).mapToEntity(any(EventDTO.class));
         verify(inputCleaner, times(1)).clean(any(Event.class));
         verify(eventRepository, times(1)).save(any(Event.class));
         verify(contactRepository, times(1)).save(any(Contact.class));
-        verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Event.class));
 
     }
 
@@ -130,14 +129,14 @@ public class EventServiceTests {
     public void givenId_whenGetById_thenReturnEventDTOObject() {
         //given - precondition or setup
         given(eventRepository.findById(anyLong())).willReturn(Optional.of(event));
-        given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
+        given(dtoMapper.mapToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
 
         //when - action or the behavior that we are going to test
         EventDTO eventDTO = eventService.getById(synchronizedEventDTO.getId());
 
         //then - verify the output
         verify(eventRepository, times(1)).findById(anyLong());
-        verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Event.class));
 
     }
 
@@ -165,7 +164,7 @@ public class EventServiceTests {
         given(contactRepository.findById(anyLong())).willReturn(Optional.of(new Contact()));
         given(inputCleaner.clean(any(Event.class))).willReturn(new Event());
         given(eventRepository.save(any(Event.class))).willReturn(new Event());
-        given(dtoMapper.mapEventToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
+        given(dtoMapper.mapToDTO(any(Event.class))).willReturn(synchronizedEventDTO);
 
         //when - action or the behavior that we are going to test
         EventDTO eventDTO = eventService.update(synchronizedEventDTO, anyLong());
@@ -175,7 +174,7 @@ public class EventServiceTests {
         verify(eventRepository, times(1)).findById(anyLong());
         verify(inputCleaner, times(1)).clean(any(Event.class));
         verify(eventRepository, times(1)).save(any(Event.class));
-        verify(dtoMapper, times(1)).mapEventToDTO(any(Event.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Event.class));
 
     }
 

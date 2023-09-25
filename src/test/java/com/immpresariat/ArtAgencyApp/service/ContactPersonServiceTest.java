@@ -3,11 +3,9 @@ package com.immpresariat.ArtAgencyApp.service;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.models.ContactPerson;
-import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
-import com.immpresariat.ArtAgencyApp.repository.InstitutionRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.ContactPersonServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
 import com.immpresariat.ArtAgencyApp.utils.InputCleaner;
@@ -99,11 +97,11 @@ public class ContactPersonServiceTest {
         //given - precondition or setup
         Long contactId = 0L;
         given(contactRepository.findById(anyLong())).willReturn(Optional.of(new Contact()));
-        given(dtoMapper.mapUnsyncDTOToContactPerson(unsyncContactPersonDTO)).willReturn(new ContactPerson());
+        given(dtoMapper.mapToEntity(unsyncContactPersonDTO)).willReturn(new ContactPerson());
         given(inputCleaner.clean(any(ContactPerson.class))).willReturn(new ContactPerson());
         given(contactPersonRepository.save(any(ContactPerson.class))).willReturn(new ContactPerson());
         given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
-        given(dtoMapper.mapContactPersonToDTO(any(ContactPerson.class))).willReturn(synchronizedContactPersonDTO);
+        given(dtoMapper.mapToDTO(any(ContactPerson.class))).willReturn(synchronizedContactPersonDTO);
 
         //when - action or the behavior that we are going to test
         ContactPersonDTO synchronizedContactPersonDTO = contactPersonService.create(unsyncContactPersonDTO, contactId);
@@ -111,11 +109,11 @@ public class ContactPersonServiceTest {
         //then - verify the output
         assertNotNull(synchronizedContactPersonDTO);
         verify(contactRepository, times(1)).findById(anyLong());
-        verify(dtoMapper, times(1)).mapUnsyncDTOToContactPerson(any(ContactPersonDTO.class));
+        verify(dtoMapper, times(1)).mapToEntity(any(ContactPersonDTO.class));
         verify(inputCleaner, times(1)).clean(any(ContactPerson.class));
         verify(contactPersonRepository, times(1)).save(any(ContactPerson.class));
         verify(contactRepository, times(1)).save(any(Contact.class));
-        verify(dtoMapper, times(1)).mapContactPersonToDTO(any(ContactPerson.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(ContactPerson.class));
 
     }
 
@@ -127,7 +125,7 @@ public class ContactPersonServiceTest {
         List<ContactPerson> contactPeople = new ArrayList<>();
         contactPeople.add(contactPerson);
         given(contactPersonRepository.findAll()).willReturn(contactPeople);
-        given(dtoMapper.mapContactPersonToDTO(any(ContactPerson.class))).willReturn(new ContactPersonDTO());
+        given(dtoMapper.mapToDTO(any(ContactPerson.class))).willReturn(new ContactPersonDTO());
 
 
         //when - action or the behavior that we are going to test
@@ -135,7 +133,7 @@ public class ContactPersonServiceTest {
 
         //then - verify the output
         verify(contactPersonRepository, times(1)).findAll();
-        verify(dtoMapper, times(contactPeople.size())).mapContactPersonToDTO(any(ContactPerson.class));
+        verify(dtoMapper, times(contactPeople.size())).mapToDTO(any(ContactPerson.class));
         assertEquals(contactPeople.size(), contactPersonDTOS.size());
 
     }
@@ -160,14 +158,14 @@ public class ContactPersonServiceTest {
     public void givenId_whenGetById_thenReturnContactPersonDTOObject() {
         //given - precondition or setup
         given(contactPersonRepository.findById(anyLong())).willReturn(Optional.of(contactPerson));
-        given(dtoMapper.mapContactPersonToDTO(any(ContactPerson.class))).willReturn(synchronizedContactPersonDTO);
+        given(dtoMapper.mapToDTO(any(ContactPerson.class))).willReturn(synchronizedContactPersonDTO);
 
         //when - action or the behavior that we are going to test
         ContactPersonDTO contactPersonDTO = contactPersonService.getById(synchronizedContactPersonDTO.getId());
 
         //then - verify the output
         verify(contactPersonRepository, times(1)).findById(anyLong());
-        verify(dtoMapper, times(1)).mapContactPersonToDTO(any(ContactPerson.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(ContactPerson.class));
 
     }
 
@@ -196,7 +194,7 @@ public class ContactPersonServiceTest {
 
         given(inputCleaner.clean(any(ContactPerson.class))).willReturn(new ContactPerson());
         given(contactPersonRepository.save(any(ContactPerson.class))).willReturn(new ContactPerson());
-        given(dtoMapper.mapContactPersonToDTO(any(ContactPerson.class))).willReturn(synchronizedContactPersonDTO);
+        given(dtoMapper.mapToDTO(any(ContactPerson.class))).willReturn(synchronizedContactPersonDTO);
 
         //when - action or the behavior that we are going to test
         ContactPersonDTO contactPersonDTO = contactPersonService.update(synchronizedContactPersonDTO, anyLong());
@@ -206,7 +204,7 @@ public class ContactPersonServiceTest {
         verify(contactPersonRepository, times(1)).findById(anyLong());
         verify(inputCleaner, times(1)).clean(any(ContactPerson.class));
         verify(contactPersonRepository, times(1)).save(any(ContactPerson.class));
-        verify(dtoMapper, times(1)).mapContactPersonToDTO(any(ContactPerson.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(ContactPerson.class));
 
     }
 

@@ -38,18 +38,19 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDTO create(EventDTO unsynchronizedEventDTO, Long contactId) {
         Contact contact = ensureContactExists(contactId);
-        Event unsynchronizedEvent = dtoMapper.mapUnsyncInputDTOToEvent(unsynchronizedEventDTO);
+        Event unsynchronizedEvent = dtoMapper.mapToEntity(unsynchronizedEventDTO);
         Event synchronizedEvent = eventRepository.save(inputCleaner.clean(unsynchronizedEvent));
         updateContact(contact, synchronizedEvent);
 
-        return dtoMapper.mapEventToDTO(synchronizedEvent);
+        return dtoMapper.mapToDTO(synchronizedEvent);
+
 
     }
 
     @Override
     public EventDTO getById(Long id) {
         Event event = ensureEventExists(id);
-        return dtoMapper.mapEventToDTO(event);
+        return dtoMapper.mapToDTO(event);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class EventServiceImpl implements EventService {
         event.setMonthWhenOrganized(eventDTO.getMonthWhenOrganized());
         Event eventDb = eventRepository.save(inputCleaner.clean(event));
         updateContactUpdatedField(contactId);
-        return dtoMapper.mapEventToDTO(eventDb);
+        return dtoMapper.mapToDTO(eventDb);
     }
 
     @Override

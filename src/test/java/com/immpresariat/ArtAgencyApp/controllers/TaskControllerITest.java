@@ -56,7 +56,7 @@ public class TaskControllerITest {
     @Test
     public void givenUnsyncDTO_whenCreate_thenReturnSyncDTO() throws Exception {
         //given
-        TaskDTO unsyncTaskDTO = dtoMapper.mapTaskToDTO(createTask(null, false));
+        TaskDTO unsyncTaskDTO = dtoMapper.mapToDTO(createTask(null, false));
 
         //when
         ResultActions response = mockMvc.perform(post("/api/v1/tasks")
@@ -132,7 +132,7 @@ public class TaskControllerITest {
     @Test
     public void givenId_whenUpdate_thanThrowResourceNotFoundException() throws Exception {
         Long id = 0L;
-        TaskDTO taskDTO = dtoMapper.mapTaskToDTO(createTask(null, false));
+        TaskDTO taskDTO = dtoMapper.mapToDTO(createTask(null, false));
 
         ResultActions response = mockMvc.perform(put(String.format("/api/v1/tasks/%s", id))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -147,7 +147,7 @@ public class TaskControllerITest {
     public void givenId_whenGetById_thanReturnUpdatedObject() throws Exception {
         String updatedTitle = "UpdatedTitle";
         Task task = taskRepository.save(createTask(null, false));
-        TaskDTO updatedTaskDTO = dtoMapper.mapTaskToDTO(task);
+        TaskDTO updatedTaskDTO = dtoMapper.mapToDTO(task);
         updatedTaskDTO.setTitle(updatedTitle);
 
         ResultActions response = mockMvc.perform(put(String.format("/api/v1/tasks/%s", task.getId()))

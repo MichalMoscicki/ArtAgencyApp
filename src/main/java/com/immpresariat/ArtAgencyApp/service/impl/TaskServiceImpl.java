@@ -38,13 +38,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTO create(TaskDTO unsyncTaskDTO) {
         unsyncTaskDTO.setUpdated(new Date());
-        Task syncTask = taskRepository.save(inputCleaner.clean(dtoMapper.mapDTOToTask(unsyncTaskDTO)));
-        return dtoMapper.mapTaskToDTO(syncTask);
+        Task syncTask = taskRepository.save(inputCleaner.clean(dtoMapper.mapToEntity(unsyncTaskDTO)));
+        return dtoMapper.mapToDTO(syncTask);
     }
 
     @Override
     public TaskDTO getById(Long taskId) {
-        return dtoMapper.mapTaskToDTO(ensureTaskExists(taskId));
+        return dtoMapper.mapToDTO(ensureTaskExists(taskId));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class TaskServiceImpl implements TaskService {
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Task> page = taskRepository.findAll(pageable);
         List<Task> tasks = page.getContent();
-        List<TaskDTO> content =  tasks.stream().map(dtoMapper::mapTaskToDTO).toList();
+        List<TaskDTO> content =  tasks.stream().map(dtoMapper::mapToDTO).toList();
         return createResponse(page, content);
     }
 
@@ -63,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Task> page = taskRepository.findAllByActiveIsTrue(pageable);
         List<Task> tasks = page.getContent();
-        List<TaskDTO> content =  tasks.stream().map(dtoMapper::mapTaskToDTO).toList();
+        List<TaskDTO> content =  tasks.stream().map(dtoMapper::mapToDTO).toList();
         return createResponse(page, content);
     }
 
@@ -71,8 +71,8 @@ public class TaskServiceImpl implements TaskService {
     public TaskDTO update(TaskDTO updatedTaskDTO, Long id) {
         ensureTaskExists(id);
         updatedTaskDTO.setUpdated(new Date());
-        Task syncTask = taskRepository.save(inputCleaner.clean(dtoMapper.mapDTOToTask(updatedTaskDTO)));
-        return dtoMapper.mapTaskToDTO(syncTask);
+        Task syncTask = taskRepository.save(inputCleaner.clean(dtoMapper.mapToEntity(updatedTaskDTO)));
+        return dtoMapper.mapToDTO(syncTask);
     }
 
     @Override

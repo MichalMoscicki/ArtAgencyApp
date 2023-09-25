@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -91,11 +91,11 @@ public class InstitutionServiceTests {
         //given - precondition or setup
         Long id = 0L;
         given(contactRepository.findById(id)).willReturn(Optional.of(new Contact()));
-        given(dtoMapper.mapUnsyncDTOToInstitution(unsyncInstitutionDTO)).willReturn(new Institution());
+        given(dtoMapper.mapToEntity(unsyncInstitutionDTO)).willReturn(new Institution());
         given(inputCleaner.clean(any(Institution.class))).willReturn(new Institution());
         given(institutionRepository.save(any(Institution.class))).willReturn(new Institution());
         given(contactRepository.save(any(Contact.class))).willReturn(new Contact());
-        given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);
+        given(dtoMapper.mapToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);
 
 
         //when - action or the behavior that we are going to test
@@ -103,11 +103,11 @@ public class InstitutionServiceTests {
 
         //then - verify the output
         assertNotNull(dbInstitutionDTO);
-        verify(dtoMapper, times(1)).mapUnsyncDTOToInstitution(any(InstitutionDTO.class));
+        verify(dtoMapper, times(1)).mapToEntity(any(InstitutionDTO.class));
         verify(inputCleaner, times(1)).clean(any(Institution.class));
         verify(institutionRepository, times(1)).save(any(Institution.class));
         verify(contactRepository, times(1)).save(any(Contact.class));
-        verify(dtoMapper, times(1)).mapInstitutionToDTO(any(Institution.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Institution.class));
 
     }
 
@@ -134,14 +134,14 @@ public class InstitutionServiceTests {
         //given - precondition or setup
         Long id = 0L;
         given(institutionRepository.findById(anyLong())).willReturn(Optional.of(institution));
-        given(dtoMapper.mapInstitutionToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);
+        given(dtoMapper.mapToDTO(any(Institution.class))).willReturn(synchronizedInstitutionDTO);
 
         //when - action or the behavior that we are going to test
         InstitutionDTO institutionDTO = institutionService.getById(id);
 
         //then - verify the output
         verify(institutionRepository, times(1)).findById(anyLong());
-        verify(dtoMapper, times(1)).mapInstitutionToDTO(any(Institution.class));
+        verify(dtoMapper, times(1)).mapToDTO(any(Institution.class));
 
     }
 
