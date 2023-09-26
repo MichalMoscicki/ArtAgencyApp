@@ -51,7 +51,6 @@ public class TaskAttachmentServiceImpl implements TaskAttachmentService {
 
     @Override
     public void deleteById(Long id) {
-
         TaskAttachment attachment = ensureAttachmentExists(id);
         attachment.setContacts(null);
         attachmentRepository.save(attachment);

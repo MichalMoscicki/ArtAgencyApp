@@ -2,9 +2,11 @@ package com.immpresariat.ArtAgencyApp.service;
 
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Task;
+import com.immpresariat.ArtAgencyApp.models.TaskAttachment;
+import com.immpresariat.ArtAgencyApp.payload.PageResponse;
 import com.immpresariat.ArtAgencyApp.payload.TaskDTO;
-import com.immpresariat.ArtAgencyApp.payload.TaskResponse;
 import com.immpresariat.ArtAgencyApp.repository.TaskRepository;
+import com.immpresariat.ArtAgencyApp.service.impl.TaskAttachmentServiceImpl;
 import com.immpresariat.ArtAgencyApp.service.impl.TaskServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.AppConstants;
 import com.immpresariat.ArtAgencyApp.utils.DTOMapper;
@@ -35,6 +37,8 @@ public class TaskServiceTest {
     DTOMapper dtoMapper;
     @Mock
     TaskRepository taskRepository;
+    @Mock
+    TaskAttachmentServiceImpl attachmentService;
     @Mock
     InputCleaner inputCleaner;
     @InjectMocks
@@ -108,7 +112,7 @@ public class TaskServiceTest {
         when(dtoMapper.mapToDTO(any(Task.class))).thenReturn(mockContent.get(0));
 
         //when - action or the behavior that we are going to test
-        TaskResponse result = taskService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
+        PageResponse<TaskDTO> result = taskService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
 
         //then - verify the output
         assertEquals(mockContent, result.getContent());
@@ -129,11 +133,12 @@ public class TaskServiceTest {
         when(dtoMapper.mapToDTO(any(Task.class))).thenReturn(mockContent.get(0));
 
         //when - action or the behavior that we are going to test
-        TaskResponse result = taskService.getActive(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
+        PageResponse<TaskDTO> result = taskService.getActive(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
 
         //then - verify the output
         assertEquals(mockContent, result.getContent());
     }
+
     @DisplayName("JUnit test for Task getById method (negative scenario)")
     @Test
     public void givenContactDTOObject_whenUpdate_thenThrowResourceNotFoundException() {
@@ -184,11 +189,30 @@ public class TaskServiceTest {
         verify(dtoMapper, times(1)).mapToDTO(any(Task.class));
     }
 
-    @DisplayName("JUnit test for TaskService delete method")
+    @DisplayName("JUnit test for TaskService delete method (negative scenario)")
+    @Test
+    public void givenId_whenDeleteById_thenReturnResourceNotFoundException() {
+        //given - precondition or setup
+        Long id = 0L;
+        given(taskRepository.findById(id)).willReturn(Optional.empty());
+
+        //when - action or the behavior that we are going to test
+        assertThrows(ResourceNotFoundException.class, () -> {
+            taskService.deleteById(id);
+        });
+
+
+        //then - verify the output
+        verify(taskRepository, never()).deleteById(id);
+    }
+
+
+    @DisplayName("JUnit test for TaskService delete method (positive scenario without attachments)")
     @Test
     public void givenId_whenDeleteById_thenTaskDeleted() {
         //given - precondition or setup
         Long id = 0L;
+        given(taskRepository.findById(id)).willReturn(Optional.of(new Task()));
         doNothing().when(taskRepository).deleteById(id);
 
         //when - action or the behavior that we are going to test
@@ -197,4 +221,34 @@ public class TaskServiceTest {
         //then - verify the output
         verify(taskRepository, times(1)).deleteById(id);
     }
+
+    @DisplayName("JUnit test for TaskService delete method (positive scenario with attachments)")
+    @Test
+    public void givenTaskWithAttachments_whenDeleteById_thenTaskDeleted() {
+        //given - precondition or setup
+        Long id = 0L;
+        Task taskWithAttachments = new Task();
+        taskWithAttachments.setId(id);
+        TaskAttachment taskAttachment = new TaskAttachment();
+        taskAttachment.setId(id);
+        taskWithAttachments.setAttachment(taskAttachment);
+
+        Task taskNoAttachments = new Task();
+        taskNoAttachments.setId(id);
+
+        given(taskRepository.findById(id)).willReturn(Optional.of(taskWithAttachments));
+        given(taskRepository.save(taskNoAttachments)).willReturn(taskNoAttachments);
+        doNothing().when(attachmentService).deleteById(anyLong());
+        doNothing().when(taskRepository).deleteById(id);
+
+        //when - action or the behavior that we are going to test
+        taskService.deleteById(id);
+
+        //then - verify the output
+        verify(taskRepository, times(1)).findById(id);
+        verify(taskRepository, times(1)).save(any(Task.class));
+        verify(attachmentService, times(1)).deleteById(anyLong());
+        verify(taskRepository, times(1)).deleteById(id);
+    }
+
 }

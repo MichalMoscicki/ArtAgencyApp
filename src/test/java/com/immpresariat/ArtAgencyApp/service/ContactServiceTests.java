@@ -3,7 +3,7 @@ package com.immpresariat.ArtAgencyApp.service;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
-import com.immpresariat.ArtAgencyApp.payload.ContactResponse;
+import com.immpresariat.ArtAgencyApp.payload.PageResponse;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.service.impl.ContactServiceImpl;
 import com.immpresariat.ArtAgencyApp.utils.AppConstants;
@@ -49,7 +49,7 @@ public class ContactServiceTests {
         when(dtoMapper.mapToDTO(any(Contact.class))).thenReturn(mockContent.get(0));
 
         //when - action or the behavior that we are going to test
-        ContactResponse result = contactService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
+        PageResponse<ContactDTO> result = contactService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
 
         //then - verify the output
         assertEquals(mockContent, result.getContent());

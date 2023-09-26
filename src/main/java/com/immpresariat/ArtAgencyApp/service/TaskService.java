@@ -1,7 +1,7 @@
 package com.immpresariat.ArtAgencyApp.service;
 
+import com.immpresariat.ArtAgencyApp.payload.PageResponse;
 import com.immpresariat.ArtAgencyApp.payload.TaskDTO;
-import com.immpresariat.ArtAgencyApp.payload.TaskResponse;
 
 public interface TaskService {
 
@@ -9,9 +9,9 @@ public interface TaskService {
 
     TaskDTO getById(Long id);
 
-    TaskResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir);
+    PageResponse<TaskDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir);
 
-    TaskResponse getActive(int pageNo, int pageSize, String sortBy, String sortDir);
+    PageResponse<TaskDTO> getActive(int pageNo, int pageSize, String sortBy, String sortDir);
 
     TaskDTO update(TaskDTO taskDTO, Long id);
 

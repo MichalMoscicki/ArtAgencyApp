@@ -6,7 +6,7 @@ import com.immpresariat.ArtAgencyApp.models.ContactPerson;
 import com.immpresariat.ArtAgencyApp.models.Event;
 import com.immpresariat.ArtAgencyApp.models.Institution;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
-import com.immpresariat.ArtAgencyApp.payload.ContactResponse;
+import com.immpresariat.ArtAgencyApp.payload.PageResponse;
 import com.immpresariat.ArtAgencyApp.repository.ContactPersonRepository;
 import com.immpresariat.ArtAgencyApp.repository.ContactRepository;
 import com.immpresariat.ArtAgencyApp.repository.EventRepository;
@@ -56,7 +56,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public PageResponse<ContactDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
 
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
@@ -65,7 +65,7 @@ public class ContactServiceImpl implements ContactService {
         Page<Contact> page = contactRepository.findAll(pageable);
         List<Contact> contacts = page.getContent();
         List<ContactDTO> content =  contacts.stream().map(dtoMapper::mapToDTO).toList();
-        return createResponse(page, content);
+        return PageResponse.createResponse(page, content);
     }
 
 
@@ -117,16 +117,7 @@ public class ContactServiceImpl implements ContactService {
         contactRepository.save(contact);
         contactPersonRepository.deleteAll(contactPeople);
     }
-    private ContactResponse createResponse(Page<Contact> page, List<ContactDTO> content) {
-        ContactResponse response = new ContactResponse();
-        response.setContent(content);
-        response.setPageSize(page.getSize());
-        response.setPageNo(page.getNumber());
-        response.setTotalElements(page.getTotalElements());
-        response.setTotalPages(page.getTotalPages());
-        response.setLast(page.isLast());
-        return response;
-    }
+
 }
 
 

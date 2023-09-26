@@ -3,8 +3,8 @@ package com.immpresariat.ArtAgencyApp.service.impl;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Task;
 import com.immpresariat.ArtAgencyApp.models.TaskAttachment;
+import com.immpresariat.ArtAgencyApp.payload.PageResponse;
 import com.immpresariat.ArtAgencyApp.payload.TaskDTO;
-import com.immpresariat.ArtAgencyApp.payload.TaskResponse;
 import com.immpresariat.ArtAgencyApp.repository.TaskRepository;
 import com.immpresariat.ArtAgencyApp.service.TaskAttachmentService;
 import com.immpresariat.ArtAgencyApp.service.TaskService;
@@ -48,23 +48,23 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public PageResponse<TaskDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = createSort(sortBy, sortDir);
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Task> page = taskRepository.findAll(pageable);
         List<Task> tasks = page.getContent();
         List<TaskDTO> content =  tasks.stream().map(dtoMapper::mapToDTO).toList();
-        return createResponse(page, content);
+        return PageResponse.createResponse(page, content);
     }
 
     @Override
-    public TaskResponse getActive(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public PageResponse<TaskDTO> getActive(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = createSort(sortBy, sortDir);
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Task> page = taskRepository.findAllByActiveIsTrue(pageable);
         List<Task> tasks = page.getContent();
         List<TaskDTO> content =  tasks.stream().map(dtoMapper::mapToDTO).toList();
-        return createResponse(page, content);
+        return PageResponse.createResponse(page, content);
     }
 
     @Override
@@ -100,19 +100,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private static Sort createSort(String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+        return sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        return sort;
-    }
-
-    private TaskResponse createResponse(Page<Task> page, List<TaskDTO> content) {
-        TaskResponse response = new TaskResponse();
-        response.setContent(content);
-        response.setPageSize(page.getSize());
-        response.setPageNo(page.getNumber());
-        response.setTotalElements(page.getTotalElements());
-        response.setTotalPages(page.getTotalPages());
-        response.setLast(page.isLast());
-        return response;
     }
 }
