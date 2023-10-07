@@ -42,8 +42,6 @@ public class TaskActivationSchedulerITest {
                 .build();
         taskRepository.save(task2);
 
-
-
         taskScheduler.checkAndSetTaskActivationStatus();
 
         Task updatedTask = taskRepository.findById(task.getId()).orElse(null);

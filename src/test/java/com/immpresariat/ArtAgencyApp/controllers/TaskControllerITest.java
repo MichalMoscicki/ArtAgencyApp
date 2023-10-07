@@ -146,9 +146,10 @@ public class TaskControllerITest {
     @Test
     public void givenId_whenGetById_thanReturnUpdatedObject() throws Exception {
         String updatedTitle = "UpdatedTitle";
-        Task task = taskRepository.save(createTask(null, false));
+        Task task = taskRepository.save(createTask(null, true));
         TaskDTO updatedTaskDTO = dtoMapper.mapToDTO(task);
         updatedTaskDTO.setTitle(updatedTitle);
+        updatedTaskDTO.setFinished(true);
 
         ResultActions response = mockMvc.perform(put(String.format("/api/v1/tasks/%s", task.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -157,7 +158,8 @@ public class TaskControllerITest {
         response.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", CoreMatchers.is(task.getId().intValue())))
-                .andExpect(jsonPath("$.title", CoreMatchers.is(updatedTitle)));
+                .andExpect(jsonPath("$.title", CoreMatchers.is(updatedTitle)))
+                .andExpect(jsonPath("$.active", CoreMatchers.is(false)));
 
     }
 

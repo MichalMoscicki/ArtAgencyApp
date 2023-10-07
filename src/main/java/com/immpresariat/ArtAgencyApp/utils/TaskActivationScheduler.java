@@ -16,7 +16,7 @@ public class TaskActivationScheduler {
         this.taskRepository = taskRepository;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 01 0 * * ?")
     public void checkAndSetTaskActivationStatus() {
         LocalDate currentDate = LocalDate.now();
 

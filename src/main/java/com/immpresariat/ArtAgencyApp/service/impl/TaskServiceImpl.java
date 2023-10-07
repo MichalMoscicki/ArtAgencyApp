@@ -70,6 +70,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTO update(TaskDTO updatedTaskDTO, Long id) {
         ensureTaskExists(id);
+        if(updatedTaskDTO.isFinished()){
+            updatedTaskDTO.setActive(false);
+        }
         updatedTaskDTO.setUpdated(new Date());
         Task syncTask = taskRepository.save(inputCleaner.clean(dtoMapper.mapToEntity(updatedTaskDTO)));
         return dtoMapper.mapToDTO(syncTask);
