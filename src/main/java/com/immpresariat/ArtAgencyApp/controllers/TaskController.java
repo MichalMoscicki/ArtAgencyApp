@@ -38,6 +38,9 @@ public class TaskController {
         return taskService.getAll(pageNo, pageSize, sortBy, sortDir);
     }
 
+    //finished
+    //future tasks
+
     @GetMapping("/active")
     public PageResponse<TaskDTO> getActive(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
                                   @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
