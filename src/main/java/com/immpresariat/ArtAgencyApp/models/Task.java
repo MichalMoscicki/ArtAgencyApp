@@ -1,6 +1,7 @@
 package com.immpresariat.ArtAgencyApp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -27,6 +28,7 @@ public class Task {
     private String description;
     private boolean finished;
     private boolean active;
+    @Future
     private LocalDate activationDate;
     private Date updated;
     @Min(1)
