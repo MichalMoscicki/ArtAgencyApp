@@ -23,6 +23,7 @@ BE:
 FE:
 - JavaScript
 - React
+- (Material UI - in progress)
 - Redux
     
 # Main functionalities
@@ -177,3 +178,4 @@ If request cause an error, response will contain:
 
 
 Screenshots
+(in progress)
