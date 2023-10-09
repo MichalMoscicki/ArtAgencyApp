@@ -52,11 +52,11 @@ public class InstitutionServiceImpl implements InstitutionService {
 
     @Override
     public InstitutionDTO update(InstitutionDTO updatedInstitutionDTO, Long contactId) {
-        //todo ensure contact exists
+        Contact contact = ensureContactExists(contactId);
         ensureInstitutionExists(updatedInstitutionDTO.getId());
         Institution updatedInstitution = dtoMapper.mapToEntity(updatedInstitutionDTO);
         Institution institutionDB = institutionRepository.save(inputCleaner.clean(updatedInstitution));
-        updateContactUpdatedField(contactId);
+        updateContactUpdatedField(contact);
         return dtoMapper.mapToDTO(institutionDB);
 
     }
@@ -107,13 +107,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         contactRepository.save(contact);
     }
 
-    private void updateContactUpdatedField(long contactId) {
-        Optional<Contact> contactOptional = contactRepository.findById(contactId);
-        if (contactOptional.isEmpty()) {
-            throw new ResourceNotFoundException("No contact with id:" + contactId);
-        }
-
-        Contact contact = contactOptional.get();
+    private void updateContactUpdatedField(Contact contact) {
         contact.setUpdated(new Date());
         contactRepository.save(contact);
     }
