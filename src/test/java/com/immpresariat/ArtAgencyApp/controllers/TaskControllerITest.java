@@ -56,7 +56,7 @@ public class TaskControllerITest {
     @Test
     public void givenUnsyncDTO_whenCreate_thenReturnSyncDTO() throws Exception {
         //given
-        TaskDTO unsyncTaskDTO = dtoMapper.mapToDTO(createTask(null, false));
+        TaskDTO unsyncTaskDTO = dtoMapper.mapToDTO(createTask(null, false, false));
 
         //when
         ResultActions response = mockMvc.perform(post("/api/v1/tasks")
@@ -102,37 +102,114 @@ public class TaskControllerITest {
                 .andExpect(jsonPath("$.attachment", CoreMatchers.notNullValue()));
     }
 
+    @Test
+    public void givenWrongStatus_when_getAll_returnError() throws Exception {
+        taskRepository.save(createTask(null, false, false));
+        taskRepository.save(createTask(null, true, false));
+        String status = "SOMEWRONGSTATUS";
+        String message = "Wrong status. Must be: active, all, finished, future (case insensitive) or null. Was: " + status;
+
+        ResultActions response = mockMvc.perform(get("/api/v1/tasks?status=" + status));
+
+        response.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
+    }
 
     @Test
-    public void givenTaskList_when_getAll_returnTasks() throws Exception {
-        taskRepository.save(createTask(null, false));
-        taskRepository.save(createTask(null, true));
+    public void givenEmptyStatus_when_getAll_returnError() throws Exception {
+        taskRepository.save(createTask(null, false, false));
+        taskRepository.save(createTask(null, true, false));
+        String status = "";
+        String message = "Status must not be empty or blank. Check the path parameter (status=)";
 
+        ResultActions response = mockMvc.perform(get("/api/v1/tasks?status=" + status));
+
+        response.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
+    }
+
+    @Test
+    public void givenBlankStatus_when_getAll_returnError() throws Exception {
+        taskRepository.save(createTask(null, false, false));
+        taskRepository.save(createTask(null, true, false));
+        String status = "   ";
+        String message = "Status must not be empty or blank. Check the path parameter (status=)";
+
+        ResultActions response = mockMvc.perform(get("/api/v1/tasks?status=" + status));
+
+        response.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
+    }
+
+    @Test
+    public void givenNoStatus_whenGetAll_returnActive() throws Exception {
+        Task task1 = taskRepository.save(createTask(null, false, false));
+        Task task2 = taskRepository.save(createTask(null, true, false));
+        String status = "Active";
         ResultActions response = mockMvc.perform(get("/api/v1/tasks"));
 
         response.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.size()", CoreMatchers.is(2)));
-
     }
 
     @Test
-    public void givenTaskList_whenGetActive_returnActive() throws Exception {
-        Task task1 = taskRepository.save(createTask(null, false));
-        Task task2 = taskRepository.save(createTask(null, true));
+    public void givenStatusAll_whenGetAll_returnActive() throws Exception {
+        Task task1 = taskRepository.save(createTask(null, false, false));
+        Task task2 = taskRepository.save(createTask(null, true, false));
+        String status = "all";
+        ResultActions response = mockMvc.perform(get("/api/v1/tasks?status=" + status));
 
-        ResultActions response = mockMvc.perform(get("/api/v1/tasks/active"));
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.size()", CoreMatchers.is(2)));
+    }
+
+
+
+    @Test
+    public void givenTaskList_whenGetAll_returnActive() throws Exception {
+        Task futureTask = taskRepository.save(createTask(null, false, false));
+        Task activeTask = taskRepository.save(createTask(null, true, false));
+        String status = "Active";
+        ResultActions response = mockMvc.perform(get("/api/v1/tasks?status=" + status));
 
         response.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.size()", CoreMatchers.is(1)));
+    }
 
+    @Test
+    public void givenStatusFuture_whenGetAll_returnActive() throws Exception {
+        Task futureTask = taskRepository.save(createTask(null, false, false));
+        Task activeTask = taskRepository.save(createTask(null, true, false));
+        String status = "future";
+        ResultActions response = mockMvc.perform(get("/api/v1/tasks?status=" + status));
+
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.size()", CoreMatchers.is(1)));
+    }
+
+    @Test
+    public void givenStatusFinished_whenGetAll_returnActive() throws Exception {
+        Task futureTask = taskRepository.save(createTask(null, false, false));
+        Task finishedTask = taskRepository.save(createTask(null, false, true));
+        String status = "FINISHED";
+        ResultActions response = mockMvc.perform(get("/api/v1/tasks?status=" + status));
+
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.size()", CoreMatchers.is(1)));
     }
 
     @Test
     public void givenId_whenUpdate_thanThrowResourceNotFoundException() throws Exception {
         Long id = 0L;
-        TaskDTO taskDTO = dtoMapper.mapToDTO(createTask(null, false));
+        TaskDTO taskDTO = dtoMapper.mapToDTO(createTask(null, false, false));
 
         ResultActions response = mockMvc.perform(put(String.format("/api/v1/tasks/%s", id))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -146,7 +223,7 @@ public class TaskControllerITest {
     @Test
     public void givenId_whenGetById_thanReturnUpdatedObject() throws Exception {
         String updatedTitle = "UpdatedTitle";
-        Task task = taskRepository.save(createTask(null, true));
+        Task task = taskRepository.save(createTask(null, true, false));
         TaskDTO updatedTaskDTO = dtoMapper.mapToDTO(task);
         updatedTaskDTO.setTitle(updatedTitle);
         updatedTaskDTO.setFinished(true);
@@ -165,7 +242,7 @@ public class TaskControllerITest {
 
     @Test
     public void givenTaskWithAssociatedData_whenDelete_thenCorrectResponse() throws Exception {
-        Task task = taskRepository.save(createTask(null, false));
+        Task task = taskRepository.save(createTask(null, false, false));
 
         ResultActions response = mockMvc.perform(delete(String.format("/api/v1/tasks/%s", task.getId())));
 
@@ -192,13 +269,13 @@ public class TaskControllerITest {
         Assertions.assertTrue(contactOptional.isPresent());
     }
 
-    private Task createTask(TaskAttachment taskAttachment, boolean active) {
+    private Task createTask(TaskAttachment taskAttachment, boolean active, boolean finished) {
         return Task.builder()
                 .title("TestTask")
                 .description("Task description")
                 .activationDate(LocalDate.now().plusDays(3))
                 .updated(null)
-                .finished(false)
+                .finished(finished)
                 .active(active)
                 .attachment(taskAttachment)
                 .priority(1)
@@ -220,6 +297,6 @@ public class TaskControllerITest {
                 .build();
 
         TaskAttachment dbTaskAttachment = taskAttachmentRepository.save(taskAttachment);
-        return createTask(dbTaskAttachment, active);
+        return createTask(dbTaskAttachment, active, false);
     }
 }

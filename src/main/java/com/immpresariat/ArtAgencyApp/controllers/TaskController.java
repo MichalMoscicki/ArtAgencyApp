@@ -33,21 +33,10 @@ public class TaskController {
     public PageResponse<TaskDTO> getAll(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
                                         @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                         @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-                                        @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+                                        @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+                                        @RequestParam(value = "status", required = false) String status
     ) {
-        return taskService.getAll(pageNo, pageSize, sortBy, sortDir);
-    }
-
-    //finished
-    //future tasks
-
-    @GetMapping("/active")
-    public PageResponse<TaskDTO> getActive(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
-                                  @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                  @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-                                  @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
-    ) {
-        return taskService.getActive(pageNo, pageSize, sortBy, sortDir);
+        return taskService.getAll(pageNo, pageSize, sortBy, sortDir, status);
     }
 
     @PutMapping("/{id}")

@@ -9,9 +9,7 @@ public interface TaskService {
 
     TaskDTO getById(Long id);
 
-    PageResponse<TaskDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir);
-
-    PageResponse<TaskDTO> getActive(int pageNo, int pageSize, String sortBy, String sortDir);
+    PageResponse<TaskDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir, String status);
 
     TaskDTO update(TaskDTO taskDTO, Long id);
 

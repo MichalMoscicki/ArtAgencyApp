@@ -11,5 +11,7 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByActivationDate(LocalDate currentDate);
-    Page<Task> findAllByActiveIsTrue(Pageable pageable);
+    Page<Task> findAllByActiveIsTrueAndFinishedIsFalse(Pageable pageable);
+    Page<Task> findAllByActiveIsFalseAndFinishedIsFalse(Pageable pageable);
+    Page<Task> findAllByActiveIsFalseAndFinishedIsTrue(Pageable pageable);
 }

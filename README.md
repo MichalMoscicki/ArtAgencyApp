@@ -142,6 +142,13 @@ Properties:
 
 
     GET api/v1/tasks  Returns page of ten tasks, ordered descending by update date.
+    Optional Query Parameters:
+    - `page` (integer): Specify the page number to retrieve a specific page of tasks. Defaults to page 1 if omitted.
+    - `sortDir` (String): Specify the sorting direction. Can be "asc" or "desc". Defaults is descending if omitted.
+    - `sortBy` (String): Specify the field used to sort tasks. Type in field name. Defaults is updated.
+    - `status` (String): Filter tasks based on their status (case insensitive). Possible status: active, future, finished, all. 
+    Retunrs all tasks if omitted.
+
     GET api/v1/tasks/{taskId}
     POST api/v1/tasks  
     PUT api/v1/tasks/{taskId}

@@ -96,7 +96,7 @@ public class TaskServiceTest {
         verify(dtoMapper, times(1)).mapToDTO(any(Task.class));
     }
 
-
+//todo: czy watto testować wszystkie przypadki switcha?
     @DisplayName("JUnit test for getAll method")
     @Test
     public void given_whenGetAll_thenReturnListOfTaskDTO() {
@@ -112,32 +112,12 @@ public class TaskServiceTest {
         when(dtoMapper.mapToDTO(any(Task.class))).thenReturn(mockContent.get(0));
 
         //when - action or the behavior that we are going to test
-        PageResponse<TaskDTO> result = taskService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
+        PageResponse<TaskDTO> result = taskService.getAll(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION, null);
 
         //then - verify the output
         assertEquals(mockContent, result.getContent());
     }
 
-    @DisplayName("JUnit test for getActive method")
-    @Test
-    public void given_whenGetActive_thenReturnListOfTaskDTO() {
-        //given - precondition or setup
-        int pageNo = 0;
-        int pageSize = 10;
-        Sort sort = Sort.by(AppConstants.DEFAULT_SORT_BY).descending();
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Task> mockPage = new PageImpl<>(Collections.singletonList(new Task()));
-        List<TaskDTO> mockContent = Collections.singletonList(new TaskDTO());
-
-        when(taskRepository.findAllByActiveIsTrue(pageable)).thenReturn(mockPage);
-        when(dtoMapper.mapToDTO(any(Task.class))).thenReturn(mockContent.get(0));
-
-        //when - action or the behavior that we are going to test
-        PageResponse<TaskDTO> result = taskService.getActive(pageNo, pageSize, AppConstants.DEFAULT_SORT_BY, AppConstants.DEFAULT_SORT_DIRECTION);
-
-        //then - verify the output
-        assertEquals(mockContent, result.getContent());
-    }
 
     @DisplayName("JUnit test for Task getById method (negative scenario)")
     @Test

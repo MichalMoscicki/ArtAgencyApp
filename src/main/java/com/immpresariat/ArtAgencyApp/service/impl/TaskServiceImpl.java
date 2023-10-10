@@ -19,11 +19,12 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+import static com.immpresariat.ArtAgencyApp.utils.AppConstants.*;
+
 @Service
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-
     private final TaskAttachmentService attachmentService;
     private final DTOMapper dtoMapper;
     private final InputCleaner inputCleaner;
@@ -48,29 +49,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public PageResponse<TaskDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public PageResponse<TaskDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir, String status) {
         Sort sort = createSort(sortBy, sortDir);
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Task> page = taskRepository.findAll(pageable);
+        Page<Task> page = createPage(pageable, status);
         List<Task> tasks = page.getContent();
-        List<TaskDTO> content =  tasks.stream().map(dtoMapper::mapToDTO).toList();
-        return PageResponse.createResponse(page, content);
-    }
-
-    @Override
-    public PageResponse<TaskDTO> getActive(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = createSort(sortBy, sortDir);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Task> page = taskRepository.findAllByActiveIsTrue(pageable);
-        List<Task> tasks = page.getContent();
-        List<TaskDTO> content =  tasks.stream().map(dtoMapper::mapToDTO).toList();
+        List<TaskDTO> content = tasks.stream().map(dtoMapper::mapToDTO).toList();
         return PageResponse.createResponse(page, content);
     }
 
     @Override
     public TaskDTO update(TaskDTO updatedTaskDTO, Long id) {
         ensureTaskExists(id);
-        if(updatedTaskDTO.isFinished()){
+        if (updatedTaskDTO.isFinished()) {
             updatedTaskDTO.setActive(false);
         }
         updatedTaskDTO.setUpdated(new Date());
@@ -81,16 +72,14 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public String deleteById(Long taskId) {
         Task task = ensureTaskExists(taskId);
-        if(task.getAttachment() != null){
+        if (task.getAttachment() != null) {
             deleteAttachments(task);
         }
         taskRepository.deleteById(taskId);
         return "Successfully deleted task with id: " + taskId;
     }
 
-
-
-     private void deleteAttachments(Task task) {
+    private void deleteAttachments(Task task) {
         TaskAttachment attachment = task.getAttachment();
         task.setAttachment(null);
         taskRepository.save(task);
@@ -105,5 +94,27 @@ public class TaskServiceImpl implements TaskService {
     private static Sort createSort(String sortBy, String sortDir) {
         return sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+    }
+
+    private Page<Task> createPage(Pageable pageable, String status) {
+        Page<Task> page;
+        if(status == null){
+           return page = taskRepository.findAll(pageable);
+        } else if (status.matches(EMPTY_OR_BLANK)){
+            throw new IllegalArgumentException("Status must not be empty or blank. Check the path parameter (status=)");
+        }
+
+        switch(status.toLowerCase()){
+            case ACTIVE -> page = taskRepository.findAllByActiveIsTrueAndFinishedIsFalse(pageable);
+            //todo czy zostawić to dla czytelności?:
+            case ALL -> page = taskRepository.findAll(pageable);
+            case FINISHED -> page = taskRepository.findAllByActiveIsFalseAndFinishedIsTrue(pageable);
+            case FUTURE -> page = taskRepository.findAllByActiveIsFalseAndFinishedIsFalse(pageable);
+            //status nie może być empty or blank. Zrób tu sprawdzenie w regexie.
+            default ->
+                    throw new IllegalArgumentException(
+                            String.format("Wrong status. Must be: active, all, finished, future (case insensitive) or null. Was: %s", status));
+        }
+        return page;
     }
 }
