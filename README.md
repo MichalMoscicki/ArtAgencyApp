@@ -69,6 +69,11 @@ Properties:
 
    
     GET api/v1/contacts     Returns page of ten contacts, ordered descending by update date.
+     Optional Query Parameters:
+    - `page` (integer): Specify the page number to retrieve a specific page of contacts. Defaults to page 1 if omitted.
+    - `sortDir` (String): Specify the sorting direction. Can be "asc" or "desc". Defaults is descending if omitted.
+    - `sortBy` (String): Specify the field used to sort contacts. Type in field name. Defaults is updated.
+
     GET api/v1/contacts/{id}
     POST api/v1/contacts
     PUT api/v1/contacts/{id}
@@ -168,14 +173,6 @@ Properties:
 
 (Other endpoints will be provided with further development).
 
-PAGINATION AND SORTING:
-
-If endpoint returns page, it can also have query parameters:
-
-    pageSize - 10 by default
-    sortBy - updateDate by default.
-    sortDir - DESC by default, can be ASC (case insensitive)
-
 ERROR HANDLING 
 
 If request cause an error, response will contain:
@@ -184,5 +181,5 @@ If request cause an error, response will contain:
 - status code
 
 
-Screenshots
+Screenshots FE:
 (in progress)
