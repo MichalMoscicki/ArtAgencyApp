@@ -49,7 +49,7 @@ USERS:
 ADMIN:
 - (Assigning tasks to users - in progress)
 - (Managing users - in progress)
-- (Exporting contacts - in progress)
+- Exporting contacts
 
 # API
 
@@ -73,7 +73,7 @@ Properties:
     - `page` (integer): Specify the page number to retrieve a specific page of contacts. Defaults to page 1 if omitted.
     - `sortDir` (String): Specify the sorting direction. Can be "asc" or "desc". Defaults is descending if omitted.
     - `sortBy` (String): Specify the field used to sort contacts. Type in field name. Defaults is updated.
-
+    GET api/v1/contacts/export-json EXports all contacts as an JSON file. (Admin only).
     GET api/v1/contacts/{id}
     POST api/v1/contacts
     PUT api/v1/contacts/{id}

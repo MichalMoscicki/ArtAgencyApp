@@ -26,8 +26,7 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -270,6 +269,17 @@ public class ContactControllerITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", CoreMatchers.is(message)));
     }
+
+    @Test
+    public void givenContactList_whenExport_thenStatusOk() throws Exception {
+        Contact contact = createSampleContact("SampleContact");
+
+        mockMvc.perform(get("/api/v1/contacts/export-json"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", "attachment; filename=businessContacts.json"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+    //todo how to do negative scenario?
 
     private Contact createSampleContact(String name) {
         Contact contact = Contact.builder()

@@ -1,10 +1,14 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
 import com.immpresariat.ArtAgencyApp.payload.PageResponse;
 import com.immpresariat.ArtAgencyApp.service.ContactService;
 import com.immpresariat.ArtAgencyApp.utils.AppConstants;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +29,25 @@ public class ContactController {
                                            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
                                    ) {
         return contactService.getAll(pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @GetMapping("/export-json")
+    public ResponseEntity<byte[]> exportData(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        byte[] jsonData;
+
+        try{
+            jsonData = objectMapper.writeValueAsBytes(contactService.export());
+        } catch (JsonProcessingException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=businessContacts.json");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(jsonData);
     }
 
     @PostMapping("")

@@ -92,6 +92,12 @@ public class ContactServiceImpl implements ContactService {
         deleteAssociatedContactPeople(contact);
         contactRepository.deleteById(id);
     }
+
+    @Override
+    public List<Contact> export() {
+        return contactRepository.findAll();
+    }
+
     private Contact ensureContactExists(Long id) {
         Optional<Contact> contactOptional = contactRepository.findById(id);
         if (contactOptional.isEmpty()) {
