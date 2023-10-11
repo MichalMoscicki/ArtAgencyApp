@@ -160,4 +160,23 @@ class InputCleanerTest {
         assertEquals("Title", task.getTitle());
     }
 
+    @DisplayName("JUnit test for clean instrument method (only title)")
+    @Test
+    public void givenInstrument_whenTrim_thenReturnCleanedIntrumentObject() {
+        //given - precondition or setup
+        Instrument instrument = Instrument.builder()
+                .id(0L)
+                .name("   Piano   ")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Instrument cleanedInstrument = inputCleaner.clean(instrument);
+
+        //then - verify the output
+        assertNotNull(instrument);
+        assertEquals("Piano", instrument.getName());
+    }
+
+
+
 }

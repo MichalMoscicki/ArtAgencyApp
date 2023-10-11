@@ -55,4 +55,9 @@ public class InputCleaner {
         return task;
     }
 
+    public Instrument clean(Instrument instrument){
+        instrument.setName(instrument.getName().trim());
+        return instrument;
+    }
+
 }

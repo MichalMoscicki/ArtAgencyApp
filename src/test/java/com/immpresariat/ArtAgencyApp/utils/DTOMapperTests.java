@@ -345,4 +345,40 @@ public class DTOMapperTests {
 
     }
 
+    @DisplayName("JUnit test for mapToDTO (InstrumentDTO) method")
+    @Test
+    public void givenInstrument_whenMapToDTO_thenReturnDTO() {
+        //given - precondition or setup
+        Instrument instrument = Instrument.builder()
+                .id(0L)
+                .name("Piano")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        InstrumentDTO instrumentDTO = dtoMapper.mapToDTO(instrument);
+
+        //then - verify the output
+        assertNotNull(instrumentDTO);
+        assertEquals(instrument.getId(), instrumentDTO.getId());
+        assertEquals(instrument.getName(), instrumentDTO.getName());
+    }
+
+    @DisplayName("JUnit test for mapToEntity (Instrument) method")
+    @Test
+    public void givenInstrumentDTO_whenMapToEntity_thenReturnInstrument() {
+        //given - precondition or setup
+        InstrumentDTO instrumentDTO = InstrumentDTO.builder()
+                .id(0L)
+                .name("Piano")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Instrument instrument = dtoMapper.mapToEntity(instrumentDTO);
+
+        //then - verify the output
+        assertNotNull(instrumentDTO);
+        assertEquals(instrument.getId(), instrumentDTO.getId());
+        assertEquals(instrument.getName(), instrumentDTO.getName());
+    }
+
 }

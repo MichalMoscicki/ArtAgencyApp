@@ -142,4 +142,18 @@ public class DTOMapper {
                 .contacts(attachmentDTO.getContacts())
                 .build();
     }
+
+    public InstrumentDTO mapToDTO(Instrument instrument){
+        return InstrumentDTO.builder()
+                .id(instrument.getId())
+                .name(instrument.getName())
+                .build();
+    }
+
+    public Instrument mapToEntity(InstrumentDTO instrumentDTO){
+        return Instrument.builder()
+                .id(instrumentDTO.getId())
+                .name(instrumentDTO.getName())
+                .build();
+    }
 }
