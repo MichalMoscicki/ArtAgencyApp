@@ -2,7 +2,10 @@ package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.immpresariat.ArtAgencyApp.models.Contact;
 import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
+import com.immpresariat.ArtAgencyApp.payload.ImportResponse;
+import com.immpresariat.ArtAgencyApp.payload.NotImportedContactInfo;
 import com.immpresariat.ArtAgencyApp.payload.PageResponse;
 import com.immpresariat.ArtAgencyApp.service.ContactService;
 import com.immpresariat.ArtAgencyApp.utils.AppConstants;
@@ -11,6 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/contacts")
@@ -27,18 +36,18 @@ public class ContactController {
                                            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
                                            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
-                                   ) {
+    ) {
         return contactService.getAll(pageNo, pageSize, sortBy, sortDir);
     }
 
     @GetMapping("/export-json")
-    public ResponseEntity<byte[]> exportData(){
+    public ResponseEntity<byte[]> exportData() {
         ObjectMapper objectMapper = new ObjectMapper();
         byte[] jsonData;
 
-        try{
+        try {
             jsonData = objectMapper.writeValueAsBytes(contactService.export());
-        } catch (JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
         HttpHeaders headers = new HttpHeaders();
@@ -53,6 +62,39 @@ public class ContactController {
     @PostMapping("")
     public ResponseEntity<ContactDTO> create(@RequestBody ContactDTO unsyncContactDTO) {
         return new ResponseEntity<>(contactService.create(unsyncContactDTO), HttpStatus.CREATED);
+    }
+
+    //todo czy to powinno być mapowane do DTO? Czy od razu można zapisać?
+    //todo nie mam pojęcia, jak to się ma pod kątem wydajności
+    @PostMapping("/import")
+    public ImportResponse uploadFile(@RequestParam("file") MultipartFile file) {
+        int savedContacts = 0;
+        List<NotImportedContactInfo> duplicatedContacts = new ArrayList<>();
+        List<NotImportedContactInfo> contactsWithErrors = new ArrayList<>();
+
+        try {
+            if (!file.isEmpty()) {
+                byte[] fileBytes = file.getBytes();
+                String jsonContent = new String(fileBytes, StandardCharsets.UTF_8);
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                Contact[] contacts = objectMapper.readValue(jsonContent, Contact[].class);
+
+                for (Contact contact : contacts) {
+                    NotImportedContactInfo result = contactService.saveImportedContact(contact);
+                    if (result == null) {
+                        savedContacts++;
+                    } else if (result.getMessage().equals("")) {
+                        duplicatedContacts.add(result);
+                    } else {
+                        contactsWithErrors.add(result);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ImportResponse(new Date(), savedContacts, duplicatedContacts, contactsWithErrors);
     }
 
     @PutMapping("/{id}")

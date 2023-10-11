@@ -50,6 +50,7 @@ ADMIN:
 - (Assigning tasks to users - in progress)
 - (Managing users - in progress)
 - Exporting contacts
+- (Importing contacts - in progress)
 
 # API
 
@@ -73,9 +74,18 @@ Properties:
     - `page` (integer): Specify the page number to retrieve a specific page of contacts. Defaults to page 1 if omitted.
     - `sortDir` (String): Specify the sorting direction. Can be "asc" or "desc". Defaults is descending if omitted.
     - `sortBy` (String): Specify the field used to sort contacts. Type in field name. Defaults is updated.
-    GET api/v1/contacts/export-json EXports all contacts as an JSON file. (Admin only).
+    
+    GET api/v1/contacts/export-json    Exports all contacts as an JSON file. (Admin only).
     GET api/v1/contacts/{id}
     POST api/v1/contacts
+    POST api/v1/contacts/import    Imports contacts form local JSON file. The JSON file should be included in 
+    the request body with a key named "file," and the value should be the local file path.
+    Response details:
+    - timestamp;
+    - savedConntacts - number of successfully saved contacts
+    - dupliatedContacts - a list of duplicated contacts (if any).
+    - contactsWithError:  a list of contacts that couldn't be saved, along with corresponding error messages (if any).
+
     PUT api/v1/contacts/{id}
     DELETE api/v1/contacts/{id}     Deletes contact and all connected data.
 

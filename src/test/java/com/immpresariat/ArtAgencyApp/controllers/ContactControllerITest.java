@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -92,7 +94,7 @@ public class ContactControllerITest {
     @Test
     public void givenTwelveContactsObject_whenGetAll_thenReturnTenContactObjectsList() throws Exception {
         //given - precondition or setup
-        for(int i = 0; i <=11; i++){
+        for (int i = 0; i <= 11; i++) {
             createSampleContact("Opener Festival");
         }
 
@@ -280,6 +282,24 @@ public class ContactControllerITest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
     //todo how to do negative scenario?
+
+
+    @Test
+    public void givenNoFile_whenImport_thenReturnError() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "".getBytes());
+
+        ResultActions response = mockMvc.perform(
+                multipart("/api/v1/contacts/import")
+                        .file(file)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+        );
+
+        response.andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(containsString("File not provided")));
+    }
+    //todo test importowania: brak pliku, plik bez jsonów, poprawny plik z różnymi rodzajami danych
+
 
     private Contact createSampleContact(String name) {
         Contact contact = Contact.builder()
