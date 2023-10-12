@@ -129,31 +129,55 @@ public class DTOMapper {
                 .build();
     }
 
-    public TaskAttachmentDTO mapToDTO (TaskAttachment attachment){
+    public TaskAttachmentDTO mapToDTO(TaskAttachment attachment) {
         return TaskAttachmentDTO.builder()
                 .id(attachment.getId())
                 .contacts(attachment.getContacts())
                 .build();
     }
 
-    public TaskAttachment mapToEntity (TaskAttachmentDTO attachmentDTO){
+    public TaskAttachment mapToEntity(TaskAttachmentDTO attachmentDTO) {
         return TaskAttachment.builder()
                 .id(attachmentDTO.getId())
                 .contacts(attachmentDTO.getContacts())
                 .build();
     }
 
-    public InstrumentDTO mapToDTO(Instrument instrument){
+    public InstrumentDTO mapToDTO(Instrument instrument) {
         return InstrumentDTO.builder()
                 .id(instrument.getId())
                 .name(instrument.getName())
                 .build();
     }
 
-    public Instrument mapToEntity(InstrumentDTO instrumentDTO){
+    public Instrument mapToEntity(InstrumentDTO instrumentDTO) {
         return Instrument.builder()
                 .id(instrumentDTO.getId())
                 .name(instrumentDTO.getName())
+                .build();
+    }
+
+    public MusicianDTO mapToDTO(Musician musician) {
+        return MusicianDTO.builder()
+                .id(musician.getId())
+                .firstName(musician.getFirstName())
+                .lastName(musician.getLastName())
+                .instruments(musician.getInstruments())
+                .email(musician.getEmail())
+                .phone(musician.getPhone())
+                .notes(musician.getNotes())
+                .build();
+    }
+
+    public Musician mapToEntity(MusicianDTO musicianDTO) {
+        return Musician.builder()
+                .id(musicianDTO.getId())
+                .firstName(musicianDTO.getFirstName())
+                .lastName(musicianDTO.getLastName())
+                .instruments(musicianDTO.getInstruments())
+                .email(musicianDTO.getEmail())
+                .phone(musicianDTO.getPhone())
+                .notes(musicianDTO.getNotes())
                 .build();
     }
 }

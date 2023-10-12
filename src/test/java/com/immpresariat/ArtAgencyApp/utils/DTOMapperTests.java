@@ -89,8 +89,6 @@ public class DTOMapperTests {
     }
 
 
-
-
     @DisplayName("JUnit test map DTO to Institution")
     @Test
     public void givenInstitutionDTOObject_whenMapDTOToInstitution_thenInstitutionObject() {
@@ -381,4 +379,61 @@ public class DTOMapperTests {
         assertEquals(instrument.getName(), instrumentDTO.getName());
     }
 
+    @DisplayName("JUnit test for mapToDTO (MusicianDTO) method")
+    @Test
+    public void givenMusician_whenMapToDTO_thenReturnDTO() {
+        //given - precondition or setup
+        Musician musician = Musician.builder()
+                .id(0L)
+                .firstName("Jan")
+                .lastName("Kowalski")
+                .email("jan@kowalski.pl")
+                .phone("+48111222333")
+                .notes("Notatki")
+                .instruments(new ArrayList<>())
+                .build();
+
+        //when - action or the behavior that we are going to test
+        MusicianDTO musicianDTO = dtoMapper.mapToDTO(musician);
+
+        //then - verify the output
+        assertNotNull(musicianDTO);
+        assertEquals(musician.getId(), musicianDTO.getId());
+        assertEquals(musician.getFirstName(), musicianDTO.getFirstName());
+        assertEquals(musician.getLastName(), musicianDTO.getLastName());
+        assertEquals(musician.getPhone(), musicianDTO.getPhone());
+        assertEquals(musician.getEmail(), musicianDTO.getEmail());
+        assertEquals(musician.getNotes(), musicianDTO.getNotes());
+        assertEquals(musician.getInstruments(), musicianDTO.getInstruments());
+
+    }
+
+    @DisplayName("JUnit test for mapToEntity (Musician) method")
+    @Test
+    public void givenMusicianDTO_whenMapToEntity_thenReturnMusician() {
+        //given - precondition or setup
+        MusicianDTO musicianDTO = MusicianDTO.builder()
+                .id(0L)
+                .firstName("Jan")
+                .lastName("Kowalski")
+                .email("jan@kowalski.pl")
+                .phone("+48111222333")
+                .notes("Notatki")
+                .instruments(new ArrayList<>())
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Musician musician = dtoMapper.mapToEntity(musicianDTO);
+
+        //then - verify the output
+        assertNotNull(musicianDTO);
+        assertEquals(musician.getId(), musicianDTO.getId());
+        assertEquals(musician.getFirstName(), musicianDTO.getFirstName());
+        assertEquals(musician.getLastName(), musicianDTO.getLastName());
+        assertEquals(musician.getPhone(), musicianDTO.getPhone());
+        assertEquals(musician.getEmail(), musicianDTO.getEmail());
+        assertEquals(musician.getNotes(), musicianDTO.getNotes());
+        assertEquals(musician.getInstruments(), musicianDTO.getInstruments());
+
+    }
 }

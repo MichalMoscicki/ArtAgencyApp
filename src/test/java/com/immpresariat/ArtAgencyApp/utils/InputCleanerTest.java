@@ -162,7 +162,7 @@ class InputCleanerTest {
 
     @DisplayName("JUnit test for clean instrument method (only title)")
     @Test
-    public void givenInstrument_whenTrim_thenReturnCleanedIntrumentObject() {
+    public void givenInstrument_whenTrim_thenReturnCleanedInstrumentObject() {
         //given - precondition or setup
         Instrument instrument = Instrument.builder()
                 .id(0L)
@@ -174,9 +174,33 @@ class InputCleanerTest {
 
         //then - verify the output
         assertNotNull(instrument);
-        assertEquals("Piano", instrument.getName());
+        assertEquals("Piano", cleanedInstrument.getName());
     }
 
+    @DisplayName("JUnit test for clean musician method (only title)")
+    @Test
+    public void givenMusician_whenTrim_thenReturnCleanedMusicianObject() {
+        //given - precondition or setup
+        Musician musician = Musician.builder()
+                .firstName(" Jan ")
+                .lastName(" Kowalski ")
+                .email(" jan@kowalski.pl ")
+                .phone(" +48111222333 ")
+                .notes(" Notatki ")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Musician cleanedMusician = inputCleaner.clean(musician);
+
+        //then - verify the output
+        assertNotNull(cleanedMusician);
+        assertEquals("Jan", cleanedMusician.getFirstName());
+        assertEquals("Kowalski", cleanedMusician.getLastName());
+        assertEquals("jan@kowalski.pl", cleanedMusician.getEmail());
+        assertEquals("+48111222333", cleanedMusician.getPhone());
+        assertEquals("Notatki", cleanedMusician.getNotes());
+
+    }
 
 
 }

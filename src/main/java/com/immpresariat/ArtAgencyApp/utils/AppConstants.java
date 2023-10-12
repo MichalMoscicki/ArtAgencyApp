@@ -14,6 +14,5 @@ public class AppConstants {
     public static final String FINISHED = "finished";
     public static final String FUTURE = "future";
     public static final String EMPTY_OR_BLANK = "^(\\s*|)$";
-
-
+    public static final String LAST_NAME ="lastName" ;
 }
