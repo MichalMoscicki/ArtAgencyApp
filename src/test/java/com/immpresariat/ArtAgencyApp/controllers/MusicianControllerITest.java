@@ -154,6 +154,7 @@ public class MusicianControllerITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", CoreMatchers.is(message)));
 
+        Assertions.assertEquals(musicianRepository.findById(musician.getId()), Optional.empty());
         Assertions.assertNotNull(instrumentRepository.findById(instrument.getId()));
 
     }

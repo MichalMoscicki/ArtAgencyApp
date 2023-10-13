@@ -46,6 +46,7 @@ public class MusicianController {
 
     @DeleteMapping("/{musicianId}")
     public ResponseEntity<String> delete(@PathVariable Long musicianId) {
+        musicianService.deleteById(musicianId);
         return new ResponseEntity<>("Successfully deleted musician with id: " + musicianId, HttpStatus.OK);
     }
 

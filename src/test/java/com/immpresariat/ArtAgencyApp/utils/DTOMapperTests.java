@@ -436,4 +436,59 @@ public class DTOMapperTests {
         assertEquals(musician.getInstruments(), musicianDTO.getInstruments());
 
     }
+
+    @DisplayName("JUnit test for mapToDTO (SongDTO) method")
+    @Test
+    public void givenSong_whenMapToDTO_thenReturnDTO() {
+        //given - precondition or setup
+        Song song = Song.builder()
+                .id(0L)
+                .title("Piosenka")
+                .description("Opis")
+                .composers("Karol Modzelewski, Jan Orwat")
+                .textAuthors("Wiesio Kiprowicz")
+                .parts(new ArrayList<>())
+                .build();
+
+        //when - action or the behavior that we are going to test
+        SongDTO songDTO = dtoMapper.mapToDTO(song);
+
+        //then - verify the output
+        assertNotNull(songDTO);
+        assertEquals(song.getId(), songDTO.getId());
+        assertEquals(song.getTitle(), songDTO.getTitle());
+        assertEquals(song.getDescription(), songDTO.getDescription());
+        assertEquals(song.getParts(), songDTO.getParts());
+        assertEquals(song.getComposers(), songDTO.getComposers());
+        assertEquals(song.getTextAuthors(), songDTO.getTextAuthors());
+
+
+    }
+
+    @DisplayName("JUnit test for mapToEntity (Song) method")
+    @Test
+    public void givenSongDTO_whenMapToEntity_thenReturnMusician() {
+        //given - precondition or setup
+        SongDTO songDTO = SongDTO.builder()
+                .id(0L)
+                .title("Piosenka")
+                .description("Opis")
+                .composers("Karol Modzelewski, Jan Orwat")
+                .textAuthors("Wiesio Kiprowicz")
+                .parts(new ArrayList<>())
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Song song = dtoMapper.mapToEntity(songDTO);
+
+        //then - verify the output
+        assertNotNull(song);
+        assertEquals(song.getId(), songDTO.getId());
+        assertEquals(song.getTitle(), songDTO.getTitle());
+        assertEquals(song.getDescription(), songDTO.getDescription());
+        assertEquals(song.getParts(), songDTO.getParts());
+        assertEquals(song.getComposers(), songDTO.getComposers());
+        assertEquals(song.getTextAuthors(), songDTO.getTextAuthors());
+
+    }
 }

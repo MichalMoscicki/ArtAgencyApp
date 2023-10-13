@@ -130,7 +130,7 @@ class InputCleanerTest {
 
     @DisplayName("JUnit test for clean contact method (only title)")
     @Test
-    public void givenContactObjectWithTitleOnly_whenTrim_thenReturnCleanedContactObject() {
+    public void givenContactObjectWithTitleOnly_whenClean_thenReturnCleanedContactObject() {
         //given - precondition or setup
         Contact contact = Contact.builder()
                 .title(" DK Chotomów  ")
@@ -146,7 +146,7 @@ class InputCleanerTest {
 
     @DisplayName("JUnit test for clean task method (only title)")
     @Test
-    public void givenTaskObjectWithTitleOnly_whenTrim_thenReturnCleanedTaskObject() {
+    public void givenTaskObjectWithTitleOnly_whenClean_thenReturnCleanedTaskObject() {
         //given - precondition or setup
         Task task = Task.builder()
                 .title("  Title ")
@@ -162,7 +162,7 @@ class InputCleanerTest {
 
     @DisplayName("JUnit test for clean instrument method (only title)")
     @Test
-    public void givenInstrument_whenTrim_thenReturnCleanedInstrumentObject() {
+    public void givenInstrument_whenClean_thenReturnCleanedInstrumentObject() {
         //given - precondition or setup
         Instrument instrument = Instrument.builder()
                 .id(0L)
@@ -179,7 +179,7 @@ class InputCleanerTest {
 
     @DisplayName("JUnit test for clean musician method (only title)")
     @Test
-    public void givenMusician_whenTrim_thenReturnCleanedMusicianObject() {
+    public void givenMusician_whenClean_thenReturnCleanedMusicianObject() {
         //given - precondition or setup
         Musician musician = Musician.builder()
                 .firstName(" Jan ")
@@ -199,6 +199,30 @@ class InputCleanerTest {
         assertEquals("jan@kowalski.pl", cleanedMusician.getEmail());
         assertEquals("+48111222333", cleanedMusician.getPhone());
         assertEquals("Notatki", cleanedMusician.getNotes());
+
+    }
+
+    @DisplayName("JUnit test for clean song method")
+    @Test
+    public void givenSong_whenClean_thenReturnCleanedMusicianObject() {
+        //given - precondition or setup
+       Song song = Song.builder()
+               .title(" Piosenka ")
+               .description(" Opis ")
+               .composers(" Karol Modzelewski, Jan Orwat  ")
+               .textAuthors(" Wiesio Kiprowicz   ")
+               .build();
+
+        //when - action or the behavior that we are going to test
+        Song cleanedSong = inputCleaner.clean(song);
+
+        //then - verify the output
+        assertNotNull(cleanedSong);
+        assertEquals("Piosenka", cleanedSong.getTitle());
+        assertEquals("Opis", cleanedSong.getDescription());
+        assertEquals("Karol Modzelewski, Jan Orwat", cleanedSong.getComposers());
+        assertEquals("Wiesio Kiprowicz", cleanedSong.getTextAuthors());
+
 
     }
 

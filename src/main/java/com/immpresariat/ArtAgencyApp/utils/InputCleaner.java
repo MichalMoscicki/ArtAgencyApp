@@ -72,5 +72,13 @@ public class InputCleaner {
         return musician;
     }
 
+    public Song clean(Song song){
+        song.setTitle(song.getTitle().trim());
+        song.setDescription(song.getDescription().trim());
+        song.setTextAuthors(song.getTextAuthors().trim());
+        song.setComposers(song.getComposers().trim());
+        return song;
+    }
+
 
 }

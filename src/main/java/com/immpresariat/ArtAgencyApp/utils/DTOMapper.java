@@ -180,4 +180,26 @@ public class DTOMapper {
                 .notes(musicianDTO.getNotes())
                 .build();
     }
+
+    public SongDTO mapToDTO(Song song) {
+        return SongDTO.builder()
+                .id(song.getId())
+                .title(song.getTitle())
+                .description(song.getDescription())
+                .composers(song.getComposers())
+                .textAuthors(song.getTextAuthors())
+                .parts(song.getParts())
+                .build();
+    }
+
+    public Song mapToEntity(SongDTO songDTO) {
+        return Song.builder()
+                .id(songDTO.getId())
+                .title(songDTO.getTitle())
+                .description(songDTO.getDescription())
+                .composers(songDTO.getComposers())
+                .textAuthors(songDTO.getTextAuthors())
+                .parts(songDTO.getParts())
+                .build();
+    }
 }

@@ -1,6 +1,9 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
+import org.springframework.data.domain.Sort;
+
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class AppConstants {
@@ -15,4 +18,6 @@ public class AppConstants {
     public static final String FUTURE = "future";
     public static final String EMPTY_OR_BLANK = "^(\\s*|)$";
     public static final String LAST_NAME ="lastName" ;
+    public static final String TITLE = "title";
+
 }
