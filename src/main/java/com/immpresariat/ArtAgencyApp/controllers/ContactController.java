@@ -64,8 +64,6 @@ public class ContactController {
         return new ResponseEntity<>(contactService.create(unsyncContactDTO), HttpStatus.CREATED);
     }
 
-    //todo czy to powinno być mapowane do DTO? Czy od razu można zapisać?
-    //todo nie mam pojęcia, jak to się ma pod kątem wydajności
     @PostMapping("/import")
     public ImportResponse uploadFile(@RequestParam("file") MultipartFile file) {
         int savedContacts = 0;

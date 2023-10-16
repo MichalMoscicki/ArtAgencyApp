@@ -5,21 +5,18 @@ import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@EqualsAndHashCode
 @ToString
 public class SongDTO {
-
 
     private Long id;
     private String title;
     private String description;
     private String composers;
     private String textAuthors;
-    private List<Part> parts;
+    private List<PartDTO> parts;
 
 }

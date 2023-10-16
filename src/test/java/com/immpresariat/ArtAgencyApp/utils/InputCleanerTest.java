@@ -174,7 +174,7 @@ class InputCleanerTest {
 
         //then - verify the output
         assertNotNull(instrument);
-        assertEquals("Piano", cleanedInstrument.getName());
+        assertEquals("piano", cleanedInstrument.getName());
     }
 
     @DisplayName("JUnit test for clean musician method (only title)")
@@ -223,6 +223,23 @@ class InputCleanerTest {
         assertEquals("Karol Modzelewski, Jan Orwat", cleanedSong.getComposers());
         assertEquals("Wiesio Kiprowicz", cleanedSong.getTextAuthors());
 
+
+    }
+
+    @DisplayName("JUnit test for clean part method")
+    @Test
+    public void givenPart_whenClean_thenReturnCleanedMusicianObject() {
+        //given - precondition or setup
+        Part part = Part.builder()
+                .type(" pdf ")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Part cleanedPart = inputCleaner.clean(part);
+
+        //then - verify the output
+        assertNotNull(cleanedPart);
+        assertEquals("pdf", cleanedPart.getType());
 
     }
 

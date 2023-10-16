@@ -36,6 +36,8 @@ public class SongControllerITest {
     @Autowired
     private PartRepository partRepository;
     @Autowired
+    private InstrumentRepository instrumentRepository;
+    @Autowired
     SongServiceImpl songService;
     @Autowired
     private ObjectMapper objectMapper;
@@ -48,7 +50,7 @@ public class SongControllerITest {
     @Test
     public void whenCreate_thenReturnDTOObject() throws Exception {
         //given - precondition or setup
-        SongDTO unsyncDTO = createSongDTOWithParts(null);
+        SongDTO unsyncDTO = createSongDTOWithoutParts(null);
 
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(post("/api/v1/songs")
@@ -78,11 +80,10 @@ public class SongControllerITest {
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
     @Test
     public void whenGetById_thenReturnSongDTOObject() throws Exception {
         //given - precondition or setup
-        Song song = createSongWithParts();
+        Song song = createSongWithoutParts();
 
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(get(String.format("/api/v1/songs/%s", song.getId())));
@@ -99,12 +100,12 @@ public class SongControllerITest {
 
 
         Long id = 0L;
-        SongDTO notExistingSong = createSongDTOWithParts(id);
+        SongDTO notExistingSong = createSongDTOWithoutParts(id);
 
         String message = String.format("No song with id: %s", id);
 
         //when - action or the behavior that we are going to test
-        ResultActions response = mockMvc.perform(put(String.format("/api/v1/songs/%s", id))
+        ResultActions response = mockMvc.perform(patch(String.format("/api/v1/songs/%s", id))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notExistingSong)));
 
@@ -115,17 +116,16 @@ public class SongControllerITest {
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
     @Test
-    public void testUpdateEvent() throws Exception {
+    public void testUpdate() throws Exception {
         // Given
-        Song song = createSongWithParts();
-        SongDTO updatedSongDTO = createSongDTOWithParts(song.getId());
+        Song song = createSongWithoutParts();
+        SongDTO updatedSongDTO = createSongDTOWithoutParts(song.getId());
         updatedSongDTO.setTitle("Nowy tytuł");
 
         // When
         ResultActions response = mockMvc.perform(
-                put(String.format("/api/v1/songs/%s", song.getId()))
+                patch(String.format("/api/v1/songs/%s", song.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedSongDTO))
         );
@@ -135,6 +135,31 @@ public class SongControllerITest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", CoreMatchers.is(updatedSongDTO.getId().intValue())))
                 .andExpect(jsonPath("$.title", CoreMatchers.is(updatedSongDTO.getTitle())));
+
+    }
+
+    @Test
+    public void testUpdateOnlyOneFieldInDTO() throws Exception {
+        // Given
+        Song song = createSongWithoutParts();
+        SongDTO updatedSongDTO = SongDTO.builder()
+                .id(song.getId())
+                .title("Nowy Tytuł")
+                .build();
+
+        // When
+        ResultActions response = mockMvc.perform(
+                patch(String.format("/api/v1/songs/%s", song.getId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedSongDTO))
+        );
+
+        // Then
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", CoreMatchers.is(updatedSongDTO.getId().intValue())))
+                .andExpect(jsonPath("$.title", CoreMatchers.is(updatedSongDTO.getTitle())))
+                .andExpect(jsonPath("$.textAuthors", CoreMatchers.is(song.getTextAuthors())));
 
     }
 
@@ -171,7 +196,6 @@ public class SongControllerITest {
 
         Assertions.assertEquals(songRepository.findById(song.getId()), Optional.empty());
 
-
     }
 
     @Test
@@ -195,7 +219,6 @@ public class SongControllerITest {
 
     }
 
-
     private void cleanDB() {
         songRepository.deleteAll();
         partRepository.deleteAll();
@@ -203,7 +226,14 @@ public class SongControllerITest {
 
     private Song createSongWithParts() {
 
-        Part part = partRepository.save(Part.builder()
+        Instrument instrument = instrumentRepository.save(new Instrument(null, "Bas"));
+
+        Part part = partRepository.save(
+                Part.builder()
+                        .name("name")
+                        .data(new byte[1])
+                        .instrument(instrument)
+                        .type("type")
                 .build());
 
         List<Part> parts = new ArrayList<>();
@@ -230,22 +260,13 @@ public class SongControllerITest {
         return songRepository.save(song);
     }
 
-    private SongDTO createSongDTOWithParts(Long id) {
-
-        Part part = partRepository.save(Part.builder()
-                .build());
-
-        List<Part> parts = new ArrayList<>();
-        parts.add(part);
-
-
+    private SongDTO createSongDTOWithoutParts(Long id) {
         return SongDTO.builder()
                 .id(id)
                 .title("Sto Lat")
                 .textAuthors("Jan Kowalski")
                 .description("Super numer")
                 .composers("Comosers")
-                .parts(parts)
                 .build();
     }
 }

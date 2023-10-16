@@ -458,7 +458,6 @@ public class DTOMapperTests {
         assertEquals(song.getId(), songDTO.getId());
         assertEquals(song.getTitle(), songDTO.getTitle());
         assertEquals(song.getDescription(), songDTO.getDescription());
-        assertEquals(song.getParts(), songDTO.getParts());
         assertEquals(song.getComposers(), songDTO.getComposers());
         assertEquals(song.getTextAuthors(), songDTO.getTextAuthors());
 
@@ -467,7 +466,7 @@ public class DTOMapperTests {
 
     @DisplayName("JUnit test for mapToEntity (Song) method")
     @Test
-    public void givenSongDTO_whenMapToEntity_thenReturnMusician() {
+    public void givenSongDTO_whenMapToEntity_thenReturnSong() {
         //given - precondition or setup
         SongDTO songDTO = SongDTO.builder()
                 .id(0L)
@@ -486,9 +485,10 @@ public class DTOMapperTests {
         assertEquals(song.getId(), songDTO.getId());
         assertEquals(song.getTitle(), songDTO.getTitle());
         assertEquals(song.getDescription(), songDTO.getDescription());
-        assertEquals(song.getParts(), songDTO.getParts());
         assertEquals(song.getComposers(), songDTO.getComposers());
         assertEquals(song.getTextAuthors(), songDTO.getTextAuthors());
 
     }
+
+
 }

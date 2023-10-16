@@ -68,9 +68,29 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public SongDTO update(SongDTO songDTO) {
-        ensureSongExists(songDTO.getId());
+        Song songDB = ensureSongExists(songDTO.getId());
         Song song = dtoMapper.mapToEntity(songDTO);
+        setNotUpdatedFields(song, songDB);
         return dtoMapper.mapToDTO(songRepository.save(inputCleaner.clean(song)));
+    }
+
+    private void setNotUpdatedFields(Song song, Song songDB){
+        if(song.getId() == null){
+            song.setId(songDB.getId());
+        }
+        if(song.getDescription() == null){
+            song.setDescription(songDB.getDescription());
+        }
+        if(song.getComposers() == null){
+            song.setComposers(songDB.getComposers());
+        }
+        if(song.getTitle() == null){
+            song.setTitle(songDB.getTitle());
+        }
+        if(song.getTextAuthors() == null){
+            song.setTextAuthors(songDB.getTextAuthors());
+        }
+        song.setParts(songDB.getParts());
     }
 
     @Override

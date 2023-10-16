@@ -36,10 +36,13 @@ public class SongController {
                                         @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
                                         @RequestParam(value = "title", required = false) String title
     ) {
-        return songService.getAll(pageNo, pageSize, sortBy, sortDir, title.toLowerCase());
+        if(title != null){
+            title = title.toLowerCase();
+        }
+        return songService.getAll(pageNo, pageSize, sortBy, sortDir, title);
     }
 
-    @PutMapping("/{songId}")
+    @PatchMapping("/{songId}")
     public ResponseEntity<SongDTO> update(@RequestBody @Valid SongDTO songDTO) {
         return new ResponseEntity<>(songService.update(songDTO), HttpStatus.OK);
     }

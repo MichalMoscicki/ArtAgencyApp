@@ -4,6 +4,12 @@ package com.immpresariat.ArtAgencyApp.utils;
 import com.immpresariat.ArtAgencyApp.models.*;
 import com.immpresariat.ArtAgencyApp.payload.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -182,13 +188,19 @@ public class DTOMapper {
     }
 
     public SongDTO mapToDTO(Song song) {
+
+        List<PartDTO> part = new ArrayList<>();
+        if(song.getParts() != null) {
+           part = song.getParts().stream().map(this::mapToDTO).toList();
+        }
+
         return SongDTO.builder()
                 .id(song.getId())
                 .title(song.getTitle())
                 .description(song.getDescription())
                 .composers(song.getComposers())
                 .textAuthors(song.getTextAuthors())
-                .parts(song.getParts())
+                .parts(part)
                 .build();
     }
 
@@ -199,7 +211,22 @@ public class DTOMapper {
                 .description(songDTO.getDescription())
                 .composers(songDTO.getComposers())
                 .textAuthors(songDTO.getTextAuthors())
-                .parts(songDTO.getParts())
+                .build();
+    }
+
+    public PartDTO mapToDTO(Part part) {
+        String fileDownloadUri = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("api/v1/parts/")
+                .path(part.getId().toString())
+                .toUriString();
+
+        return PartDTO.builder()
+                .id(part.getId())
+                .type(part.getType())
+                .name(part.getName())
+                .url(fileDownloadUri)
+                .instrumentName(part.getInstrument().getName())
                 .build();
     }
 }

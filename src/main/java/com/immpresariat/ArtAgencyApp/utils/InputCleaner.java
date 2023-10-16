@@ -59,7 +59,7 @@ public class InputCleaner {
     }
 
     public Instrument clean(Instrument instrument) {
-        instrument.setName(instrument.getName().trim());
+        instrument.setName(instrument.getName().trim().toLowerCase());
         return instrument;
     }
 
@@ -78,6 +78,11 @@ public class InputCleaner {
         song.setTextAuthors(song.getTextAuthors().trim());
         song.setComposers(song.getComposers().trim());
         return song;
+    }
+
+    public Part clean(Part part){
+        part.setType(part.getType().trim());
+        return part;
     }
 
 
