@@ -53,7 +53,6 @@ public class InstrumentServiceTest {
         verify(dtoMapper, times(1)).mapToDTO(any(Instrument.class));
     }
 
-
     @DisplayName("JUnit test for Instrument getById method (negative scenario)")
     @Test
     public void whenGetById_thenThrowResourceNotFoundException() {
@@ -68,7 +67,6 @@ public class InstrumentServiceTest {
         //then - verify the output
         verify(dtoMapper, never()).mapToDTO(any(Instrument.class));
     }
-
 
     @DisplayName("JUnit test for Instrument getById method (positive scenario)")
     @Test

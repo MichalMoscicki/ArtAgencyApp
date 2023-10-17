@@ -81,33 +81,29 @@ public class PartServiceImpl implements PartService {
 
     private void removePartFromSong(Part part, Song song) {
         List<Part> parts = song.getParts();
-        parts.remove(part);
-        song.setParts(parts);
-        songRepository.save(song);
+        if(parts != null) {
+            parts.remove(part);
+            song.setParts(parts);
+            songRepository.save(song);
+        }
     }
 
     private Instrument ensureInstrumentExists(Long id) {
-        Optional<Instrument> instrumentOptional = instrumentRepository.findById(id);
-        if (instrumentOptional.isEmpty()) {
+        return instrumentRepository.findById(id).orElseThrow( () -> {
             throw new ResourceNotFoundException("No instrument with id: " + id);
-        }
-        return instrumentOptional.get();
+        });
     }
 
     private Song ensureSongExists(Long id) {
-        Optional<Song> songOptional = songRepository.findById(id);
-        if (songOptional.isEmpty()) {
+        return songRepository.findById(id).orElseThrow( () -> {
             throw new ResourceNotFoundException("No song with id: " + id);
-        }
-        return songOptional.get();
-    }
+        });
+      }
 
     private Part ensurePartExists(Long id) {
-        Optional<Part> partOptional = partRepository.findById(id);
-        if (partOptional.isEmpty()) {
+        return partRepository.findById(id).orElseThrow( () -> {
             throw new ResourceNotFoundException("No part with id: " + id);
-        }
-        return partOptional.get();
+        });
     }
 
 

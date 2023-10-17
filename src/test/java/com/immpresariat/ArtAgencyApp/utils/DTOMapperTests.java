@@ -11,6 +11,11 @@ import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.MalformedURLException;
 import java.time.LocalDate;
@@ -19,7 +24,9 @@ import java.util.Date;
 import java.util.List;
 
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@WebAppConfiguration
+@AutoConfigureMockMvc
 public class DTOMapperTests {
 
     DTOMapper dtoMapper;
@@ -490,5 +497,33 @@ public class DTOMapperTests {
 
     }
 
+    @DisplayName("JUnit test for mapToDTO (PartDTO) method")
+    @Test
+    public void givenPart_whenMapToDTO_thenReturnDTO() {
+        //given - precondition or setup
+        Instrument instrument = Instrument.builder()
+                .id(0L)
+                .name("bas")
+                .build();
+
+        Part part = Part.builder()
+                .id(0L)
+                .type("aplication/pdf")
+                .instrument(instrument)
+                .data(new byte[4])
+                .build();
+
+        //when - action or the behavior that we are going to test
+        PartDTO partDTO = dtoMapper.mapToDTO(part);
+
+        //then - verify the output
+        assertNotNull(partDTO);
+        assertEquals(part.getId(), partDTO.getId());
+        assertEquals(part.getType(), partDTO.getType());
+        assertEquals(part.getInstrument().getName(), partDTO.getInstrumentName());
+        assertEquals("http://localhost/api/v1/parts/" + part.getId(), partDTO.getUrl());
+
+
+    }
 
 }
