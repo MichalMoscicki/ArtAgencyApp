@@ -85,5 +85,10 @@ public class InputCleaner {
         return part;
     }
 
+    public Concert clean(Concert concert){
+        concert.setTitle(concert.getTitle().trim());
+        return concert;
+    }
+
 
 }

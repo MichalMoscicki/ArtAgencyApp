@@ -522,8 +522,61 @@ public class DTOMapperTests {
         assertEquals(part.getType(), partDTO.getType());
         assertEquals(part.getInstrument().getName(), partDTO.getInstrumentName());
         assertEquals("http://localhost/api/v1/parts/" + part.getId(), partDTO.getUrl());
+    }
 
+    @DisplayName("JUnit test for mapToDTO (ConcertDTO) method")
+    @Test
+    public void givenConcert_whenMapToDTO_thenReturnDTO() {
+        //given - precondition or setup
+        Concert concert = Concert.builder()
+                .id(0L)
+                .title("Koncert w Filharmonii")
+                .date(LocalDate.now())
+                .musicians(new ArrayList<>())
+                .organizer(new Contact())
+                .songs(new ArrayList<>())
+                .build();
 
+        //when - action or the behavior that we are going to test
+        ConcertDTO concertDTO = dtoMapper.mapToDTO(concert);
+
+        //then - verify the output
+        assertNotNull(concertDTO);
+        assertEquals(concert.getId(), concertDTO.getId());
+        assertEquals(concert.getDate(), concertDTO.getDate());
+        assertEquals(concert.getTitle(), concertDTO.getTitle());
+        assertEquals(concert.getMusicians(), concertDTO.getMusicians());
+        assertEquals(concert.getOrganizer(), concertDTO.getOrganizer());
+        assertEquals(concert.getSongs(), concertDTO.getSongs());
+
+    }
+
+    @DisplayName("JUnit test for mapToEntity (Concert) method")
+    @Test
+    public void givenConcertDTO_whenMapToEntity_thenReturnConcert() {
+        //given - precondition or setup
+        ConcertDTO concertDTO = ConcertDTO.builder()
+                .id(0L)
+                .title("Koncert w Filharmonii")
+                .date(LocalDate.now())
+                .notes("Uwagi")
+                .details(new ConcertDetails())
+                .musicians(new ArrayList<>())
+                .organizer(new Contact())
+                .songs(new ArrayList<>())
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Concert concert = dtoMapper.mapToEntity(concertDTO);
+
+        //then - verify the output
+        assertNotNull(concert);
+        assertEquals(concert.getId(), concertDTO.getId());
+        assertEquals(concert.getTitle(), concertDTO.getTitle());
+        assertEquals(concert.getDate(), concertDTO.getDate());
+        assertEquals(concert.getMusicians(), concertDTO.getMusicians());
+        assertEquals(concert.getOrganizer(), concertDTO.getOrganizer());
+        assertEquals(concert.getSongs(), concertDTO.getSongs());
     }
 
 }

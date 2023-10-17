@@ -204,7 +204,7 @@ class InputCleanerTest {
 
     @DisplayName("JUnit test for clean song method")
     @Test
-    public void givenSong_whenClean_thenReturnCleanedMusicianObject() {
+    public void givenSong_whenClean_thenReturnCleanedSongObject() {
         //given - precondition or setup
        Song song = Song.builder()
                .title(" Piosenka ")
@@ -228,7 +228,7 @@ class InputCleanerTest {
 
     @DisplayName("JUnit test for clean part method")
     @Test
-    public void givenPart_whenClean_thenReturnCleanedMusicianObject() {
+    public void givenPart_whenClean_thenReturnCleanedPartObject() {
         //given - precondition or setup
         Part part = Part.builder()
                 .type(" pdf ")
@@ -240,6 +240,23 @@ class InputCleanerTest {
         //then - verify the output
         assertNotNull(cleanedPart);
         assertEquals("pdf", cleanedPart.getType());
+
+    }
+
+    @DisplayName("JUnit test for clean concert method")
+    @Test
+    public void givenConcert_whenClean_thenReturnCleanedConcertObject() {
+        //given - precondition or setup
+        Concert concert = Concert.builder()
+                .title(" Title ")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        Concert cleanedConcert = inputCleaner.clean(concert);
+
+        //then - verify the output
+        assertNotNull(cleanedConcert);
+        assertEquals("Title", cleanedConcert.getTitle());
 
     }
 

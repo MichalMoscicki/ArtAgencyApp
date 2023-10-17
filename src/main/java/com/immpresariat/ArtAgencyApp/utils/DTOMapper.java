@@ -229,4 +229,26 @@ public class DTOMapper {
                 .instrumentName(part.getInstrument().getName())
                 .build();
     }
+
+    public ConcertDTO mapToDTO(Concert concert){
+        return ConcertDTO.builder()
+                .id(concert.getId())
+                .title(concert.getTitle())
+                .date(concert.getDate())
+                .musicians(concert.getMusicians())
+                .organizer(concert.getOrganizer())
+                .songs(concert.getSongs())
+                .build();
+    }
+
+    public Concert mapToEntity(ConcertDTO concertDTO){
+        return Concert.builder()
+                .id(concertDTO.getId())
+                .title(concertDTO.getTitle())
+                .date(concertDTO.getDate())
+                .musicians(concertDTO.getMusicians())
+                .organizer(concertDTO.getOrganizer())
+                .songs(concertDTO.getSongs())
+                .build();
+    }
 }
