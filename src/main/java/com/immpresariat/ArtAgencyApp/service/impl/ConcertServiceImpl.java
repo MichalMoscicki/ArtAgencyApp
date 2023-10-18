@@ -53,10 +53,9 @@ public class ConcertServiceImpl implements ConcertService {
     }
 
     @Override
-    public ConcertDTO update(ConcertDTO concertDTO) {
-        Concert concertDB = ensureConcertExists(concertDTO.getId());
-        Concert updatedConcert = dtoMapper.mapToEntity(concertDTO);
-        setNotUpdatedFields(concertDB, updatedConcert);
+    public ConcertDTO update(ConcertDTO concertDTO, Long concertId) {
+        Concert concertDB = ensureConcertExists(concertId);
+        setNotUpdatedFields(concertDTO, concertDB);
         return dtoMapper.mapToDTO(concertRepository.save(concertDB));
     }
 
@@ -72,21 +71,21 @@ public class ConcertServiceImpl implements ConcertService {
         });
     }
 
-    private void setNotUpdatedFields(Concert concert, Concert concertDB){
-        if(concert.getId() == null){
-            concert.setId(concertDB.getId());
+    private void setNotUpdatedFields(ConcertDTO concertDTO, Concert concertDB){
+        if(concertDTO.getId() != null){
+            concertDB.setId(concertDTO.getId());
         }
-        if(concert.getTitle() == null){
-            concert.setTitle(concertDB.getTitle());
+        if(concertDTO.getTitle() != null){
+            concertDB.setTitle(concertDTO.getTitle());
         }
-        if(concert.getOrganizer() == null){
-            concert.setTitle(concertDB.getTitle());
+        if(concertDTO.getOrganizer() != null){
+            concertDB.setTitle(concertDTO.getTitle());
         }
-        if(concert.getMusicians() == null){
-            concert.setMusicians(concertDB.getMusicians());
+        if(concertDTO.getMusicians() != null){
+            concertDB.setMusicians(concertDTO.getMusicians());
         }
-        if(concert.getSongs() == null){
-            concert.setSongs(concertDB.getSongs());
+        if(concertDTO.getSongs() != null){
+            concertDB.setSongs(concertDTO.getSongs());
         }
     }
 }

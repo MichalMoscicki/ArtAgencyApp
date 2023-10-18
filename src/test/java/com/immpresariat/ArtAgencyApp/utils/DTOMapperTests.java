@@ -559,8 +559,6 @@ public class DTOMapperTests {
                 .id(0L)
                 .title("Koncert w Filharmonii")
                 .date(LocalDate.now())
-                .notes("Uwagi")
-                .details(new ConcertDetails())
                 .musicians(new ArrayList<>())
                 .organizer(new Contact())
                 .songs(new ArrayList<>())

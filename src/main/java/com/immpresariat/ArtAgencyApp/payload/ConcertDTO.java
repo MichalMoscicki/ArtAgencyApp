@@ -18,8 +18,6 @@ public class ConcertDTO {
     private Long id;
     private String title;
     LocalDate date;
-    private String notes;
-    ConcertDetails details;
     private List<Musician> musicians;
     private List<Song> songs;
     private Contact organizer;

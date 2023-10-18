@@ -10,7 +10,7 @@ public interface ConcertService {
     ConcertDTO create(ConcertDTO concertDTO);
     ConcertDTO getById(Long id);
     PageResponse<ConcertDTO> getAll(int pageNo, int pageSize, String sortBy, String sortDir);
-    ConcertDTO update(ConcertDTO concertDTO);
+    ConcertDTO update(ConcertDTO concertDTO, Long concertId);
     void deleteById(Long id);
 
 }

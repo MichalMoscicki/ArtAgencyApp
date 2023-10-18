@@ -32,8 +32,9 @@ public class ConcertController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ConcertDTO> update(@RequestBody ConcertDTO concertDTO) {
-        return new ResponseEntity<>(concertService.update(concertDTO), HttpStatus.OK);
+    public ResponseEntity<ConcertDTO> update(@RequestBody ConcertDTO concertDTO,
+                                             @PathVariable Long id) {
+        return new ResponseEntity<>(concertService.update(concertDTO, id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -44,6 +45,6 @@ public class ConcertController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         concertService.deleteById(id);
-        return new ResponseEntity<>("Successfully deleted contact with id: " + id, HttpStatus.OK);
+        return new ResponseEntity<>("Successfully deleted concert with id: " + id, HttpStatus.OK);
     }
 }
