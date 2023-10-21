@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -45,6 +46,7 @@ public class MusicianControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenReturnDTOObject() throws Exception {
         //given - precondition or setup
         MusicianDTO unsyncDTO = createMusicianDTOWithInstrument(null);
@@ -62,6 +64,7 @@ public class MusicianControllerITest {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long instrumentId = 0L;
@@ -79,6 +82,7 @@ public class MusicianControllerITest {
 
 
     @Test
+     @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnEventDTOObject() throws Exception {
         //given - precondition or setup
         Musician musician = createMusicianWithInstrument();
@@ -93,6 +97,7 @@ public class MusicianControllerITest {
     }
 
     @Test
+     @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
 
@@ -116,6 +121,7 @@ public class MusicianControllerITest {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void testUpdateEvent() throws Exception {
         // Given
         Musician musician = createMusicianWithInstrument();
@@ -139,6 +145,7 @@ public class MusicianControllerITest {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenDelete_thenEventDeleted() throws Exception {
         //given - precondition or setup
         Musician musician = createMusicianWithInstrument();

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -54,6 +55,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenUnsyncDTO_whenCreate_thenReturnSyncDTO() throws Exception {
         //given
         TaskDTO unsyncTaskDTO = dtoMapper.mapToDTO(createTask(null, false, false));
@@ -72,6 +74,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long id = 0L;
@@ -86,11 +89,11 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnContactDTOObject() throws Exception {
         //given - precondition or setup
         Task task = taskRepository.save(createTaskWithAttachments(true));
         Long id = task.getId();
-
 
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(get(String.format("/api/v1/tasks/%s", id)));
@@ -103,6 +106,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenWrongStatus_when_getAll_returnError() throws Exception {
         taskRepository.save(createTask(null, false, false));
         taskRepository.save(createTask(null, true, false));
@@ -117,6 +121,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenEmptyStatus_when_getAll_returnError() throws Exception {
         taskRepository.save(createTask(null, false, false));
         taskRepository.save(createTask(null, true, false));
@@ -131,6 +136,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenBlankStatus_when_getAll_returnError() throws Exception {
         taskRepository.save(createTask(null, false, false));
         taskRepository.save(createTask(null, true, false));
@@ -145,6 +151,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenNoStatus_whenGetAll_returnActive() throws Exception {
         Task task1 = taskRepository.save(createTask(null, false, false));
         Task task2 = taskRepository.save(createTask(null, true, false));
@@ -157,6 +164,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenStatusAll_whenGetAll_returnActive() throws Exception {
         Task task1 = taskRepository.save(createTask(null, false, false));
         Task task2 = taskRepository.save(createTask(null, true, false));
@@ -168,9 +176,8 @@ public class TaskControllerITest {
                 .andExpect(jsonPath("$.content.size()", CoreMatchers.is(2)));
     }
 
-
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskList_whenGetAll_returnActive() throws Exception {
         Task futureTask = taskRepository.save(createTask(null, false, false));
         Task activeTask = taskRepository.save(createTask(null, true, false));
@@ -183,6 +190,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenStatusFuture_whenGetAll_returnActive() throws Exception {
         Task futureTask = taskRepository.save(createTask(null, false, false));
         Task activeTask = taskRepository.save(createTask(null, true, false));
@@ -195,6 +203,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenStatusFinished_whenGetAll_returnActive() throws Exception {
         Task futureTask = taskRepository.save(createTask(null, false, false));
         Task finishedTask = taskRepository.save(createTask(null, false, true));
@@ -207,6 +216,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenId_whenUpdate_thanThrowResourceNotFoundException() throws Exception {
         Long id = 0L;
         TaskDTO taskDTO = dtoMapper.mapToDTO(createTask(null, false, false));
@@ -221,6 +231,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenId_whenGetById_thanReturnUpdatedObject() throws Exception {
         String updatedTitle = "UpdatedTitle";
         Task task = taskRepository.save(createTask(null, true, false));
@@ -241,6 +252,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskWithAssociatedData_whenDelete_thenCorrectResponse() throws Exception {
         Task task = taskRepository.save(createTask(null, false, false));
 
@@ -253,6 +265,7 @@ public class TaskControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskWithAssociatedData_whenDelete_theTaskAndTaskAttachmentDeletedContactNotDeleted() throws Exception {
         Task task = taskRepository.save(createTaskWithAttachments(false));
         TaskAttachment attachment = task.getAttachment();

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -52,6 +53,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenReturnContactDTOObject() throws Exception {
         //given - precondition or setup
         ContactDTO unsyncContactDTO = ContactDTO.builder()
@@ -74,6 +76,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetAll_thenReturnContactObjectsList() throws Exception {
         //given - precondition or setup
         Contact contact1 = createSampleContact("Opener Festival");
@@ -89,6 +92,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTwelveContactsObject_whenGetAll_thenReturnTenContactObjectsList() throws Exception {
         //given - precondition or setup
         for (int i = 0; i <= 11; i++) {
@@ -105,11 +109,10 @@ public class ContactControllerITest {
                 .andExpect(jsonPath("$.totalElements", CoreMatchers.is(12)))
                 .andExpect(jsonPath("$.last", CoreMatchers.is(false)))
                 .andExpect(jsonPath("$.pageSize", CoreMatchers.is(10)));
-
-
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenThreeContactsObject_whenGetAllDesc_thenReturnContactsInCorrectOrder() throws Exception {
         //given - precondition or setup
         Contact contact1 = createSampleContact("First");
@@ -127,6 +130,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenThreeContactsObject_whenGetAllAsc_thenReturnContactsInCorrectOrder() throws Exception {
         //given - precondition or setup
         Contact contact1 = createSampleContact("First");
@@ -144,6 +148,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenThreeContactsObject_whenGetAllSortByName_thenReturnContactsInCorrectOrder() throws Exception {
         //given - precondition or setup
         Contact contact1 = createSampleContact("First");
@@ -161,6 +166,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenThreeContactsObject_whenGetAllSortByNameAsc_thenReturnContactsInCorrectOrder() throws Exception {
         //given - precondition or setup
         Contact contact1 = createSampleContact("First");
@@ -178,6 +184,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long id = 0L;
@@ -192,6 +199,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnContactDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact("Opener Festival");
@@ -207,6 +215,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         ContactDTO syncContactDTO = ContactDTO.builder()
@@ -228,6 +237,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenReturnContactDTO() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact("Opener Festival");
@@ -253,6 +263,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenContactWithAssociatedData_whenDelete_thenContactDeleted() throws Exception {
         //given - precondition or setup
         Contact contact = createContactWithAssociatedData();
@@ -270,6 +281,7 @@ public class ContactControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "ADMIN")
     public void givenContactList_whenExport_thenStatusOk() throws Exception {
         Contact contact = createSampleContact("SampleContact");
 

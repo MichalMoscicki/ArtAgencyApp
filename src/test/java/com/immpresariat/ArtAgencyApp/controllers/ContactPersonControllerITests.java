@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -72,6 +73,7 @@ public class ContactPersonControllerITests {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenContactPersonAddedToContact() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -93,6 +95,7 @@ public class ContactPersonControllerITests {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -112,6 +115,7 @@ public class ContactPersonControllerITests {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnContactPersonDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -129,6 +133,7 @@ public class ContactPersonControllerITests {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -153,6 +158,7 @@ public class ContactPersonControllerITests {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void testUpdateContactPerson() throws Exception {
         // Given
         Contact contact = createSampleContact();
@@ -189,6 +195,7 @@ public class ContactPersonControllerITests {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenDelete_thenContactPersonDeleted() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -210,6 +217,7 @@ public class ContactPersonControllerITests {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenNoContact_whenDelete_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long contactId = 0L;
@@ -227,6 +235,7 @@ public class ContactPersonControllerITests {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenNoContactPerson_whenDelete_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -54,6 +55,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenUnsyncDTO_whenCreate_thenReturnResourceNotFoundException() throws Exception {
         //given
         Long taskId = 0L;
@@ -72,6 +74,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenUnsyncDTO_whenCreate_thenReturnSyncDTO() throws Exception {
         //given
         Task task = taskRepository.save(createTask(null, false));
@@ -89,6 +92,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenId_whenGetById_thenReturnResourceNotFoundException() throws Exception {
         //given
         Long taskId = 0L;
@@ -105,6 +109,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenId_whenGetById_thenReturnSyncDTO() throws Exception {
         //given
         TaskAttachment attachment = taskAttachmentRepository.save(createAttachment());
@@ -120,6 +125,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskId_whenUpdate_thenReturnResourceNotFoundException() throws Exception {
         //given
         Long taskId = 0L;
@@ -139,6 +145,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskAttachmentId_whenUpdate_thenReturnResourceNotFoundException() throws Exception {
         //given
         Task task = taskRepository.save(createTask(null, false));
@@ -158,8 +165,8 @@ public class TaskAttachmentITest {
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskAttachmentDTO_whenUpdate_thenAttachmentUpdated() throws Exception {
         //given
         TaskAttachment attachment = taskAttachmentRepository.save(createAttachment());
@@ -190,6 +197,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskAttachmentDTO_whenUpdate_thenAttachmentUpdatedEmptyContacts() throws Exception {
         //given
         TaskAttachment attachment = taskAttachmentRepository.save(createAttachment());
@@ -214,6 +222,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskAttachmentDTO_whenDelete_thenThrowResourceNotFoundException() throws Exception {
         //given
         Task task = taskRepository.save(createTask(null, false));
@@ -230,6 +239,7 @@ public class TaskAttachmentITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTaskAttachmentDTO_whenDelete_thenAttachmentDeleted() throws Exception {
         //given
         TaskAttachment attachment = taskAttachmentRepository.save(createAttachment());

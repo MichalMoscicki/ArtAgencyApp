@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -41,6 +42,7 @@ public class ConcertControllerITest {
 
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenReturnConcertDTOObject() throws Exception {
         //given - precondition or setup
         ConcertDTO concertDTO = createConcertDTO(null);
@@ -58,6 +60,7 @@ public class ConcertControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetAll_thenReturnConcertObjectsList() throws Exception {
         //given - precondition or setup
         Concert concert1 = createConcert();
@@ -73,6 +76,7 @@ public class ConcertControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long id = 0L;
@@ -87,6 +91,7 @@ public class ConcertControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnConcertDTOObject() throws Exception {
         //given - precondition or setup
         Concert concert = createConcert();
@@ -101,6 +106,7 @@ public class ConcertControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long id = 0L;
@@ -119,6 +125,7 @@ public class ConcertControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenTitleOnly_whenUpdate_thenReturnContactDTO() throws Exception {
         //given - precondition or setup
         Concert concert = createConcert();
@@ -139,6 +146,7 @@ public class ConcertControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenId_whenDelete_thenConcertDeleted() throws Exception {
         //given - precondition or setup
         Concert concert = createConcert();

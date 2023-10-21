@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class InstrumentControllerITest {
 
-
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -35,14 +35,13 @@ public class InstrumentControllerITest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     @BeforeEach
     public void setup() {
         cleanDB();
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenReturnDTOObject() throws Exception {
         //given - precondition or setup
         InstrumentDTO unsyncDTO = createSampleInstrumentDTO(null);
@@ -58,8 +57,8 @@ public class InstrumentControllerITest {
                 .andExpect(jsonPath("$.id", CoreMatchers.notNullValue()));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long instrumentId = 0L;
@@ -75,8 +74,8 @@ public class InstrumentControllerITest {
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnEventDTOObject() throws Exception {
         //given - precondition or setup
         Instrument instrument = createSampleInstrument();
@@ -90,12 +89,10 @@ public class InstrumentControllerITest {
                 .andExpect(jsonPath("$.name", CoreMatchers.is(instrument.getName())));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
-
-
         Long instrumentId = 0L;
         InstrumentDTO notExistingInstrument = createSampleInstrumentDTO(instrumentId);
 
@@ -106,15 +103,14 @@ public class InstrumentControllerITest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notExistingInstrument)));
 
-
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void testUpdateEvent() throws Exception {
         // Given
         Instrument instrument = createSampleInstrument();
@@ -136,8 +132,8 @@ public class InstrumentControllerITest {
 
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenDelete_thenEventDeleted() throws Exception {
         //given - precondition or setup
         Instrument instrument = createSampleInstrument();
@@ -154,7 +150,6 @@ public class InstrumentControllerITest {
                 .andExpect(jsonPath("$", CoreMatchers.is(message)));
 
     }
-
 
     private void cleanDB() {
         instrumentRepository.deleteAll();

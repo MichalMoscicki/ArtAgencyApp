@@ -24,7 +24,8 @@ public class SecurityConfig {
         httpSecurity.csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/instruments/**").permitAll()
+                                .requestMatchers("/api/v1/contacts/export-json").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/contacts/import").hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).sessionManagement((session) -> session

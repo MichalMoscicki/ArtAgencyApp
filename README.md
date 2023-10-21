@@ -17,8 +17,8 @@ BE:
 - Mockito
 - JUnit
 - Integration Tests
-- (Spring Security - in progress)
-- (JSON Web Token - in progress)
+- Spring Security - in progress
+- JSON Web Token - in progress
 
 FE:
 - JavaScript
@@ -35,22 +35,22 @@ Users are divided into two roles: USER and ADMIN.
 The program provides various functionalities based on the role:
 
 NOT AUTHORIZED:
-- (Logging in - in progress)
-- (Registration - in progress)
+- Logging in
+- Registration
 
 USERS:
 - Managing business contacts
 - Managing tasks, scheduling and adding attachments to them
-- (Managing press contacts - in progress)
-- (Managing bands and musicians - in progress)
-- (Managing music scores - in progress)
-- (Managing assignments for the music bands - in progress)
+- Managing bands and musicians 
+- Managing music scores
+- Managing assignments for the music bands
+- (Email automation - in progress)
 
 ADMIN:
 - (Assigning tasks to users - in progress)
 - (Managing users - in progress)
 - Exporting contacts
-- (Importing contacts - in progress)
+- Importing contacts - in progress
 
 # API
 

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -42,7 +43,6 @@ public class InstitutionControllerITest {
     private ContactRepository contactRepository;
     @Autowired
     InstitutionService institutionService;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -52,6 +52,7 @@ public class InstitutionControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenReturnInstitutionDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -70,6 +71,7 @@ public class InstitutionControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenInstitutionAddedToContact() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -90,8 +92,8 @@ public class InstitutionControllerITest {
 
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -102,15 +104,14 @@ public class InstitutionControllerITest {
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s/institutions/%s", contactId, institutionId)));
 
-
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnInstitutionDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -126,8 +127,8 @@ public class InstitutionControllerITest {
                 .andExpect(jsonPath("$.name", CoreMatchers.is(syncDTO.getName())));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -151,6 +152,7 @@ public class InstitutionControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void testUpdateInstitution() throws Exception {
         // Given
         Contact contact = createSampleContact();
@@ -185,6 +187,7 @@ public class InstitutionControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenDelete_thenInstitutionDeleted() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -205,8 +208,8 @@ public class InstitutionControllerITest {
 
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenNoContact_whenDelete_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long contactId = 0L;
@@ -224,6 +227,7 @@ public class InstitutionControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenNoInstitution_whenDelete_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -240,7 +244,6 @@ public class InstitutionControllerITest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
-
 
     private Contact createSampleContact() {
         Contact contact = Contact.builder()

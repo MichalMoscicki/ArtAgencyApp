@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -48,6 +49,7 @@ public class SongControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenReturnDTOObject() throws Exception {
         //given - precondition or setup
         SongDTO unsyncDTO = createSongDTOWithoutParts(null);
@@ -63,8 +65,8 @@ public class SongControllerITest {
                 .andExpect(jsonPath("$.id", CoreMatchers.notNullValue()));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long songId = 0L;
@@ -81,6 +83,7 @@ public class SongControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnSongDTOObject() throws Exception {
         //given - precondition or setup
         Song song = createSongWithoutParts();
@@ -95,10 +98,9 @@ public class SongControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
-
-
         Long id = 0L;
         SongDTO notExistingSong = createSongDTOWithoutParts(id);
 
@@ -109,7 +111,6 @@ public class SongControllerITest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notExistingSong)));
 
-
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isNotFound())
@@ -117,6 +118,7 @@ public class SongControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void testUpdate() throws Exception {
         // Given
         Song song = createSongWithoutParts();
@@ -139,6 +141,7 @@ public class SongControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void testUpdateOnlyOneFieldInDTO() throws Exception {
         // Given
         Song song = createSongWithoutParts();
@@ -164,6 +167,7 @@ public class SongControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenId_whenDelete_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Long id = 0L;
@@ -179,7 +183,8 @@ public class SongControllerITest {
 
     }
 
-        @Test
+    @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenSongWithoutParts_whenDelete_thenSongDeleted() throws Exception {
         //given - precondition or setup
         Song song = createSongWithoutParts();
@@ -199,6 +204,7 @@ public class SongControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void givenSongWithParts_whenDelete_thenSongDeleted() throws Exception {
         //given - precondition or setup
         Song song = createSongWithParts();
@@ -234,7 +240,7 @@ public class SongControllerITest {
                         .data(new byte[1])
                         .instrument(instrument)
                         .type("type")
-                .build());
+                        .build());
 
         List<Part> parts = new ArrayList<>();
         parts.add(part);
