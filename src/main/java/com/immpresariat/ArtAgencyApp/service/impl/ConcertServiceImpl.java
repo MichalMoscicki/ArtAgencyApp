@@ -18,7 +18,6 @@ import java.util.List;
 
 @Service
 public class ConcertServiceImpl implements ConcertService {
-
     private final ConcertRepository concertRepository;
     private final DTOMapper dtoMapper;
     private final InputCleaner inputCleaner;

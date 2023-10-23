@@ -7,6 +7,7 @@ import com.immpresariat.ArtAgencyApp.utils.AppConstants;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,5 +50,4 @@ public class MusicianController {
         musicianService.deleteById(musicianId);
         return new ResponseEntity<>("Successfully deleted musician with id: " + musicianId, HttpStatus.OK);
     }
-
 }

@@ -115,7 +115,7 @@ public class InstrumentControllerITest {
         // Given
         Instrument instrument = createSampleInstrument();
         InstrumentDTO updatedInstrumentDTO = createSampleInstrumentDTO(instrument.getId());
-        updatedInstrumentDTO.setName("Kontrabas");
+        updatedInstrumentDTO.setName("kontrabas");
 
         // When
         ResultActions response = mockMvc.perform(

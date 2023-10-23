@@ -34,7 +34,7 @@ public class AuthenticationService {
 
     private static Role assignRole(String inputRole) {
         Role role;
-        if (inputRole.equalsIgnoreCase("admin")) {
+        if (inputRole.equalsIgnoreCase("role_admin")) {
             role = Role.ADMIN;
         } else{
             role = Role.USER;

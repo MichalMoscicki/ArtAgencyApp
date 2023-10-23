@@ -17,8 +17,7 @@ BE:
 - Mockito
 - JUnit
 - Integration Tests
-- Spring Security - in progress
-- JSON Web Token - in progress
+- JSON Web Token 
 
 FE:
 - JavaScript
@@ -40,10 +39,10 @@ NOT AUTHORIZED:
 
 USERS:
 - Managing business contacts
-- Managing tasks, scheduling and adding attachments to them
-- Managing bands and musicians 
-- Managing music scores
-- Managing assignments for the music bands
+  - Managing tasks, scheduling and adding attachments to them
+  - Managing bands and musicians 
+  - Managing music scores
+  - Managing assignments for the music bands
 - (Email automation - in progress)
 
 ADMIN:

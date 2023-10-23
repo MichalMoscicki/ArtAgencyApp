@@ -290,25 +290,14 @@ public class ContactControllerITest {
                 .andExpect(header().string("Content-Disposition", "attachment; filename=businessContacts.json"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
-    //todo how to do negative scenario?
+    @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
+    public void givenContactList_whenExport_thenReturn401() throws Exception {
+        Contact contact = createSampleContact("SampleContact");
 
-
-//    @Test
-//    public void givenNoFile_whenImport_thenReturnError() throws Exception {
-//        MockMultipartFile file = new MockMultipartFile("file", "file.txt", "text/plain", "".getBytes());
-//
-//        ResultActions response = mockMvc.perform(
-//                multipart("/api/v1/contacts/import")
-//                        .file(file)
-//                        .contentType(MediaType.MULTIPART_FORM_DATA)
-//        );
-//
-//        response.andDo(print())
-//                .andExpect(status().is4xxClientError())
-//                .andExpect(content().string(containsString("File not provided")));
-//    }
-    //todo test importowania: brak pliku, plik bez jsonów, poprawny plik z różnymi rodzajami danych
-
+        mockMvc.perform(get("/api/v1/contacts/export-json"))
+                .andExpect(status().isUnauthorized());
+    }
 
     private Contact createSampleContact(String name) {
         Contact contact = Contact.builder()

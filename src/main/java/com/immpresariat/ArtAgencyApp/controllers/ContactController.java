@@ -42,6 +42,7 @@ public class ContactController {
         return contactService.getAll(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/export-json")
     public ResponseEntity<byte[]> exportData() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -66,6 +67,7 @@ public class ContactController {
         return new ResponseEntity<>(contactService.create(unsyncContactDTO), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/import")
     public ImportResponse uploadFile(@RequestParam("file") MultipartFile file) {
         int savedContacts = 0;
