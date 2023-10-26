@@ -270,4 +270,15 @@ If request cause an error, response will contain:
 
 
 Screenshots FE:
-(in progress)
+
+Login form:
+![login.png](screenshots%2Flogin.png)
+
+Musicians component with pagination and sorting:
+![musiciansSorting.png](screenshots%2FmusiciansSorting.png)
+
+Musicians add and update form (same component with different prop values):
+![musiciansAddAndUpdateForm.png](screenshots%2FmusiciansAddAndUpdateForm.png)
+
+Instruments form:
+![instrumentsForm.png](screenshots%2FinstrumentsForm.png)
