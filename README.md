@@ -251,7 +251,7 @@ PARTS ENDPOINT
 
     
     POST /api/v1/songs/{songId}/parts - stores part in database and connect it with song and instrument.
-    Request body should include two keys:
+    Request body should be multipart/form-data and include two keys:
     - "file" : the value should be the local file path.
     - "instrument" " the value should be an exsisting in DB instrument object (id, name).
     Instruments in song must be unique - if violated, endpoint returns resourceAlreadyexistsException.
@@ -269,7 +269,7 @@ If request cause an error, response will contain:
 - status code
 
 
-Screenshots FE:
+Screenshots FE (work in progress):
 
 Login form:
 ![login.png](screenshots%2Flogin.png)
@@ -282,3 +282,4 @@ Musicians add and update form (same component with different prop values):
 
 Instruments form:
 ![instrumentsForm.png](screenshots%2FinstrumentsForm.png)
+

@@ -25,6 +25,7 @@ public class Part {
     private String type;
     @NotNull
     @Lob
+    @Column(name = "data", columnDefinition="MEDIUMBLOB")
     private byte[] data;
 
 }
