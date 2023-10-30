@@ -5,6 +5,7 @@ import com.immpresariat.ArtAgencyApp.payload.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.immpresariat.ArtAgencyApp.repository.SongRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ public class DTOMapperTests {
     Event event;
     Long contactPersonId;
     ContactPerson contactPerson;
+
+    @Autowired
+    SongRepository songRepository;
 
 
     @BeforeEach
@@ -547,7 +551,7 @@ public class DTOMapperTests {
         assertEquals(concert.getTitle(), concertDTO.getTitle());
         assertEquals(concert.getMusicians(), concertDTO.getMusicians());
         assertEquals(concert.getOrganizer(), concertDTO.getOrganizer());
-        assertEquals(concert.getSongs(), concertDTO.getSongs());
+        assertEquals(concert.getSongs().size(), concertDTO.getSongs().size());
 
     }
 
@@ -565,7 +569,7 @@ public class DTOMapperTests {
                 .build();
 
         //when - action or the behavior that we are going to test
-        Concert concert = dtoMapper.mapToEntity(concertDTO);
+        Concert concert = dtoMapper.mapToEntity(concertDTO, songRepository);
 
         //then - verify the output
         assertNotNull(concert);
@@ -574,7 +578,7 @@ public class DTOMapperTests {
         assertEquals(concert.getDate(), concertDTO.getDate());
         assertEquals(concert.getMusicians(), concertDTO.getMusicians());
         assertEquals(concert.getOrganizer(), concertDTO.getOrganizer());
-        assertEquals(concert.getSongs(), concertDTO.getSongs());
+        assertEquals(concert.getSongs().size(), concertDTO.getSongs().size());
     }
 
 }

@@ -1,8 +1,10 @@
 package com.immpresariat.ArtAgencyApp.utils;
 
 
+import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.*;
 import com.immpresariat.ArtAgencyApp.payload.*;
+import com.immpresariat.ArtAgencyApp.repository.SongRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -190,8 +193,8 @@ public class DTOMapper {
     public SongDTO mapToDTO(Song song) {
 
         List<PartDTO> part = new ArrayList<>();
-        if(song.getParts() != null) {
-           part = song.getParts().stream().map(this::mapToDTO).toList();
+        if (song.getParts() != null) {
+            part = song.getParts().stream().map(this::mapToDTO).toList();
         }
 
         return SongDTO.builder()
@@ -230,25 +233,37 @@ public class DTOMapper {
                 .build();
     }
 
-    public ConcertDTO mapToDTO(Concert concert){
+    public ConcertDTO mapToDTO(Concert concert) {
+        List<SongDTO> songDTOS = new ArrayList<>();
+        if (concert.getSongs() != null) {
+            songDTOS = concert.getSongs().stream().map(this::mapToDTO).collect(Collectors.toList());
+        }
+
         return ConcertDTO.builder()
                 .id(concert.getId())
                 .title(concert.getTitle())
                 .date(concert.getDate())
                 .musicians(concert.getMusicians())
                 .organizer(concert.getOrganizer())
-                .songs(concert.getSongs())
+                .songs(songDTOS)
                 .build();
     }
 
-    public Concert mapToEntity(ConcertDTO concertDTO){
+    public Concert mapToEntity(ConcertDTO concertDTO, SongRepository songRepository) {
+        List<Song> songs = new ArrayList<>();
+        if(concertDTO.getSongs() != null){
+            songs  = concertDTO.getSongs().stream().map(songDTO -> songRepository.findById(songDTO.getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("No song with id: " + songDTO.getId())))
+                    .collect(Collectors.toList());
+        }
+
         return Concert.builder()
                 .id(concertDTO.getId())
                 .title(concertDTO.getTitle())
                 .date(concertDTO.getDate())
                 .musicians(concertDTO.getMusicians())
                 .organizer(concertDTO.getOrganizer())
-                .songs(concertDTO.getSongs())
+                .songs(songs)
                 .build();
     }
 }

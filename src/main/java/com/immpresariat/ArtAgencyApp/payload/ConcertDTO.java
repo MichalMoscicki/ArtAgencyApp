@@ -19,6 +19,6 @@ public class ConcertDTO {
     private String title;
     LocalDate date;
     private List<Musician> musicians;
-    private List<Song> songs;
+    private List<SongDTO> songs;
     private Contact organizer;
 }
