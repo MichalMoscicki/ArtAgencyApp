@@ -4,4 +4,5 @@ import com.immpresariat.ArtAgencyApp.models.Instrument;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InstrumentRepository extends JpaRepository<Instrument, Long> {
+    boolean existsByName(String name);
 }

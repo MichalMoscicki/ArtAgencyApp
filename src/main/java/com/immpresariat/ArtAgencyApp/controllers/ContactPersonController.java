@@ -1,7 +1,6 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.immpresariat.ArtAgencyApp.payload.ContactPersonDTO;
-import com.immpresariat.ArtAgencyApp.payload.EventDTO;
 import com.immpresariat.ArtAgencyApp.service.ContactPersonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

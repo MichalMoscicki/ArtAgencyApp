@@ -1,5 +1,6 @@
 package com.immpresariat.ArtAgencyApp.service.impl;
 
+import com.immpresariat.ArtAgencyApp.exception.ResourceAlreadyExistsException;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.Instrument;
 import com.immpresariat.ArtAgencyApp.payload.InstrumentDTO;
@@ -29,6 +30,9 @@ public class InstrumentServiceImpl implements InstrumentService {
 
     @Override
     public InstrumentDTO create(InstrumentDTO unsyncDTO) {
+        if(instrumentRepository.existsByName(unsyncDTO.getName().trim().toLowerCase())){
+            throw new ResourceAlreadyExistsException(String.format("Instrument with name: %s already exists!", unsyncDTO.getName()));
+        }
         Instrument instrument = dtoMapper.mapToEntity(unsyncDTO);
         return dtoMapper.mapToDTO(instrumentRepository.save(inputCleaner.clean(instrument)));
     }

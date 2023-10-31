@@ -1,10 +1,18 @@
 package com.immpresariat.ArtAgencyApp.models;
 
-import com.immpresariat.ArtAgencyApp.payload.ContactDTO;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +31,5 @@ public class TaskAttachment {
 
     @OneToMany
     private Set<Contact> contacts;
-
 
 }

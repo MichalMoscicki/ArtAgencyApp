@@ -1,10 +1,18 @@
 package com.immpresariat.ArtAgencyApp.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.GenerationType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.lang.Nullable;
 
@@ -35,6 +43,5 @@ public class Institution {
     @Nullable
     @Email(message = "Invalid email")
     private String email;
-
 
 }

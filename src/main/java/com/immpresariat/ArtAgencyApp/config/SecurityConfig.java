@@ -35,6 +35,7 @@ public class SecurityConfig {
                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/parts/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -44,7 +45,6 @@ public class SecurityConfig {
                .cors(Customizer.withDefaults())
                .build();
     }
-
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
