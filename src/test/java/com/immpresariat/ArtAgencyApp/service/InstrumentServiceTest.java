@@ -37,13 +37,18 @@ public class InstrumentServiceTest {
     @Test
     public void givenUnsyncDTO_whenCreate_thenReturnDTOObject() {
         //given - precondition or setup
+        InstrumentDTO instrumentDTO = InstrumentDTO.builder()
+                .id(0L)
+                .name("sample instrument")
+                .build();
+
         given(dtoMapper.mapToEntity(any(InstrumentDTO.class))).willReturn(new Instrument());
         given(inputCleaner.clean(any(Instrument.class))).willReturn(new Instrument());
         given(instrumentRepository.save(any(Instrument.class))).willReturn(new Instrument());
         given(dtoMapper.mapToDTO(any(Instrument.class))).willReturn(new InstrumentDTO());
 
         //when - action or the behavior that we are going to test
-        InstrumentDTO instrumentDTO = instrumentService.create(new InstrumentDTO());
+        InstrumentDTO savedInstrumentDTO = instrumentService.create(instrumentDTO);
 
         //then - verify the output
         assertNotNull(instrumentDTO);

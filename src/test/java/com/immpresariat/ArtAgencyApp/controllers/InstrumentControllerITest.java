@@ -157,7 +157,7 @@ public class InstrumentControllerITest {
 
     private Instrument createSampleInstrument() {
         Instrument instrument = Instrument.builder()
-                .name("Fortepian")
+                .name("sampleInstrument")
                 .build();
         return instrumentRepository.save(instrument);
     }
@@ -165,7 +165,7 @@ public class InstrumentControllerITest {
     private InstrumentDTO createSampleInstrumentDTO(Long id) {
         return InstrumentDTO.builder()
                 .id(id)
-                .name("Fortepian")
+                .name("sampleInstrument")
                 .build();
     }
 }

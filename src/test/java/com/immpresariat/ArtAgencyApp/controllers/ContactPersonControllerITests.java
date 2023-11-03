@@ -54,6 +54,7 @@ public class ContactPersonControllerITests {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenReturnContactPersonDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -70,7 +71,6 @@ public class ContactPersonControllerITests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", CoreMatchers.notNullValue()));
     }
-
 
     @Test
     @WithMockUser(username = "testuser@test.com", roles = "USER")

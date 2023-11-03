@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: artagency
+    networks:
+      art-agency-net:
+
+  art-agency-app:
+    container_name: art-agency-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      art-agency-net:
+    restart: on-failure
+
+networks:
+  art-agency-net:

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @CrossOrigin
 public class AuthenticationController {
-
     private final AuthenticationService service;
 
     @PostMapping("/register")

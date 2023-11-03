@@ -46,13 +46,13 @@ public class EventControllerITest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     @BeforeEach
     public void setup() {
         cleanDB();
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenReturnEventDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -71,6 +71,7 @@ public class EventControllerITest {
     }
 
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenCreate_thenEventAddedToContact() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -90,8 +91,8 @@ public class EventControllerITest {
 
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -102,15 +103,14 @@ public class EventControllerITest {
         //when - action or the behavior that we are going to test
         ResultActions response = mockMvc.perform(get(String.format("/api/v1/contacts/%s/events/%s", contactId, eventId)));
 
-
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenGetById_thenReturnEventDTOObject() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -126,8 +126,8 @@ public class EventControllerITest {
                 .andExpect(jsonPath("$.name", CoreMatchers.is(syncDTO.getName())));
     }
 
-
     @Test
+    @WithMockUser(username = "testuser@test.com", roles = "USER")
     public void whenUpdate_thenThrowResourceNotFoundException() throws Exception {
         //given - precondition or setup
         Contact contact = createSampleContact();
@@ -143,13 +143,11 @@ public class EventControllerITest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notExistingEvent)));
 
-
         //then - verify the output
         response.andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
-
 
     @Test
     @WithMockUser(username = "testuser@test.com", roles = "USER")
@@ -184,7 +182,6 @@ public class EventControllerITest {
         Contact updatedContact = contactRepository.findById(contactId).get();
         assertNotEquals(updated, updatedContact.getUpdated());
     }
-
 
     @Test
     @WithMockUser(username = "testuser@test.com", roles = "USER")
@@ -245,7 +242,6 @@ public class EventControllerITest {
                 .andExpect(jsonPath("$.message", CoreMatchers.is(message)));
     }
 
-
     private void cleanDB() {
         List<Contact> contacts = contactRepository.findAll();
         for (Contact contact : contacts) {
@@ -278,4 +274,5 @@ public class EventControllerITest {
                 .monthWhenOrganized(monthWhenOrganised)
                 .build();
     }
+
 }
