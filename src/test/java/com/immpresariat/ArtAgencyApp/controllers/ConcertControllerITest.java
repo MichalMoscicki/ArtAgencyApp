@@ -167,6 +167,7 @@ public class ConcertControllerITest {
         return ConcertDTO.builder()
                 .id(id)
                 .title("Tytuł")
+                .address("Address")
                 .date(LocalDate.now())
                 .organizer(null)
                 .songs(new ArrayList<>())
@@ -177,6 +178,7 @@ public class ConcertControllerITest {
     private Concert createConcert() {
         Concert concert = Concert.builder()
                 .title("Tytuł")
+                .address("Address")
                 .date(LocalDate.now())
                 .organizer(null)
                 .songs(new ArrayList<>())
