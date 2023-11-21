@@ -27,8 +27,8 @@ public class ConcertController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ConcertDTO> create(@RequestBody ConcertDTO unsyncConcerttDTO) {
-        return new ResponseEntity<>(concertService.create(unsyncConcerttDTO), HttpStatus.CREATED);
+    public ResponseEntity<ConcertDTO> create(@RequestBody ConcertDTO unsyncConcertDTO) {
+        return new ResponseEntity<>(concertService.create(unsyncConcertDTO), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")

@@ -21,8 +21,10 @@ public class Concert {
     private Long id;
     @NotBlank
     private String title;
+    @NotBlank
+    private String address;
     @NotNull
-    LocalDate date;
+    private LocalDate date;
     @ManyToMany
     private List<Musician> musicians;
     @ManyToMany

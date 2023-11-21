@@ -87,6 +87,9 @@ public class ConcertServiceImpl implements ConcertService {
         if (concertDTO.getOrganizer() != null) {
             concertDB.setTitle(concertDTO.getTitle());
         }
+        if (concertDTO.getAddress() != null) {
+            concertDB.setAddress(concertDTO.getAddress());
+        }
         if (concertDTO.getMusicians() != null) {
             concertDB.setMusicians(concertDTO.getMusicians());
         }

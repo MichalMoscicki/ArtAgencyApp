@@ -17,8 +17,10 @@ import java.util.List;
 public class ConcertDTO {
     private Long id;
     private String title;
-    LocalDate date;
+    private String address;
+    private LocalDate date;
     private List<Musician> musicians;
     private List<SongDTO> songs;
     private Contact organizer;
+
 }
