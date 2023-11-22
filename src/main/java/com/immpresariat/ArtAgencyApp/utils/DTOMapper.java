@@ -4,6 +4,7 @@ package com.immpresariat.ArtAgencyApp.utils;
 import com.immpresariat.ArtAgencyApp.exception.ResourceNotFoundException;
 import com.immpresariat.ArtAgencyApp.models.*;
 import com.immpresariat.ArtAgencyApp.payload.*;
+import com.immpresariat.ArtAgencyApp.repository.ConcertRepository;
 import com.immpresariat.ArtAgencyApp.repository.SongRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -266,6 +267,30 @@ public class DTOMapper {
                 .musicians(concertDTO.getMusicians())
                 .organizer(concertDTO.getOrganizer())
                 .songs(songs)
+                .build();
+    }
+
+    public ConcertDetails mapToEntity(ConcertDetailsDTO concertDetailsDTO, ConcertRepository concertRepository){
+        Concert concert = concertRepository.findById(concertDetailsDTO.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("No concert with id: " + concertDetailsDTO.getId()));
+
+        return ConcertDetails.builder()
+                .id(concertDetailsDTO.getId())
+                .start(concertDetailsDTO.getStart())
+                .end(concertDetailsDTO.getEnd())
+                .concert(concert)
+                .address(concertDetailsDTO.getAddress())
+                .build();
+    }
+
+    public ConcertDetailsDTO mapToDTO(ConcertDetails concertDetails){
+
+        return ConcertDetailsDTO.builder()
+                .id(concertDetails.getId())
+                .concertId(concertDetails.getConcert().getId())
+                .start(concertDetails.getStart())
+                .end(concertDetails.getEnd())
+                .address(concertDetails.getAddress())
                 .build();
     }
 }

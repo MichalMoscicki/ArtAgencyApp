@@ -5,12 +5,17 @@ import com.immpresariat.ArtAgencyApp.payload.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.immpresariat.ArtAgencyApp.repository.ConcertRepository;
 import com.immpresariat.ArtAgencyApp.repository.SongRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +28,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @SpringBootTest
@@ -30,23 +36,22 @@ import java.util.List;
 @AutoConfigureMockMvc
 public class DTOMapperTests {
 
-    DTOMapper dtoMapper;
-    Long institutionId;
-    Institution institution;
-    Long eventId;
-    Event event;
-    Long contactPersonId;
-    ContactPerson contactPerson;
-
-    @Autowired
-    SongRepository songRepository;
-
+    private Institution institution;
+    private Event event;
+    private Long contactPersonId;
+    private ContactPerson contactPerson;
+    @Mock
+    private SongRepository songRepository;
+    @Mock
+    private ConcertRepository concertRepository;
+    @InjectMocks
+    private DTOMapper dtoMapper;
 
     @BeforeEach
     public void setup() {
         dtoMapper = new DTOMapper();
 
-        institutionId = 1L;
+        Long institutionId = 1L;
         institution = Institution.builder()
                 .id(institutionId)
                 .name("DK Praga")
@@ -58,7 +63,7 @@ public class DTOMapperTests {
                 .webPage("http://www.pksgrojec.pl/rozklad_new/tpo_5129722.html")
                 .build();
 
-        eventId = 1L;
+        Long eventId = 1L;
         event = Event.builder()
                 .id(eventId)
                 .name("Dni Miasta")
@@ -76,7 +81,6 @@ public class DTOMapperTests {
                 .build();
 
     }
-
 
     @DisplayName("JUnit test for map Institution to DTO")
     @Test
@@ -472,7 +476,6 @@ public class DTOMapperTests {
         assertEquals(song.getComposers(), songDTO.getComposers());
         assertEquals(song.getTextAuthors(), songDTO.getTextAuthors());
 
-
     }
 
     @DisplayName("JUnit test for mapToEntity (Song) method")
@@ -579,6 +582,63 @@ public class DTOMapperTests {
         assertEquals(concert.getMusicians(), concertDTO.getMusicians());
         assertEquals(concert.getOrganizer(), concertDTO.getOrganizer());
         assertEquals(concert.getSongs().size(), concertDTO.getSongs().size());
+    }
+
+    @DisplayName("JUnit test for mapToDTO (ConcertDetailsDTO) method")
+    @Test
+    public void givenConcertDetails_whenMapToDTO_thenReturnDTO() {
+        //given - precondition or setup
+        Concert concert = Concert.builder()
+                .id(0L)
+                .build();
+
+        ConcertDetails concertDetails = ConcertDetails.builder()
+                .id(0L)
+                .concert(concert)
+                .end(new Date())
+                .start(new Date())
+                .address("ul. Łąkowa, Łomianki")
+                .build();
+
+        //when - action or the behavior that we are going to test
+        ConcertDetailsDTO concertDetailsDTO = dtoMapper.mapToDTO(concertDetails);
+
+        //then - verify the output
+        assertNotNull(concertDetailsDTO);
+        assertEquals(concertDetails.getId(), concertDetailsDTO.getId());
+        assertEquals(concertDetails.getStart(), concertDetailsDTO.getStart());
+        assertEquals(concertDetails.getEnd(), concertDetailsDTO.getEnd());
+        assertEquals(concertDetails.getAddress(), concertDetailsDTO.getAddress());
+        assertEquals(concertDetails.getConcert().getId(), concertDetailsDTO.getConcertId());
+    }
+
+    @DisplayName("JUnit test for mapToEntity (ConcertDetails) method")
+    @Test
+    public void givenConcertDetailsDTO_whenMapToEntity_thenReturnConcertDetails() {
+        //given - precondition or setup
+        Concert concert = Concert.builder()
+                .id(0L)
+                .build();
+
+        ConcertDetailsDTO concertDetailsDTO = ConcertDetailsDTO.builder()
+                .id(0L)
+                .concertId(concert.getId())
+                .end(new Date())
+                .start(new Date())
+                .address("ul. Łąkowa, Łomianki")
+                .build();
+        BDDMockito.given(concertRepository.findById(concert.getId())).willReturn(Optional.of(concert));
+
+        //when - action or the behavior that we are going to test
+        ConcertDetails concertDetails = dtoMapper.mapToEntity(concertDetailsDTO, concertRepository);
+
+        //then - verify the output
+        assertNotNull(concertDetailsDTO);
+        assertEquals(concertDetails.getId(), concertDetailsDTO.getId());
+        assertEquals(concertDetails.getStart(), concertDetailsDTO.getStart());
+        assertEquals(concertDetails.getEnd(), concertDetailsDTO.getEnd());
+        assertEquals(concertDetails.getAddress(), concertDetailsDTO.getAddress());
+        assertEquals(concertDetails.getConcert().getId(), concertDetailsDTO.getConcertId());
     }
 
 }

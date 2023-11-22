@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -22,16 +23,11 @@ public class ConcertDetails {
     private Long id;
     @NotBlank
     private String address;
-    @NotBlank
-    private String city;
     @NotNull
-    private Date soundcheck;
+    private Date start;
     @NotNull
-    private Date performance;
-    private boolean outdoor;
-    private String description;
-
+    private Date end;
+    @OneToOne
+    private Concert concert;
 }
 
-//concert nic nie wie o detailsach, pobiera się je osobnym zapytaniem.
-// Zadbaj o to, żeby id były takie same;
