@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.MalformedURLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -595,8 +596,8 @@ public class DTOMapperTests {
         ConcertDetails concertDetails = ConcertDetails.builder()
                 .id(0L)
                 .concert(concert)
-                .end(new Date())
-                .start(new Date())
+                .end(LocalDateTime.now())
+                .start(LocalDateTime.now())
                 .address("ul. Łąkowa, Łomianki")
                 .build();
 
@@ -623,8 +624,8 @@ public class DTOMapperTests {
         ConcertDetailsDTO concertDetailsDTO = ConcertDetailsDTO.builder()
                 .id(0L)
                 .concertId(concert.getId())
-                .end(new Date())
-                .start(new Date())
+                .end(LocalDateTime.now())
+                .start(LocalDateTime.now())
                 .address("ul. Łąkowa, Łomianki")
                 .build();
         BDDMockito.given(concertRepository.findById(concert.getId())).willReturn(Optional.of(concert));

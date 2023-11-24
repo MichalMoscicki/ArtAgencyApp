@@ -271,8 +271,8 @@ public class DTOMapper {
     }
 
     public ConcertDetails mapToEntity(ConcertDetailsDTO concertDetailsDTO, ConcertRepository concertRepository){
-        Concert concert = concertRepository.findById(concertDetailsDTO.getId()).orElseThrow(
-                () -> new ResourceNotFoundException("No concert with id: " + concertDetailsDTO.getId()));
+        Concert concert = concertRepository.findById(concertDetailsDTO.getConcertId()).orElseThrow(
+                () -> new ResourceNotFoundException("No concert with id: " + concertDetailsDTO.getConcertId()));
 
         return ConcertDetails.builder()
                 .id(concertDetailsDTO.getId())

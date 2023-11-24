@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -24,9 +25,9 @@ public class ConcertDetails {
     @NotBlank
     private String address;
     @NotNull
-    private Date start;
+    private LocalDateTime start;
     @NotNull
-    private Date end;
+    private LocalDateTime end;
     @OneToOne
     private Concert concert;
 }
