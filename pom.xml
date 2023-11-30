@@ -86,6 +86,21 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-calendar</artifactId>
+			<version>v3-rev411-1.25.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.xmljim.json</groupId>
+			<artifactId>jsonfactory</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-jetty</artifactId>
+			<version>1.22.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

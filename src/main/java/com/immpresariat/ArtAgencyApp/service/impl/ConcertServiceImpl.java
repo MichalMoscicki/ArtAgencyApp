@@ -77,14 +77,12 @@ public class ConcertServiceImpl implements ConcertService {
         });
     }
 
+    //todo
     private void setUpdatedFields(ConcertDTO concertDTO, Concert concertDB) {
         if (concertDTO.getId() != null) {
             concertDB.setId(concertDTO.getId());
         }
         if (concertDTO.getTitle() != null) {
-            concertDB.setTitle(concertDTO.getTitle());
-        }
-        if (concertDTO.getOrganizer() != null) {
             concertDB.setTitle(concertDTO.getTitle());
         }
         if (concertDTO.getAddress() != null) {

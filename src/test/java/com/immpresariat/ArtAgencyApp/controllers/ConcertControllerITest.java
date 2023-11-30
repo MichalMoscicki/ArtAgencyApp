@@ -1,6 +1,7 @@
 package com.immpresariat.ArtAgencyApp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.util.DateTime;
 import com.immpresariat.ArtAgencyApp.models.Concert;
 import com.immpresariat.ArtAgencyApp.payload.ConcertDTO;
 import com.immpresariat.ArtAgencyApp.repository.*;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -168,8 +170,9 @@ public class ConcertControllerITest {
                 .id(id)
                 .title("Tytuł")
                 .address("Address")
-                .date(LocalDate.now())
-                .organizer(null)
+                .start(LocalDateTime.now())
+                .end(LocalDateTime.now())
+                .description("Description")
                 .songs(new ArrayList<>())
                 .musicians(new ArrayList<>())
                 .build();
@@ -179,8 +182,9 @@ public class ConcertControllerITest {
         Concert concert = Concert.builder()
                 .title("Tytuł")
                 .address("Address")
-                .date(LocalDate.now())
-                .organizer(null)
+                .start(LocalDateTime.now())
+                .end(LocalDateTime.now())
+                .description("Description")
                 .songs(new ArrayList<>())
                 .musicians(new ArrayList<>())
                 .build();

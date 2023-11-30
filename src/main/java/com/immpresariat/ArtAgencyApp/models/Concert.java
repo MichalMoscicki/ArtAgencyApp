@@ -5,14 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 public class Concert {
 
@@ -24,12 +23,13 @@ public class Concert {
     @NotBlank
     private String address;
     @NotNull
-    private LocalDate date;
+    private LocalDateTime start;
+    @NotNull
+    private LocalDateTime end;
     @ManyToMany
     private List<Musician> musicians;
     @ManyToMany
     private List<Song> songs;
-    @ManyToOne
-    private Contact organizer;
+    private String description;
 
 }

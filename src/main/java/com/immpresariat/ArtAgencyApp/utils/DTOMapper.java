@@ -244,9 +244,10 @@ public class DTOMapper {
                 .id(concert.getId())
                 .title(concert.getTitle())
                 .address(concert.getAddress())
-                .date(concert.getDate())
+                .start(concert.getStart())
+                .end(concert.getEnd())
+                .description(concert.getDescription())
                 .musicians(concert.getMusicians())
-                .organizer(concert.getOrganizer())
                 .songs(songDTOS)
                 .build();
     }
@@ -263,34 +264,12 @@ public class DTOMapper {
                 .id(concertDTO.getId())
                 .title(concertDTO.getTitle())
                 .address(concertDTO.getAddress())
-                .date(concertDTO.getDate())
+                .start(concertDTO.getStart())
+                .end(concertDTO.getEnd())
+                .description(concertDTO.getDescription())
                 .musicians(concertDTO.getMusicians())
-                .organizer(concertDTO.getOrganizer())
                 .songs(songs)
                 .build();
     }
 
-    public ConcertDetails mapToEntity(ConcertDetailsDTO concertDetailsDTO, ConcertRepository concertRepository){
-        Concert concert = concertRepository.findById(concertDetailsDTO.getConcertId()).orElseThrow(
-                () -> new ResourceNotFoundException("No concert with id: " + concertDetailsDTO.getConcertId()));
-
-        return ConcertDetails.builder()
-                .id(concertDetailsDTO.getId())
-                .start(concertDetailsDTO.getStart())
-                .end(concertDetailsDTO.getEnd())
-                .concert(concert)
-                .address(concertDetailsDTO.getAddress())
-                .build();
-    }
-
-    public ConcertDetailsDTO mapToDTO(ConcertDetails concertDetails){
-
-        return ConcertDetailsDTO.builder()
-                .id(concertDetails.getId())
-                .concertId(concertDetails.getConcert().getId())
-                .start(concertDetails.getStart())
-                .end(concertDetails.getEnd())
-                .address(concertDetails.getAddress())
-                .build();
-    }
 }

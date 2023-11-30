@@ -87,6 +87,8 @@ public class InputCleaner {
 
     public Concert clean(Concert concert){
         concert.setTitle(concert.getTitle().trim());
+        concert.setDescription(concert.getDescription().trim());
+        concert.setAddress(concert.getAddress().trim());
         return concert;
     }
 
